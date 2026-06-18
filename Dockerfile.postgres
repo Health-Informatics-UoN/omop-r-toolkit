@@ -1,6 +1,8 @@
 FROM omop-tools
 
-RUN apt-get install libpq-dev libssl-dev pkg-config
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    libpq-dev
 
 RUN install2.r --error --ncpus 2 \
     RPostgres

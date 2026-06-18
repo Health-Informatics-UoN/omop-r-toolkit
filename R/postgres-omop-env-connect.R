@@ -1,7 +1,7 @@
 library(CDMConnector)
 library(DBI)
 library(dplyr)
-library(RPostgresSQL)
+library(RPostgres)
 
 # Use the parameters named as the default 5s-TES agent
 DB_HOST <- Sys.getenv("postgresServer")
@@ -12,10 +12,9 @@ DB_PASSWORD <- Sys.getenv("postgresPassword")
 DB_NAME <- Sys.getenv("postgresDatabase")
 DB_SCHEMA <- Sys.getenv("postgresSchema")
 
-drv <- DBI::dbDriver("PostgreSQL")
 
 con <- DBI::dbConnect(
-  drv,
+  drv = RPostgres::Postgres(),
   dbname = DB_NAME,
   host = DB_HOST,
   port = DB_PORT,
