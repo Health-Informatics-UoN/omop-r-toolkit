@@ -6,12 +6,11 @@ library(RPostgres)
 # Use the parameters named as the default 5s-TES agent
 DB_HOST <- Sys.getenv("postgresServer")
 # Can't find the port config name
-DB_PORT <- 5432
+DB_PORT <- Sys.getenv("postgresPort")
 DB_USERNAME <- Sys.getenv("postgresUsername")
 DB_PASSWORD <- Sys.getenv("postgresPassword")
 DB_NAME <- Sys.getenv("postgresDatabase")
 DB_SCHEMA <- Sys.getenv("postgresSchema")
-
 
 con <- DBI::dbConnect(
   drv = RPostgres::Postgres(),
@@ -24,6 +23,7 @@ con <- DBI::dbConnect(
 
 cdm <- cdmFromCon(con = con, 
                   cdmSchema = DB_SCHEMA, 
+                  writeSchema = DB_SCHEMA,
                   cdmName = "postgres_omop")
 
 print(names(cdm))
