@@ -1,0 +1,9 @@
+FROM omop-tools
+
+RUN apt-get install libpq-dev libssl-dev pkg-config
+
+RUN install2.r --error --ncpus 2 \
+    RPostgres
+
+RUN mkdir -p /output /jdbc \
+    && R -e 'DatabaseConnector::downloadJdbcDrivers("postgresql", pathToDriver = "/jdbc")'
