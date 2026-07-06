@@ -25,7 +25,8 @@ RUN install2.r --error --ncpus 2 \
     CDMConnector \
     CodelistGenerator \
     omopgenerics \
-    PatientProfiles
+    PatientProfiles \
+    CirceR
 
 COPY . .
     
