@@ -15,7 +15,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* \
     && R CMD javareconf
 
-RUN install2.r --error --ncpus 2 \
+RUN install2.r --error --ncpus -1 \
     rJava \
     RPostgres \
     remotes \
