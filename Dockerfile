@@ -1,7 +1,5 @@
 FROM rocker/r-ver:4.4.1
 
-RUN /rocker_scripts/setup_R.sh https://packagemanager.posit.co/cran/__linux__/jammy/2023-01-29
-
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         openjdk-11-jdk \
