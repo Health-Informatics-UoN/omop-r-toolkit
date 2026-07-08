@@ -1,5 +1,0 @@
-FROM omop-tools-postgres
-
-COPY . .
-
-CMD ["Rscript", "./R/postgres-omop-env-connect.R"]

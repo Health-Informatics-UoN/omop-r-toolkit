@@ -10,15 +10,17 @@ RUN apt-get update \
         libbz2-dev \
         zlib1g-dev \
         pkg-config \
+        libpq-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && R CMD javareconf
 
 RUN install2.r --error --ncpus 2 \
     rJava \
+    RPostgres \
     remotes \
     ParallelLogger \
-    rjson \
+    jsonlite \
     docopt \
     SqlRender \
     DatabaseConnector \
@@ -33,7 +35,9 @@ RUN install2.r --error --ncpus 2 \
     DrugUtilisation \
     DrugExposureDiagnostics
 
+RUN mkdir -p /output /jdbc \
+    && R -e 'DatabaseConnector::downloadJdbcDrivers("postgresql", pathToDriver = "/jdbc")'
 
 COPY . .
     
-CMD ["Rscript", "hello.R"]
+CMD ["Rscript", "./R/count-cohorts.R"]
