@@ -2,7 +2,7 @@
 
 Packaging OMOP CDM R tools for use in [Five Safes TES](https://docs.federated-analytics.ac.uk/five_safes_tes)
 
-## Functions
+## Functions
 ### Count a cohort
 
 ```sh

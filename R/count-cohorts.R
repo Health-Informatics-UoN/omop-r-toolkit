@@ -38,4 +38,4 @@ cdm <- generateConceptCohortSet(
   requiredObservation = requiredObservation
 )
 
-print(cohortCount(cdm[[arguments$name]]))
+write.csv(summariseCohortCount(cdm[[arguments$name]]), "outputs/output.csv")
