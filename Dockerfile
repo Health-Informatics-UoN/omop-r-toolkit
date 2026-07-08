@@ -18,15 +18,21 @@ RUN install2.r --error --ncpus 2 \
     rJava \
     remotes \
     ParallelLogger \
+    rjson \
+    docopt \
     SqlRender \
     DatabaseConnector \
-    FeatureExtraction \
-    CohortGenerator \
-    CDMConnector \
-    CodelistGenerator \
     omopgenerics \
+    CDMConnector \
+    CohortGenerator \
+    CodelistGenerator \
     PatientProfiles \
-    CirceR
+    IncidencePrevalence \
+    CohortCharacteristics \
+    CohortSurvival \
+    DrugUtilisation \
+    DrugExposureDiagnostics
+
 
 COPY . .
     
