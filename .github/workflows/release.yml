@@ -40,6 +40,7 @@ jobs:
       packages: write
     env:
       registry: ghcr.io
+      repo_owner: health-informatics-uon
       image-name: omop-R-tools
       image-description: "Container image for OMOP R tools"
       context: .
@@ -70,7 +71,7 @@ jobs:
         env:
           DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
         with:
-          images: ${{ env.registry }}/${{ github.repository_owner }}/${{ env.image-name }}
+          images: ${{ env.registry }}/${{ env.repo_owner }}/${{ env.image-name }}
           tags: |
             type=sha
             ${{ github.sha }}
@@ -93,9 +94,9 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           annotations: ${{ steps.meta.outputs.annotations }}
           # Pulls the cache from the last 'edge' build
-          cache-from: type=registry,ref=${{ env.registry }}/${{ github.repository_owner }}/${{ env.image-name }}:edge
+          cache-from: type=registry,ref=${{ env.registry }}/${{ env.repo_owner }}/${{ env.image-name }}:edge
           # Pushes the new inline cache back to the 'edge' image (inline mode=max caches all stages)
-          cache-to: type=registry,ref=${{ env.registry }}/${{ github.repository_owner }}/${{ env.image-name }}:edge,mode=max
+          cache-to: type=registry,ref=${{ env.registry }}/${{ env.repo_owner }}/${{ env.image-name }}:edge,mode=max
   # semver-container:
   #   uses: health-informatics-uon/workflows/.github/workflows/semver-container.yml@1.4.9
   #   needs: [release, publish-container]
