@@ -42,6 +42,7 @@ jobs:
       registry: ghcr.io
       repo_owner: health-informatics-uon
       image-name: omop-r-tools
+
       image-description: "Container image for OMOP R tools"
       context: .
       dockerfile: ./Dockerfile
