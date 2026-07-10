@@ -10,7 +10,7 @@ Options:
   --end=<end>                   How the cohort end date should be defined. One of "observation_period_end_date", a numeric scalar for the number of days, or "event_end_date" [default: observation_period_end_date]
   --requiredObservation=<days>  Comma-separated pair of days of required observation time prior,post index, e.g. "0,0" [default: 0,0]
   --conceptSet=<json>           JSON string describing the concept set for the cohort ({"someName": [1234, 5678],...})
-  --output-path=<output_path>   Path to write the output csv to [default: output.json]
+  --output-path=<output_path>   Path to write the output csv to [default: outputs/output.csv]
 
 ' -> doc
 
@@ -39,4 +39,4 @@ cdm <- generateConceptCohortSet(
   requiredObservation = requiredObservation
 )
 
-write.csv(summariseCohortCount(cdm[[arguments$name]]), arguments$output_path)
+write.table(summariseCohortCount(cdm[[arguments$name]]), arguments$output_path)
