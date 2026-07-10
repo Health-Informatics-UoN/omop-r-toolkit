@@ -33,18 +33,18 @@ jobs:
   #     dockerfile: ./Dockerfile
   #     platforms: linux/amd64,linux/arm64
   #   secrets: inherit
+  #   I've copied in Andy's publish-container workflow, but added caching actions because the R builds are so sloooooow
   publish-container:
-    with:
-      image-name: omop-R-tools
-      image-description: "Container image for OMOP R tools"
-      registry: ghcr.io
-      context: .
-      dockerfile: ./Dockerfile
-      platforms: linux/amd64,linux/arm64
-    secrets: inherit
     runs-on: ubuntu-latest
     permissions:
       packages: write
+    env:
+      registry: ghcr.io
+      image-name: omop-R-tools
+      image-description: "Container image for OMOP R tools"
+      context: .
+      dockerfile: ./Dockerfile
+      platforms: linux/amd64,linux/arm64
     steps:
       - name: Check out the repo
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -70,20 +70,12 @@ jobs:
         env:
           DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
         with:
-          images: ${{ env.registry }}/${{ env.repo-owner }}/${{ env.image-name }}
-          # Tag notes:
-          # - RFC3339 is not suitable for docker tags, so we squash the date
-          # - We tag both the short (7-char prefixed) and full sha commit hashes; both are useful
-          # - `edge` represents latest main branch commit (potentially unstable)
+          images: ${{ env.registry }}/${{ github.repository_owner }}/${{ env.image-name }}
           tags: |
             type=sha
             ${{ github.sha }}
             type=raw,value={{date 'YYYYMMDDHHmmss[Z]'}}
             edge
-          # Label notes:
-          # - Static labels are applied in the Dockerfile
-          # - Date format in `org.opencontainers.image.created` must be RFC3339
-          # - version should be considered a semver candidate only, unless revision aligns with a git tag
           labels: |
             org.opencontainers.image.revision={{sha}}
             org.opencontainers.image.created={{date 'YYYY-MM-DD HH:mm:ss[Z]'}}
@@ -100,8 +92,10 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           annotations: ${{ steps.meta.outputs.annotations }}
-          cache-from: type=registry,ref=${{ env.registry }}/${{ env.repo-owner }}/${{ env.image-name }}:edge
-
+          # Pulls the cache from the last 'edge' build
+          cache-from: type=registry,ref=${{ env.registry }}/${{ github.repository_owner }}/${{ env.image-name }}:edge
+          # Pushes the new inline cache back to the 'edge' image (inline mode=max caches all stages)
+          cache-to: type=registry,ref=${{ env.registry }}/${{ github.repository_owner }}/${{ env.image-name }}:edge,mode=max
   # semver-container:
   #   uses: health-informatics-uon/workflows/.github/workflows/semver-container.yml@1.4.9
   #   needs: [release, publish-container]
