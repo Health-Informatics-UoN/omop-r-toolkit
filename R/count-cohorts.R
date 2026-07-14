@@ -29,10 +29,8 @@ requiredObservation <- as.numeric(strsplit(arguments$requiredObservation, ",")[[
 # conceptSet arrives as a JSON string - parse it into an R list
 conceptSet <- fromJSON(arguments$conceptSet)
 
-cdm <- connectFiveSafesTESPg("postgres_omop", arguments$name)
+cdm <- connectFiveSafesTESPg("postgres_omop")
 
-# create a separate object for the cohorts to make dropping the tables neater later
-# If you follow the docs and modify the existing cdm object, you can't use dropPrefixTables
 cdm_cohorts <- generateConceptCohortSet(
   cdm = cdm,
   name = arguments$name,
@@ -44,5 +42,4 @@ cdm_cohorts <- generateConceptCohortSet(
 
 write.table(summariseCohortCount(cdm_cohorts[[arguments$name]]), arguments$output_path)
 
-class(cdm) <- c("db_cdm", class(cdm))
-cdmDisconnect(cdm, dropPrefixTables=TRUE)
+cdmDisconnect(cdm)
