@@ -45,4 +45,4 @@ cdm_cohorts <- generateConceptCohortSet(
 write.table(summariseCohortCount(cdm_cohorts[[arguments$name]]), arguments$output_path)
 
 class(cdm) <- c("db_cdm", class(cdm))
-CDMConnector:::cdmDisconnect.db_cdm(cdm, dropPrefixTables = TRUE)
+cdmDisconnect(cdm, dropPrefixTables=TRUE)
