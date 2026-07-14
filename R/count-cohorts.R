@@ -20,7 +20,6 @@ library(CohortCharacteristics)
 library(docopt)
 library(jsonlite)
 source("R/postgres-connect-5s-tes.R")
-source("R/cleanCohortTables.R")
 
 arguments <- docopt(doc, version = "Count cohorts 0.1.0")
 
@@ -30,8 +29,11 @@ requiredObservation <- as.numeric(strsplit(arguments$requiredObservation, ",")[[
 # conceptSet arrives as a JSON string - parse it into an R list
 conceptSet <- fromJSON(arguments$conceptSet)
 
-cdm <- connectFiveSafesTESPg("postgres_omop")
-cdm <- generateConceptCohortSet(
+cdm <- connectFiveSafesTESPg("postgres_omop", arguments$name)
+
+# create a separate object for the cohorts to make dropping the tables neater later
+# If you follow the docs and modify the existing cdm object, you can't use dropPrefixTables
+cdm_cohorts <- generateConceptCohortSet(
   cdm = cdm,
   name = arguments$name,
   limit = if (arguments$alloccurrences) "all" else "first",
@@ -40,6 +42,7 @@ cdm <- generateConceptCohortSet(
   requiredObservation = requiredObservation
 )
 
-write.table(summariseCohortCount(cdm[[arguments$name]]), arguments$output_path)
+write.table(summariseCohortCount(cdm_cohorts[[arguments$name]]), arguments$output_path)
 
-cdmDisconnect(cdm, dropPrefixTables=arguments$name)
+class(cdm) <- c("db_cdm", class(cdm))
+CDMConnector:::cdmDisconnect.db_cdm(cdm, dropPrefixTables = TRUE)
