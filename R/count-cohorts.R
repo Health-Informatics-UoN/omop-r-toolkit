@@ -20,6 +20,7 @@ library(CohortCharacteristics)
 library(docopt)
 library(jsonlite)
 source("R/postgres-connect-5s-tes.R")
+source("R/cleanCohortTables.R")
 
 arguments <- docopt(doc, version = "Count cohorts 0.1.0")
 
@@ -40,3 +41,5 @@ cdm <- generateConceptCohortSet(
 )
 
 write.table(summariseCohortCount(cdm[[arguments$name]]), arguments$output_path)
+
+cdmDisconnect(cdm, dropPrefixTables=arguments$name)
