@@ -22,8 +22,10 @@ connectFiveSafesTESPg <- function(cdmName) {
     user = DB_USERNAME,
   )
   
-  cdmFromCon(con = con,
-             cdmSchema = DB_SCHEMA, 
-             writeSchema = DB_SCHEMA,
-             cdmName = cdmName)
+  cdmFromCon(
+    con = con,
+    cdmSchema = DB_SCHEMA, 
+    writeSchema = DB_SCHEMA,
+    cdmName = cdmName,
+  )
 }

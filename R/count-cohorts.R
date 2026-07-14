@@ -20,6 +20,7 @@ library(CohortCharacteristics)
 library(docopt)
 library(jsonlite)
 source("R/postgres-connect-5s-tes.R")
+source("R/cleanCohortTables.R")
 
 arguments <- docopt(doc, version = "Count cohorts 0.1.0")
 
@@ -30,7 +31,8 @@ requiredObservation <- as.numeric(strsplit(arguments$requiredObservation, ",")[[
 conceptSet <- fromJSON(arguments$conceptSet)
 
 cdm <- connectFiveSafesTESPg("postgres_omop")
-cdm <- generateConceptCohortSet(
+
+cdm_cohorts <- generateConceptCohortSet(
   cdm = cdm,
   name = arguments$name,
   limit = if (arguments$alloccurrences) "all" else "first",
@@ -39,4 +41,8 @@ cdm <- generateConceptCohortSet(
   requiredObservation = requiredObservation
 )
 
-write.table(summariseCohortCount(cdm[[arguments$name]]), arguments$output_path)
+write.table(summariseCohortCount(cdm_cohorts[[arguments$name]]), arguments$output_path)
+
+cdm <- cleanUpTables(cdm, arguments$name)
+
+cdmDisconnect(cdm)
