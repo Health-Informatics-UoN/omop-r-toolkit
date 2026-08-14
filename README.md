@@ -52,6 +52,8 @@ The scripts have a string at the beginning which defines the help message for th
 #### Do something, hopefully useful
 
 The scripts use [Darwin-EU](github.com/darwin-eu/) libraries to interact with the OMOP-CDM, following examples in their excellent documentation.
+They all assume you are using a PostgreSQL database to hold your OMOP-CDM.
+The utility script [for database connection](./R/postgres-connect-5s-tes.R) uses environment variables matching the 5s-TES defaults to define your database credentials.
 
 #### Write the output somewhere
 

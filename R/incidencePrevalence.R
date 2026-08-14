@@ -21,3 +21,13 @@ Options:
   --denominatorDaysPriorObservation     The number of days of prior observation observed in the database required for an individual to start contributing time in a cohort.
   
 ' -> doc
+
+library(dplyr, warn.conflicts = FALSE)
+library(docopt)
+library(jsonlite)
+source("R/postgres-connect-5s-tes.R")
+source("R/cleanCohortTables.R")
+
+arguments <- docopt(doc, version = "Incidence and Prevalence 0.1.0")
+
+cdm <- connectFiveSafesTESPg("postgres_omop")
