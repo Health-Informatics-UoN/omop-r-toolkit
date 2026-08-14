@@ -2,15 +2,17 @@
 
 Packaging OMOP CDM R tools for use in [Five Safes TES](https://docs.federated-analytics.ac.uk/five_safes_tes)(5s-TES)
 
+[Skip to the scripts](#scripts)
+
 ## How the tools are packaged
 
 ### Overview
 
 The tools are made to run as a container, designed for eyes-off analysis using 5s-TES.
-5s-TES works by a [Task Execution Service (TES)](https://www.ga4gh.org/product/task-execution-service-tes/) picking up a task sent through a submission layer.
+5s-TES works by a [Task Execution Service (TES)](https://www.ga4gh.org/product/task-execution-service-tes/) engine picking up a task.
 A task is some computation carried out by "executors": containers that run some program, then write an output.
 To make a reusable executor, this toolkit has a series of scripts in `/R` which can be run using `Rscript`.
-This means users can pass commands to the container when it is running in 5s-TES to control what happens inside a Trusted Research Environment (TRE).
+This means users can pass commands to the container when it is running in 5s-TES to control how the container executes inside a Trusted Research Environment (TRE).
 
 ### Commands
 
@@ -45,17 +47,18 @@ To fit with this, all the scripts are written to run in three steps:
 
 #### Parse command-line arguments
 
-To do 1., the scripts have a string at the beginning which defines the help message for the CLI tool, then use [docopt](https://github.com/docopt/docopt.R) so this can be used as arguments to the script's functions.
+The scripts have a string at the beginning which defines the help message for the CLI tool, then use [docopt](https://github.com/docopt/docopt.R) so this can be used as arguments to the script's functions.
 
 #### Do something, hopefully useful
 
-To do 2., the scripts use [Darwin-EU](github.com/darwin-eu/) libraries to interact with the OMOP-CDM, following examples in their excellent documentation.
+The scripts use [Darwin-EU](github.com/darwin-eu/) libraries to interact with the OMOP-CDM, following examples in their excellent documentation.
 
 #### Write the output somewhere
 
-When writing the output (3.), the scripts have a CLI argument specifying at least one output path.
+When writing the output the scripts have a CLI argument specifying at least one output path.
 A TES message allows you to specify where you can collect your outputs from, for example a directory in an s3 bucket.
 If you want to use your outputs afterwards, make sure these match!
+
 In the example above, the `output-path` is `outputs/output.csv`, which means if the `/outputs` directory is described in the TES message, you can pick up your results from there later.
 
 
