@@ -12,7 +12,7 @@ connectFiveSafesTESPg <- function(cdmName) {
   DB_PASSWORD <- Sys.getenv("postgresPassword")
   DB_NAME <- Sys.getenv("postgresDatabase")
   DB_SCHEMA <- Sys.getenv("postgresSchema")
-  
+
   con <- DBI::dbConnect(
     drv = RPostgres::Postgres(),
     dbname = DB_NAME,
@@ -21,10 +21,10 @@ connectFiveSafesTESPg <- function(cdmName) {
     password = DB_PASSWORD,
     user = DB_USERNAME,
   )
-  
+
   cdmFromCon(
     con = con,
-    cdmSchema = DB_SCHEMA, 
+    cdmSchema = DB_SCHEMA,
     writeSchema = DB_SCHEMA,
     cdmName = cdmName,
   )

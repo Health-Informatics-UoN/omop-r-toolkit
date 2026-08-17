@@ -19,6 +19,7 @@ library(CodelistGenerator)
 library(CohortCharacteristics)
 library(docopt)
 library(jsonlite)
+library(CDMConnector)
 source("R/postgres-connect-5s-tes.R")
 source("R/cleanCohortTables.R")
 
@@ -32,7 +33,7 @@ conceptSet <- fromJSON(arguments$conceptSet)
 
 cdm <- connectFiveSafesTESPg("postgres_omop")
 
-cdm_cohorts <- generateConceptCohortSet(
+cdm_cohorts <- CodelistGenerator::generateConceptCohortSet(
   cdm = cdm,
   name = arguments$name,
   limit = if (arguments$alloccurrences) "all" else "first",
@@ -45,4 +46,4 @@ write.table(summariseCohortCount(cdm_cohorts[[arguments$name]]), arguments$outpu
 
 cdm <- cleanUpTables(cdm, arguments$name)
 
-cdmDisconnect(cdm)
+CDMConnector::cdmDisconnect(cdm)
