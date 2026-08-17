@@ -1,0 +1,14 @@
+Package: omopRToolkit
+Title: Bundling of OMOP tools for eyes-off analysis
+Version: 0.1.0
+Authors@R: 
+    person("James", "Mitchell-White", , "james.mitchell-white1@nottingham.ac.uk", role = c("aut", "cre"))
+Description: Darwin-EU have provided R tools for interacting with OMOP-CDM databases.
+    Here, we provide some of these tools in a single container with some scripts to run these analyses with remote job execution.
+License: use_mit_license()
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 8.1.0
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
