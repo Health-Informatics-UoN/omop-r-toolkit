@@ -11,7 +11,7 @@ Packaging OMOP CDM R tools for use in [Five Safes TES](https://docs.federated-an
 The tools are made to run as a container, designed for eyes-off analysis using 5s-TES.
 5s-TES works by a [Task Execution Service (TES)](https://www.ga4gh.org/product/task-execution-service-tes/) engine picking up a task.
 A task is some computation carried out by "executors": containers that run some program, then write an output, and are defined with a JSON string following the schema for the TES "Create task" API.
-To make a reusable executor, this toolkit has a series of scripts in `/R` which can be run using `Rscript`.
+To make a reusable executor, this toolkit has a series of scripts in `/inst/scripts` which can be run using `Rscript`.
 This means users can pass commands to the container when it is running in 5s-TES to control how the container executes inside a Trusted Research Environment (TRE).
 
 ### Commands
@@ -19,16 +19,16 @@ This means users can pass commands to the container when it is running in 5s-TES
 For example, [counting a cohort](#count-a-cohort) can be done locally using the command line like so:
 
 ```bash
-Rscript R/count-cohorts.R skin_cancer_20260713 --conceptSet="{'neoplasm': [139750]}" --output-path=outputs/output.csv
+Rscript inst/scripts/count-cohorts.R skin_cancer_20260713 --conceptSet="{'neoplasm': [139750]}" --output-path=outputs/output.csv
 ```
 
-This will run the `R/count-cohorts.R` script with the command-line arguments specified.
+This will run the `inst/scripts/count-cohorts.R` script with the command-line arguments specified.
 Running this as a TES task is similar, except the tokens have to be passed as an array:
 
 ```json
 [
     "Rscript",
-    "R/count-cohorts.R",
+    "inst/scripts/count-cohorts.R",
     "skin_cancer_20260713",
     "--conceptSet={\"neoplasm\": [139750]}",
     "--output-path=outputs/output.csv"
@@ -92,7 +92,7 @@ This means a basic example of running this using a TES message looks like this:
                            "image": "ghcr.io/health-informatics-uon/omop-r-tools:sha-8071279",
                            "command": [
                                     "Rscript",
-                                    "R/count-cohorts.R",
+                                    "inst/scripts/count-cohorts.R",
                                     "skin_cancer_20260713",
                                     "--conceptSet={\"neoplasm\": [139750]}",
                                     "--output-path=outputs/output.csv"
