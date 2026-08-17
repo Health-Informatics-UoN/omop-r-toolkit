@@ -13,15 +13,15 @@ Usage:
 Options:
   -h --help                                           Show this screen
   --version                                           Show version
-  --denominatorCohortDateRange=<dates>                Optional comma-separated pair of dates ("YYYY-MM-DD").The first indicating the earliest cohort start date and the second indicating the latest possible cohort end date. [default: ""]
-  --denominatorAgeGroup=<groups>                      A list of age groups for which cohorts will be generated. [default: ""]
+  --denominatorCohortDateRange=<dates>                Optional comma-separated pair of dates ("YYYY-MM-DD").The first indicating the earliest cohort start date and the second indicating the latest possible cohort end date. [default: NA,NA]
+  --denominatorAgeGroup=<groups>                      A list of age groups for which cohorts will be generated. [default: [[0,150]]]
   --denominatorBothOff                                Do not have a cohort of people assigned either Male or Female
   --denominatorMale                                   Have a cohort of people assigned Male
   --denominatorFemale                                 Have a cohort of people assigned Female
-  --denominatorDaysPriorObservation                   The number of days of prior observation observed in the database required for an individual to start contributing time in a cohort. [default: ""]
-  --estimateIncidenceOutputPath=<output_path>         A path to which the output of estimateIncidence is saved. [default: ""]
-  --estimatePointPrevalenceOutputPath=<output_path>   A path to which the output of estimateIncidence is saved. [default: ""]
-  --estimatePeriodPrevalenceOutputPath=<output_path>  A path to which the output of estimateIncidence is saved. [default: ""]
+  --denominatorDaysPriorObservation                   The number of days of prior observation observed in the database required for an individual to start contributing time in a cohort. [default: ]
+  --estimateIncidenceOutputPath=<output_path>         A path to which the output of estimateIncidence is saved. [default: ]
+  --estimatePointPrevalenceOutputPath=<output_path>   A path to which the output of estimatePointPrevalence is saved. [default: ]
+  --estimatePeriodPrevalenceOutputPath=<output_path>  A path to which the output of estimatePeriodPrevalence is saved. [default: ]
 ' -> doc
 
 library(dplyr, warn.conflicts = FALSE)
@@ -31,20 +31,35 @@ source("R/postgres-connect-5s-tes.R")
 source("R/cleanCohortTables.R")
 source("R/parseDateVector.R")
 source("R/cohortGenders.R")
+source("R/parseAgeGroups.R")
 
 arguments <- docopt(doc, version = "Incidence and Prevalence 0.1.0")
 
-print(arguments)
+# If you don't specify anything, the defaults are:
+# $ <denominatorCohortName>             : chr "test"
+# $ help                                : logi FALSE
+# $ version                             : logi FALSE
+# $ denominatorCohortDateRange          : NULL
+# $ denominatorAgeGroup                 : NULL
+# $ denominatorBothOff                  : logi FALSE
+# $ denominatorMale                     : logi FALSE
+# $ denominatorFemale                   : logi FALSE
+# $ denominatorDaysPriorObservation     : logi FALSE
+# $ estimateIncidenceOutputPath         : NULL
+# $ estimatePointPrevalenceOutputPath   : NULL
+# $ estimatePeriodPrevalenceOutputPath  : NULL
+# $ denominatorCohortName               : chr "test"
 
-if (is.null(attr(arguments, estimateIncidenceOutputPath))
-  & is.null(attr(arguments, estimatePointPrevalenceOutputPath))
-  & is.null(attr(arguments, estimatePeriodPrevalenceOutputPath))) {
+if (is.null(arguments$estimateIncidenceOutputPath)
+  & is.null(arguments$estimatePointPrevalenceOutputPath)
+  & is.null(arguments$estimatePeriodPrevalenceOutputPath)) {
     stop("You need to specify at least one output path for an IncidencePrevalence function")
   }
 
-denominatorCohortDateRange = parseNDates(arguments$denominatorCohortDateRange, 2)
-denominatorAgeGroup = as.numeric(strsplit(arguments$denominatorAgeGroup, ",")[[1]])
-denominatorSex = cohortGenders(
+denominatorCohortDateRange <- ifelse((arguments$denominatorCohortDateRange == "NA,NA"), as.Date(c(NA, NA)), parseNDates(arguments$denominatorCohortDateRange, 2))
+denominatorAgeGroup <- parseAgeGroups(arguments$denominatorAgeGroup)
+print(denominatorAgeGroup)
+denominatorSex <- cohortGenders(
   !arguments$denominatorBothOff,
   arguments$denominatorFemale,
   arguments$denominatorMale
