@@ -22,11 +22,12 @@ library(jsonlite)
 library(CDMConnector)
 source("R/postgres-connect-5s-tes.R")
 source("R/cleanCohortTables.R")
+source("R/parseIntList.R")
 
 arguments <- docopt(doc, version = "Count cohorts 0.1.0")
 
 # requiredObservation arrives as a string like "0,0" - split into a numeric vector of length 2
-requiredObservation <- as.numeric(strsplit(arguments$requiredObservation, ",")[[1]])
+requiredObservation <- parseNInts(arguments$requiredObservation, 2)
 
 # conceptSet arrives as a JSON string - parse it into an R list
 conceptSet <- fromJSON(arguments$conceptSet)

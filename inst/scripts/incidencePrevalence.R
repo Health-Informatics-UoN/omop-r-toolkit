@@ -18,7 +18,12 @@ Options:
   --denominatorBothOff                                Do not have a cohort of people assigned either Male or Female
   --denominatorMale                                   Have a cohort of people assigned Male
   --denominatorFemale                                 Have a cohort of people assigned Female
-  --denominatorDaysPriorObservation                   The number of days of prior observation observed in the database required for an individual to start contributing time in a cohort. [default: ]
+  --denominatorDaysPriorObservation                   The number of days of prior observation observed in the database required for an individual to start contributing time in a cohort. [default: 0]
+  --requirementInteractions                           If TRUE, cohorts will be created for all combinations of ageGroup, sex, and daysPriorObservation. If FALSE, only the first value specified for the other factors will be used. Consequently, order of values matters when requirementInteractions is FALSE. [default: TRUE]
+  --outcomeAllOccurrences                             Include all occurrences of events in the outcome cohort. Otherwise, only includes the first
+  --outcomeEnd=<end>                                  How the outcome cohort end date should be defined. One of "observation_period_end_date", a numeric scalar for the number of days, or "event_end_date" [default: observation_period_end_date]
+  --outcomeRequiredObservation=<days>                 Comma-separated pair of days of required observation time prior, post index for the outcome cohort, e.g. "0,0" [default: 0,0]
+  --outcomeConceptSet=<json>                          JSON string describing the concept set for the outcome cohort ({"someName": [1234, 5678],...})
   --estimateIncidenceOutputPath=<output_path>         A path to which the output of estimateIncidence is saved. [default: ]
   --estimatePointPrevalenceOutputPath=<output_path>   A path to which the output of estimatePointPrevalence is saved. [default: ]
   --estimatePeriodPrevalenceOutputPath=<output_path>  A path to which the output of estimatePeriodPrevalence is saved. [default: ]
@@ -58,7 +63,6 @@ if (is.null(arguments$estimateIncidenceOutputPath)
 
 denominatorCohortDateRange <- ifelse((arguments$denominatorCohortDateRange == "NA,NA"), as.Date(c(NA, NA)), parseNDates(arguments$denominatorCohortDateRange, 2))
 denominatorAgeGroup <- parseAgeGroups(arguments$denominatorAgeGroup)
-print(denominatorAgeGroup)
 denominatorSex <- cohortGenders(
   !arguments$denominatorBothOff,
   arguments$denominatorFemale,
@@ -69,4 +73,30 @@ if (length(denominatorSex) == 0) {
   stop("You need at least one sex cohort")
 }
 
-#cdm <- connectFiveSafesTESPg("postgres_omop")
+cdm <- connectFiveSafesTESPg("postgres_omop")
+
+cdm <- IncidencePrevalence::generateDenominatorCohortSet(
+  cdm = cdm,
+  name = arguments$denominatorCohortName,
+  cohortDateRange = denominatorCohortDateRange,
+  ageGroup = denominatorAgeGroup,
+  sex = denominatorSex,
+  daysPriorObservation = arguments$denominatorDaysPriorObservation,
+  requirementInteractions = arguments$requirementInteractions
+)
+
+# So far we've only used concept cohort definitions. When we've explored other packages for creating cohorts, we can add other options.
+
+cdm_cohorts <- CodelistGenerator::generateConceptCohortSet(
+  cdm = cdm,
+  name = "outcome",
+  limit = if (arguments$outcomeAllOccurrences) "all" else "first",
+  conceptSet = conceptSet,
+  end = arguments$end,
+  requiredObservation = requiredObservation
+)
+
+
+cdm <- cleanUpTables(cdm, arguments$denominatorCohortName)
+
+CDMConnector::cdmDisconnect(cdm)
