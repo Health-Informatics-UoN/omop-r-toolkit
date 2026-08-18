@@ -13,15 +13,18 @@ Usage:
 Options:
   -h --help                                           Show this screen
   --version                                           Show version
-  --denominatorCohortDateRange=<dates>                Optional comma-separated pair of dates ("YYYY-MM-DD").The first indicating the earliest cohort start date and the second indicating the latest possible cohort end date. [default: NA,NA]
+  --denominatorCohortDateRange=<dates>                Optional comma-separated pair of dates ("YYYY-MM-DD").The first indicating the earliest cohort start date and the second indicating the latest possible cohort end date. [default: 1900-01-01,2100-01-01]
   --denominatorAgeGroup=<groups>                      A list of age groups for which cohorts will be generated. [default: [[0,150]]]
   --denominatorBothOff                                Do not have a cohort of people assigned either Male or Female
   --denominatorMale                                   Have a cohort of people assigned Male
   --denominatorFemale                                 Have a cohort of people assigned Female
-  --denominatorDaysPriorObservation                   The number of days of prior observation observed in the database required for an individual to start contributing time in a cohort. [default: 0]
+  --denominatorDaysPriorObservation=<days>            The number of days of prior observation observed in the database required for an individual to start contributing time in a cohort. [default: 0]
   --requirementInteractions                           If TRUE, cohorts will be created for all combinations of ageGroup, sex, and daysPriorObservation. If FALSE, only the first value specified for the other factors will be used. Consequently, order of values matters when requirementInteractions is FALSE. [default: TRUE]
-  --outcomeCohortName                                 Name of the outcome cohort in the cdm database
+  --outcomeCohortName=<cohortName>                    Name of the outcome cohort in the cdm database
   --estimateIncidenceOutputPath=<output_path>         A path to which the output of estimateIncidence is saved. [default: ]
+  --incidenceInterval=<interval>                      The interval for incidence, if estimating incidence. [default: years]
+  --incidenceOutcomeWashout=<washout>                 The washout for incidence, if estimating incidence. [default: 0]
+  --incidenceRepeatedEvents                           Whether to measure repeated events if estimating incidence
   --estimatePointPrevalenceOutputPath=<output_path>   A path to which the output of estimatePointPrevalence is saved. [default: ]
   --estimatePeriodPrevalenceOutputPath=<output_path>  A path to which the output of estimatePeriodPrevalence is saved. [default: ]
 ' -> doc
@@ -38,28 +41,13 @@ source("R/parseIntList.R")
 
 arguments <- docopt(doc, version = "Incidence and Prevalence 0.1.0")
 
-# If you don't specify anything, the defaults are:
-# $ <denominatorCohortName>             : chr "test"
-# $ help                                : logi FALSE
-# $ version                             : logi FALSE
-# $ denominatorCohortDateRange          : NULL
-# $ denominatorAgeGroup                 : NULL
-# $ denominatorBothOff                  : logi FALSE
-# $ denominatorMale                     : logi FALSE
-# $ denominatorFemale                   : logi FALSE
-# $ denominatorDaysPriorObservation     : logi FALSE
-# $ estimateIncidenceOutputPath         : NULL
-# $ estimatePointPrevalenceOutputPath   : NULL
-# $ estimatePeriodPrevalenceOutputPath  : NULL
-# $ denominatorCohortName               : chr "test"
-
 if (is.null(arguments$estimateIncidenceOutputPath)
   & is.null(arguments$estimatePointPrevalenceOutputPath)
   & is.null(arguments$estimatePeriodPrevalenceOutputPath)) {
     stop("You need to specify at least one output path for an IncidencePrevalence function")
   }
 
-denominatorCohortDateRange <- ifelse((arguments$denominatorCohortDateRange == "NA,NA"), as.Date(c(NA, NA)), parseNDates(arguments$denominatorCohortDateRange, 2))
+denominatorCohortDateRange <- parseNDates(arguments$denominatorCohortDateRange, 2)
 denominatorAgeGroup <- parseAgeGroups(arguments$denominatorAgeGroup)
 denominatorSex <- cohortGenders(
   !arguments$denominatorBothOff,
@@ -71,9 +59,7 @@ if (length(denominatorSex) == 0) {
   stop("You need at least one sex cohort")
 }
 
-requiredObservation <- parseNInts(arguments$outcomeRequiredObservation, 2)
-
-cdm <- connectFiveSafesTESPg("postgres_omop")
+cdm <- connectFiveSafesTESPg("postgres_omop", cohortTables = arguments$outcomeCohortName)
 
 cdm <- IncidencePrevalence::generateDenominatorCohortSet(
   cdm = cdm,
@@ -81,9 +67,20 @@ cdm <- IncidencePrevalence::generateDenominatorCohortSet(
   cohortDateRange = denominatorCohortDateRange,
   ageGroup = denominatorAgeGroup,
   sex = denominatorSex,
-  daysPriorObservation = arguments$denominatorDaysPriorObservation,
+  daysPriorObservation = as.numeric(arguments$denominatorDaysPriorObservation),
   requirementInteractions = arguments$requirementInteractions
 )
 
+if (!is.null(arguments$estimateIncidenceOutputPath)) {
+  inc <- IncidencePrevalence::estimateIncidence(
+    cdm = cdm,
+    denominatorTable = arguments$denominatorCohortName,
+    outcomeTable = arguments$outcomeCohortName,
+    interval = arguments$incidenceInterval,
+    outcomeWashout = as.numeric(arguments$incidenceOutcomeWashout),
+    repeatedEvents = arguments$incidenceRepeatedEvents
+  )
+  write.csv(IncidencePrevalence::asIncidenceResult(inc), file = arguments$estimateIncidenceOutputPath)
+}
 
 CDMConnector::cdmDisconnect(cdm)

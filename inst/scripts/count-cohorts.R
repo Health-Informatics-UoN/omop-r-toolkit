@@ -15,9 +15,9 @@ library(docopt)
 library(CDMConnector)
 source("R/postgres-connect-5s-tes.R")
 
-cdm <- connectFiveSafesTESPg("postgres_omop")
-
 arguments <- docopt(doc, version = "Count cohorts 0.1.0")
+
+cdm <- connectFiveSafesTESPg("postgres_omop", cohortTables = arguments$name)
 
 write.table(summariseCohortCount(cdm[[arguments$name]]), arguments$output_path)
 

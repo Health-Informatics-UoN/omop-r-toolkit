@@ -17,7 +17,7 @@ source("R/parseIntList.R")
 
 arguments <- docopt(doc, version = "Clean up cohort tables 0.1.0")
 
-cdm <- connectFiveSafesTESPg("postgres_omop")
+cdm <- connectFiveSafesTESPg("postgres_omop", cohortTables = arguments$name)
 
 cdm <- cleanUpTables(cdm, arguments$name)
 
