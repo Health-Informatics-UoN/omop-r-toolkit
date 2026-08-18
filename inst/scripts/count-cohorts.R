@@ -33,6 +33,7 @@ conceptSet <- fromJSON(arguments$conceptSet)
 
 cdm <- connectFiveSafesTESPg("postgres_omop")
 
+# At the moment, we're just doing concept cohorts. We can add other ways of creating a cohort later.
 cdm_cohorts <- CodelistGenerator::generateConceptCohortSet(
   cdm = cdm,
   name = arguments$name,
