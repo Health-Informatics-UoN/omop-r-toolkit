@@ -26,7 +26,11 @@ Options:
   --incidenceOutcomeWashout=<washout>                 The washout for incidence, if estimating incidence. [default: 0]
   --incidenceRepeatedEvents                           Whether to measure repeated events if estimating incidence
   --estimatePointPrevalenceOutputPath=<output_path>   A path to which the output of estimatePointPrevalence is saved. [default: ]
+  --pointPrevalenceInterval=<interval>                The interval for point prevalence, if estimating point prevalence [default: Years]
+  --pointPrevalenceTimePoint=<timePoint>              The time point for point prevalence, if estimating point prevalence [default: start]
   --estimatePeriodPrevalenceOutputPath=<output_path>  A path to which the output of estimatePeriodPrevalence is saved. [default: ]
+  --periodPrevalenceInterval=<interval>               The interval for period prevalence, if estimating period prevalence [default: Years]
+  --periodPrevalenceTimePoint=<timePoint>             The time period for period prevalence, if estimating period prevalence [default: start]
 ' -> doc
 
 library(dplyr, warn.conflicts = FALSE)
@@ -81,6 +85,28 @@ if (!is.null(arguments$estimateIncidenceOutputPath)) {
     repeatedEvents = arguments$incidenceRepeatedEvents
   )
   write.csv(IncidencePrevalence::asIncidenceResult(inc), file = arguments$estimateIncidenceOutputPath)
+}
+
+if (!is.null(arguments$estimatePointPrevalenceOutputPath)) {
+  prev <- IncidencePrevalence::estimatePointPrevalence(
+    cdm = cdm,
+    denominatorTable = arguments$denominatorCohortName,
+    outcomeTable = arguments$outcomeCohortName,
+    interval = arguments$pointPrevalenceInterval,
+    timePoint = arguments$pointPrevalenceTimePoint
+  )
+  write.csv(IncidencePrevalence::asIncidenceResult(prev), file = arguments$estimatePointPrevalenceOutputPath)
+}
+
+if (!is.null(arguments$estimatePeriodPrevalenceOutputPath)) {
+  prev <- IncidencePrevalence::estimatePeriodPrevalence(
+    cdm = cdm,
+    denominatorTable = arguments$denominatorCohortName,
+    outcomeTable = arguments$outcomeCohortName,
+    interval = arguments$periodPrevalenceInterval,
+    timePoint = arguments$periodPrevalenceTimePoint
+  )
+  write.csv(IncidencePrevalence::asIncidenceResult(prev), file = arguments$estimatePeriodPrevalenceOutputPath)
 }
 
 CDMConnector::cdmDisconnect(cdm)
