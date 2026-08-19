@@ -95,7 +95,7 @@ if (!is.null(arguments$estimatePointPrevalenceOutputPath)) {
     interval = arguments$pointPrevalenceInterval,
     timePoint = arguments$pointPrevalenceTimePoint
   )
-  write.csv(IncidencePrevalence::asIncidenceResult(prev), file = arguments$estimatePointPrevalenceOutputPath)
+  write.csv(IncidencePrevalence::asPrevalenceResult(prev), file = arguments$estimatePointPrevalenceOutputPath)
 }
 
 if (!is.null(arguments$estimatePeriodPrevalenceOutputPath)) {
@@ -106,7 +106,7 @@ if (!is.null(arguments$estimatePeriodPrevalenceOutputPath)) {
     interval = arguments$periodPrevalenceInterval,
     timePoint = arguments$periodPrevalenceTimePoint
   )
-  write.csv(IncidencePrevalence::asIncidenceResult(prev), file = arguments$estimatePeriodPrevalenceOutputPath)
+  write.csv(IncidencePrevalence::asPrevalenceResult(prev), file = arguments$estimatePeriodPrevalenceOutputPath)
 }
 
 CDMConnector::cdmDisconnect(cdm)
