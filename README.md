@@ -8,7 +8,7 @@ Packaging OMOP CDM R tools for use in [Five Safes TES](https://docs.federated-an
 
 ### Overview
 
-The tools are made to run as a container, designed for eyes-off analysis using 5s-TES.
+The tools are made to run as containers, designed for eyes-off analysis using 5s-TES.
 5s-TES works by a [Task Execution Service (TES)](https://www.ga4gh.org/product/task-execution-service-tes/) engine picking up a task.
 A task is some computation carried out by "executors": containers that run some program, then write an output, and are defined with a JSON string following the schema for the TES "Create task" API.
 To make a reusable executor, this toolkit has a series of scripts in `/inst/scripts` which can be run using `Rscript`.
@@ -16,22 +16,21 @@ This means users can pass commands to the container when it is running in 5s-TES
 
 ### Commands
 
-For example, [counting a cohort](#count-a-cohort) can be done locally using the command line like so:
+For example, [defining a concept set cohort](#define-a-concept-cohort-set) can be done locally using the command line like so:
 
 ```bash
-Rscript inst/scripts/count-cohorts.R skin_cancer_20260713 --conceptSet="{'neoplasm': [139750]}" --output-path=outputs/output.csv
+Rscript inst/scripts/defineConceptCohortSet.R skin_cancer_20260713 --conceptSet="{'neoplasm': [139750]}"
 ```
 
-This will run the `inst/scripts/count-cohorts.R` script with the command-line arguments specified.
+This will run the `inst/scripts/defineConceptCohortSet.R` script with the command-line arguments specified.
 Running this as a TES task is similar, except the tokens have to be passed as an array:
 
 ```json
 [
     "Rscript",
-    "inst/scripts/count-cohorts.R",
+    "inst/scripts/defineConceptCohortSet.R",
     "skin_cancer_20260713",
     "--conceptSet={\"neoplasm\": [139750]}",
-    "--output-path=outputs/output.csv"
 ]
 ```
 
@@ -42,8 +41,8 @@ One "gotcha" here is that where you would use quotes to wrap JSON on the command
 To fit with this, all the scripts are written to run in three steps:
 
 1. Parse command-line arguments
-2. Do something, hopefullly useful
-3. Write the output somewhere
+2. Do something, hopefully useful
+3. Maybe write the output somewhere
 
 #### Parse command-line arguments
 
@@ -61,8 +60,17 @@ When writing the output the scripts have a CLI argument specifying at least one 
 A TES message allows you to specify where you can collect your outputs from, for example a directory in an s3 bucket.
 If you want to use your outputs afterwards, make sure these match!
 
-In the example above, the `output-path` is `outputs/output.csv`, which means if the `/outputs` directory is described in the TES message, you can pick up your results from there later.
+### Running an analysis
+In the example above, all that happens is that a cohort is created in the database.
+This is not a complete example of an analysis, which requires something to be done with that cohort.
+There are multiple ways of creating a cohort and multiple analyses that can be performed on created cohorts, the combinations of which would be complicated to support as single scripts, so the workflow for using these is:
 
+1. Define cohort(s) with a script (or scripts)
+2. Perform analyses with separate scripts
+3. Clean up your tables if necessary
+
+For example, you could run the container once, running the `defineConceptCohortSet` script, then run the container again with the `incidencePrevalence` script to estimate incidence, then run the container a final time with `cleanUpCohortTables` to tidy up.
+This might seem strange, running the same container three times, but this allows for a flexible, mix-and-match setup.
 
 ### All together, now
 
@@ -94,9 +102,22 @@ This means a basic example of running this using a TES message looks like this:
                            "image": "ghcr.io/health-informatics-uon/omop-r-tools:sha-8071279",
                            "command": [
                                     "Rscript",
-                                    "inst/scripts/count-cohorts.R",
+                                    "inst/scripts/defineConceptCohortSet.R",
                                     "skin_cancer_20260713",
                                     "--conceptSet={\"neoplasm\": [139750]}",
+                           ],
+                           "workdir": null,
+                           "stdin": null,
+                           "stdout": null,
+                           "stderr": null,
+                           "env": {}
+                  },
+                  {
+                           "image": "ghcr.io/health-informatics-uon/omop-r-tools:sha-8071279",
+                           "command": [
+                                    "Rscript",
+                                    "inst/scripts/count-cohorts.R",
+                                    "skin_cancer_20260713",
                                     "--output-path=outputs/output.csv"
                            ],
                            "workdir": null,
@@ -104,7 +125,21 @@ This means a basic example of running this using a TES message looks like this:
                            "stdout": null,
                            "stderr": null,
                            "env": {}
+                  },
+                  {
+                           "image": "ghcr.io/health-informatics-uon/omop-r-tools:sha-8071279",
+                           "command": [
+                                    "Rscript",
+                                    "inst/scripts/cleanUpCohortTables.R",
+                                    "skin_cancer_20260713",
+                           ],
+                           "workdir": null,
+                           "stdin": null,
+                           "stdout": null,
+                           "stderr": null,
+                           "env": {}
                   }
+
          ],
          "volumes": null,
          "tags": {
@@ -117,7 +152,7 @@ This means a basic example of running this using a TES message looks like this:
 ```
 </details>
 
-This starts the version of the container with the hash specified, passing it the command to run `count-cohorts.R`, and configuring the files written to the container's `/outputs` to be passed to an s3 bucket after.
+This starts the version of the container with the hash specified, passing it the command to run `defineConceptCohortSet.R` to create a cohort, `count-cohorts.R` to count the members of the cohort, then `cleanUpCohortTables.R` to remove the cohort table, and configuring the files written to the container's `/outputs` to be passed to an s3 bucket after.
 Most of the rest is descriptive, refer to [5s-TES docs](https://docs.federated-analytics.ac.uk/) for more details
 
 ## Scripts
@@ -138,7 +173,7 @@ Options:
 ### Count a cohort
 ```sh
 Usage:
-  count_cohorts.R <name> [--output-path=<output_path>]
+  count-cohorts.R <name> [--output-path=<output_path>]
 
 Options:
   -h --help                     Show this screen
