@@ -30,7 +30,6 @@ Options:
   --pointPrevalenceTimePoint=<timePoint>              The time point for point prevalence, if estimating point prevalence [default: start]
   --estimatePeriodPrevalenceOutputPath=<output_path>  A path to which the output of estimatePeriodPrevalence is saved. [default: ]
   --periodPrevalenceInterval=<interval>               The interval for period prevalence, if estimating period prevalence [default: Years]
-  --periodPrevalenceTimePoint=<timePoint>             The time period for period prevalence, if estimating period prevalence [default: start]
 ' -> doc
 
 library(dplyr, warn.conflicts = FALSE)
@@ -104,7 +103,6 @@ if (!is.null(arguments$estimatePeriodPrevalenceOutputPath)) {
     denominatorTable = arguments$denominatorCohortName,
     outcomeTable = arguments$outcomeCohortName,
     interval = arguments$periodPrevalenceInterval,
-    timePoint = arguments$periodPrevalenceTimePoint
   )
   write.csv(IncidencePrevalence::asPrevalenceResult(prev), file = arguments$estimatePeriodPrevalenceOutputPath)
 }
