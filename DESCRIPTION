@@ -13,6 +13,7 @@ Imports:
     DBI,
     RPostgres,
     remotes,
+    purrr,
     ParallelLogger,
     jsonlite,
     docopt,
