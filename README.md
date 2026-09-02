@@ -99,7 +99,7 @@ This means a basic example of running this using a TES message looks like this:
          "resources": null,
          "executors": [
                   {
-                           "image": "ghcr.io/health-informatics-uon/omop-r-tools:sha-8071279",
+                           "image": "ghcr.io/health-informatics-uon/omop-r-tools:sha-e96408f",
                            "command": [
                                     "Rscript",
                                     "inst/scripts/defineConceptCohortSet.R",
@@ -113,7 +113,7 @@ This means a basic example of running this using a TES message looks like this:
                            "env": {}
                   },
                   {
-                           "image": "ghcr.io/health-informatics-uon/omop-r-tools:sha-8071279",
+                           "image": "ghcr.io/health-informatics-uon/omop-r-tools:sha-e96408f",
                            "command": [
                                     "Rscript",
                                     "inst/scripts/count-cohorts.R",
@@ -127,7 +127,7 @@ This means a basic example of running this using a TES message looks like this:
                            "env": {}
                   },
                   {
-                           "image": "ghcr.io/health-informatics-uon/omop-r-tools:sha-8071279",
+                           "image": "ghcr.io/health-informatics-uon/omop-r-tools:sha-e96408f",
                            "command": [
                                     "Rscript",
                                     "inst/scripts/cleanUpCohortTables.R",
