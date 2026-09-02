@@ -99,7 +99,7 @@ This means a basic example of running this using a TES message looks like this:
          "resources": null,
          "executors": [
                   {
-                           "image": "ghcr.io/health-informatics-uon/omop-r-tools:sha-8071279",
+                           "image": "ghcr.io/health-informatics-uon/omop-r-tools:sha-e96408f",
                            "command": [
                                     "Rscript",
                                     "inst/scripts/defineConceptCohortSet.R",
@@ -113,7 +113,7 @@ This means a basic example of running this using a TES message looks like this:
                            "env": {}
                   },
                   {
-                           "image": "ghcr.io/health-informatics-uon/omop-r-tools:sha-8071279",
+                           "image": "ghcr.io/health-informatics-uon/omop-r-tools:sha-e96408f",
                            "command": [
                                     "Rscript",
                                     "inst/scripts/count-cohorts.R",
@@ -127,7 +127,7 @@ This means a basic example of running this using a TES message looks like this:
                            "env": {}
                   },
                   {
-                           "image": "ghcr.io/health-informatics-uon/omop-r-tools:sha-8071279",
+                           "image": "ghcr.io/health-informatics-uon/omop-r-tools:sha-e96408f",
                            "command": [
                                     "Rscript",
                                     "inst/scripts/cleanUpCohortTables.R",
@@ -189,4 +189,39 @@ Usage:
 Options:
   -h --help                     Show this screen
   --version                     Show version
+```
+
+### Incidence and Prevalence
+```sh
+Calculate incidence or prevalence in a cohort.
+
+Usage:
+  incidencePrevalence.R <denominatorCohortName> [options]
+
+Options:
+  -h --help                                           Show this screen
+  --version                                           Show version
+  --denominatorCohortDateRange=<dates>                Optional comma-separated pair of dates ("YYYY-MM-DD").The first indicating the earliest cohort start date and the second indicating the latest possible cohort end date. [default: 1900-01-01,2100-01-01]
+  --denominatorAgeGroup=<groups>                      A list of age groups for which cohorts will be generated. [default: [[0,150]]]
+  --denominatorBothOff                                Do not have a cohort of people assigned either Male or Female
+  --denominatorMale                                   Have a cohort of people assigned Male
+  --denominatorFemale                                 Have a cohort of people assigned Female
+  --denominatorDaysPriorObservation=<days>            The number of days of prior observation observed in the database required for an individual to start contributing time in a cohort. [default: 0]
+  --requirementInteractions                           If TRUE, cohorts will be created for all combinations of ageGroup, sex, and daysPriorObservation. If FALSE, only the first value specified for the other factors will be used. Consequently, order of values matters when requirementInteractions is FALSE. [default: TRUE]
+  --outcomeCohortName=<cohortName>                    Name of the outcome cohort in the cdm database
+  --estimateIncidenceOutputPath=<output_path>         A path to which the output of estimateIncidence is saved. [default: ]
+  --incidenceInterval=<interval>                      The interval for incidence, if estimating incidence. [default: years]
+  --incidenceOutcomeWashout=<washout>                 The washout for incidence, if estimating incidence. [default: 0]
+  --incidenceRepeatedEvents                           Whether to measure repeated events if estimating incidence
+  --estimatePointPrevalenceOutputPath=<output_path>   A path to which the output of estimatePointPrevalence is saved. [default: ]
+  --pointPrevalenceInterval=<interval>                The interval for point prevalence, if estimating point prevalence [default: Years]
+  --pointPrevalenceTimePoint=<timePoint>              The time point for point prevalence, if estimating point prevalence [default: start]
+  --estimatePeriodPrevalenceOutputPath=<output_path>  A path to which the output of estimatePeriodPrevalence is saved. [default: ]
+  --periodPrevalenceInterval=<interval>               The interval for period prevalence, if estimating period prevalence [default: Years]
+```
+
+The output from this is in the [omopgenerics summarised result format](https://darwin-eu.github.io/omopgenerics/articles/summarised_result.html), so you can use it for plots with e.g.:
+
+```R
+omopgenerics::importSummarisedResult("my-incidence-file.csv") |> plotIncidence()
 ```
