@@ -83,7 +83,7 @@ if (!is.null(arguments$estimateIncidenceOutputPath)) {
     outcomeWashout = as.numeric(arguments$incidenceOutcomeWashout),
     repeatedEvents = arguments$incidenceRepeatedEvents
   ) |>
-    exportSummarisedResult(fileName = arguments$estimateIncidenceOutputPath)
+    omopgenerics::exportSummarisedResult(fileName = arguments$estimateIncidenceOutputPath)
 }
 
 if (!is.null(arguments$estimatePointPrevalenceOutputPath)) {
@@ -94,7 +94,7 @@ if (!is.null(arguments$estimatePointPrevalenceOutputPath)) {
     interval = arguments$pointPrevalenceInterval,
     timePoint = arguments$pointPrevalenceTimePoint
   ) |>
-    exportSummarisedResult(fileName = arguments$estimatePointPrevalenceOutputPath)
+    omopgenerics::exportSummarisedResult(fileName = arguments$estimatePointPrevalenceOutputPath)
 }
 
 if (!is.null(arguments$estimatePeriodPrevalenceOutputPath)) {
@@ -104,7 +104,7 @@ if (!is.null(arguments$estimatePeriodPrevalenceOutputPath)) {
     outcomeTable = arguments$outcomeCohortName,
     interval = arguments$periodPrevalenceInterval,
   ) |>
-    exportSummarisedResult(fileName = arguments$estimatePeriodPrevalenceOutputPath)
+    omopgenerics::exportSummarisedResult(fileName = arguments$estimatePeriodPrevalenceOutputPath)
 }
 
 CDMConnector::cdmDisconnect(cdm)
