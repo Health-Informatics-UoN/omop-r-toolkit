@@ -82,8 +82,8 @@ if (!is.null(arguments$estimateIncidenceOutputPath)) {
     interval = arguments$incidenceInterval,
     outcomeWashout = as.numeric(arguments$incidenceOutcomeWashout),
     repeatedEvents = arguments$incidenceRepeatedEvents
-  )
-  write.csv(IncidencePrevalence::asIncidenceResult(inc), file = arguments$estimateIncidenceOutputPath)
+  ) |>
+    exportSummarisedResult(fileName = arguments$estimateIncidenceOutputPath)
 }
 
 if (!is.null(arguments$estimatePointPrevalenceOutputPath)) {
@@ -93,8 +93,8 @@ if (!is.null(arguments$estimatePointPrevalenceOutputPath)) {
     outcomeTable = arguments$outcomeCohortName,
     interval = arguments$pointPrevalenceInterval,
     timePoint = arguments$pointPrevalenceTimePoint
-  )
-  write.csv(IncidencePrevalence::asPrevalenceResult(prev), file = arguments$estimatePointPrevalenceOutputPath)
+  ) |>
+    exportSummarisedResult(fileName = arguments$estimatePointPrevalenceOutputPath)
 }
 
 if (!is.null(arguments$estimatePeriodPrevalenceOutputPath)) {
@@ -103,8 +103,8 @@ if (!is.null(arguments$estimatePeriodPrevalenceOutputPath)) {
     denominatorTable = arguments$denominatorCohortName,
     outcomeTable = arguments$outcomeCohortName,
     interval = arguments$periodPrevalenceInterval,
-  )
-  write.csv(IncidencePrevalence::asPrevalenceResult(prev), file = arguments$estimatePeriodPrevalenceOutputPath)
+  ) |>
+    exportSummarisedResult(fileName = arguments$estimatePeriodPrevalenceOutputPath)
 }
 
 CDMConnector::cdmDisconnect(cdm)
