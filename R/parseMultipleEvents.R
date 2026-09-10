@@ -4,11 +4,14 @@
 #' "a,b,c"           -> c("a", "b", "c")
 
 parseMultipleEvents <- function(val) {
-  if (is.null(val) || tolower(val) == "null") {
+  if (is.null(val) || length(val) == 0L || is.na(val) || identical(tolower(val), "null")) {
     return(NULL)
   }
-  if (tolower(val) == "true") {
-    return(TRUE)
+
+  bool_val <- suppressWarnings(as.logical(val))
+  if (!is.na(bool_val)) {
+    return(bool_val)
   }
-  strsplit(val, ",")[[1]]
+
+  trimws(strsplit(val, ",", fixed = TRUE)[[1]])
 }

@@ -13,7 +13,7 @@ Options:
   --indexDate=<date_col>        Date column to use as index [default: cohort_start_date]
   --targetDate=<type>           event_start_date or event_end_date [default: event_start_date]
   --censorDate=<col>            Optional censor date column
-  --multipleEvents=<mode>       null, true, or comma-separated priority list [default: null]
+  --multipleEvents=<mode>       null, true, or comma-separated priority list
   --nameStyle=<style>           Naming pattern [default: {value}_{window_name}]
 ' -> doc
 

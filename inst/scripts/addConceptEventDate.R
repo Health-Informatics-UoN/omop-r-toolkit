@@ -13,7 +13,7 @@ Options:
   --indexDate=<date_col>        Date column to use as index [default: cohort_start_date]
   --targetDate=<type>           event_start_date or event_end_date [default: event_start_date]
   --censorDate=<col>            Optional censor date column
-  --multipleEvents=<mode>       null, true, or comma-separated priority list [default: null]
+  --multipleEvents=<mode>       null, true, or comma-separated priority list
   --nameStyle=<style>           Naming pattern [default: {value}_{window_name}]
 ' -> doc
 
@@ -28,14 +28,14 @@ source("R/parseMultipleEvents.R")
 
 arguments <- docopt(doc, version = "Add Concept Event Date 0.1.0")
 
-cdm <- connectFiveSafesTESPg("postgres_omop", cohortTables = arguments$name)
-cohort <- cdm[[arguments$name]]
-orig_names <- colnames(cohort)
-
 conceptSet <- parseJSONConceptSet(arguments$conceptSet)
 window <- parseWindows(arguments$window)
 censorDate <- if (!is.null(arguments$censorDate)) arguments$censorDate else NULL
 multipleEvents <- parseMultipleEvents(arguments$multipleEvents)
+
+cdm <- connectFiveSafesTESPg("postgres_omop", cohortTables = arguments$name)
+cohort <- cdm[[arguments$name]]
+orig_names <- colnames(cohort)
 
 cohort <- cohort |>
   addConceptEventDate(

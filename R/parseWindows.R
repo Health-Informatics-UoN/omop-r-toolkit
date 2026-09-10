@@ -11,9 +11,6 @@ parseWindows <- function(windowString) {
   normalize_window_value <- function(x) {
     x <- trimws(as.character(x))
     if (length(x) == 0L || is.na(x)) return(NA_real_)
-    lower <- tolower(x)
-    if (lower %in% c("inf", "infinity")) return(Inf)
-    if (lower %in% c("-inf", "-infinity")) return(-Inf)
     v <- suppressWarnings(as.numeric(x))
     if (is.na(v)) stop(sprintf("Cannot parse window value: %s", x))
     v
