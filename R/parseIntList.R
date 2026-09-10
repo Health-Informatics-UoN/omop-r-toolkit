@@ -60,7 +60,8 @@ parseStringAsInts <- function(
   lowerLimit = -Inf,
   upperLimit = Inf
 ) {
-  as.numeric(strsplit(intString, ",")[[1]]) |>
+  strsplit(intString, ",")[[1]] |>
+    as.numeric() |>
     checkInts() |>
     checkLength(n) |>
     checkLowerLimit(lowerLimit) |>
