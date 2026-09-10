@@ -41,8 +41,8 @@ parseWindows <- function(windowString) {
 
   # ---- Case 2: JSON array or object ----
   normalized_json <- windowString
-  normalized_json <- gsub("-Inf", "-1e308", normalized_json, perl = TRUE)
-  normalized_json <- gsub("Inf", "1e308", normalized_json, perl = TRUE)
+  normalized_json <- gsub("-Inf", "-1e500", normalized_json, perl = TRUE)
+  normalized_json <- gsub("Inf", "1e500", normalized_json, perl = TRUE)
   parsed <- jsonlite::fromJSON(normalized_json)
 
   # Single array: [-365, 0]
