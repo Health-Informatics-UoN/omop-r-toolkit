@@ -40,7 +40,7 @@ parse_json_or_default <- function(x, default) {
 cdm <- connectFiveSafesTESPg("postgres_omop", cohortTables = arguments$name)
 cohort <- cdm[[arguments$name]]
 
-strata <- parse_json_or_default(arguments$strata, list())
+strata <- parseJSONOrDefault(arguments$strata, list())
 variables <- parse_json_or_default(arguments$variables, NULL)
 estimates <- parse_json_or_default(arguments$estimates, c("count", "percentage"))
 weights <- parse_json_or_null(arguments$weights, NULL)
