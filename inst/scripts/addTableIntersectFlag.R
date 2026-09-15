@@ -6,7 +6,6 @@ Usage:
 Options:
   -h --help                     Show this screen
   --version                     Show version
-  --output-path=<output_path>   Path to write the output csv to [default: outputs/table_intersect_flag.csv]
   --tableName=<table>           OMOP table name (e.g. drug_exposure)
   --window=<window>             Window [default: [-Inf,Inf]]
   --indexDate=<date_col>        Date column to use as index [default: cohort_start_date]

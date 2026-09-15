@@ -6,7 +6,6 @@ Usage:
 Options:
   -h --help                     Show this screen
   --version                     Show version
-  --output-path=<output_path>   Path to write the output csv to [default: outputs/concept_event_days.csv]
   --conceptSet=<json>           JSON concept set
   --window=<window>             Window [default: [[-Inf,Inf]]]
   --order=<order>               first or last [default: first]

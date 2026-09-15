@@ -6,7 +6,6 @@ Usage:
 Options:
   -h --help                     Show this screen
   --version                     Show version
-  --output-path=<output_path>   Path to write the output csv to [default: outputs/intersect_count.csv]
   --targetCohortTable=<target>  Name of the target cohort table
   --targetCohortId=<id>         Specific cohort definition ID (optional)
   --window=<window>             Window [default: -Inf,Inf]

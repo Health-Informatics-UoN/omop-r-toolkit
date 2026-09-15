@@ -6,7 +6,6 @@ Usage:
 Options:
   -h --help                     Show this screen
   --version                     Show version
-  --output-path=<output_path>   Path to write the output csv to [default: outputs/characteristics.csv]
   --indexDate=<date_col>        Date column to use as index [default: cohort_start_date]
   --addAge                      Add age at index date
   --ageGroup=<json>             JSON list of age groups [default: [[0,150]]]
