@@ -1,8 +1,4 @@
 #' Summarise a cohort table using the standard PatientProfiles summary API.
-#' If summariseResult() is not available, this function stops with a clear error.
-#'
-#' This keeps feature-generation scripts focused on adding columns to a cohort table
-#' and leaves the final summary step in a reusable helper.
 
 summariseCohortTable <- function(cohort,
                                  output_path = NULL,
