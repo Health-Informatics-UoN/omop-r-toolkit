@@ -43,7 +43,7 @@ cohort <- cdm[[arguments$name]]
 strata <- parseJSONOrDefault(arguments$strata, list())
 variables <- parse_json_or_default(arguments$variables, NULL)
 estimates <- parse_json_or_default(arguments$estimates, c("count", "percentage"))
-weights <- parse_json_or_null(arguments$weights, NULL)
+weights <- parseJSONOrDefault(arguments$weights, NULL)
 customEstimates <- parse_json_or_default(arguments$customEstimates, list())
 
 group <- if (is.null(arguments$group) || !nzchar(arguments$group)) list() else arguments$group
