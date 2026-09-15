@@ -31,7 +31,7 @@ cohort <- cdm[[arguments$name]]
 
 window <- parseWindows(arguments$window)
 targetCohortId <- if (!is.null(arguments$targetCohortId)) as.numeric(arguments$targetCohortId) else NULL
-censorDate <- if (!is.null(arguments$censorDate)) arguments$censorDate else NULL
+censorDate <- arguments$censorDate
 
 cohort <- cohort |>
   addCohortEventDate(
