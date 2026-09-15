@@ -27,7 +27,7 @@ arguments <- docopt(doc, version = "Add Table Intersect Date 0.1.0")
 cdm <- connectFiveSafesTESPg("postgres_omop", cohortTables = arguments$name)
 cohort <- cdm[[arguments$name]]
 
-indexDate <- if (is.null(arguments$indexDate) || !nzchar(arguments$indexDate)) "cohort_start_date" else arguments$indexDate
+indexDate <- if (is.null(arguments$indexDate) || !nzchar(arguments$indexDate, keepNA = FALSE)) "cohort_start_date" else arguments$indexDate
 window <- parseWindows(arguments$window)
 targetDate <- if (!is.null(arguments$targetDate) && nzchar(arguments$targetDate)) arguments$targetDate else startDateColumn(arguments$tableName)
 inObservation <- as.logical(arguments$inObservation)
