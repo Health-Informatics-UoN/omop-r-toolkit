@@ -29,22 +29,14 @@ source("R/parseJSONOrDefault.R")
 
 arguments <- docopt(doc, version = "Summarise Cohort 0.1.0")
 
-parse_json_or_null <- function(x, default = NULL) {
-  parseJSONOrDefault(x, default)
-}
-
-parse_json_or_default <- function(x, default) {
-  parseJSONOrDefault(x, default)
-}
-
 cdm <- connectFiveSafesTESPg("postgres_omop", cohortTables = arguments$name)
 cohort <- cdm[[arguments$name]]
 
 strata <- parseJSONOrDefault(arguments$strata, list())
-variables <- parse_json_or_default(arguments$variables, NULL)
-estimates <- parse_json_or_default(arguments$estimates, c("count", "percentage"))
+variables <- parseJSONOrDefault(arguments$variables, NULL)
+estimates <- parseJSONOrDefault(arguments$estimates, c("count", "percentage"))
 weights <- parseJSONOrDefault(arguments$weights, NULL)
-customEstimates <- parse_json_or_default(arguments$customEstimates, list())
+customEstimates <- parseJSONOrDefault(arguments$customEstimates, list())
 
 group <- if (is.null(arguments$group) || !nzchar(arguments$group)) list() else arguments$group
 
