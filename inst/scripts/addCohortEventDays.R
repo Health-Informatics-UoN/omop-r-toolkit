@@ -29,18 +29,16 @@ cdm <- connectFiveSafesTESPg("postgres_omop", cohortTables = c(arguments$name, a
 cohort <- cdm[[arguments$name]]
 
 window <- parseWindows(arguments$window)
-targetCohortId <- if (!is.null(arguments$targetCohortId)) as.numeric(arguments$targetCohortId) else NULL
-censorDate <- if (!is.null(arguments$censorDate)) arguments$censorDate else NULL
 
 cohort <- cohort |>
   addCohortEventDays(
     targetCohortTable = arguments$targetCohortTable,
-    targetCohortId = targetCohortId,
+    targetCohortId = if (!is.null(arguments$targetCohortId)) as.numeric(arguments$targetCohortId) else NULL,
     window = window,
     order = arguments$order,
     indexDate = arguments$indexDate,
     targetDate = arguments$targetDate,
-    censorDate = censorDate,
+    censorDate = arguments$censorDate,
     nameStyle = arguments$nameStyle
   )
 

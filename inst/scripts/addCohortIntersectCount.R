@@ -28,12 +28,11 @@ cdm <- connectFiveSafesTESPg("postgres_omop", cohortTables = c(arguments$name, a
 cohort <- cdm[[arguments$name]]
 
 window <- parseWindows(arguments$window)
-targetCohortId <- if (!is.null(arguments$targetCohortId)) as.numeric(arguments$targetCohortId) else NULL
 
 cohort <- cohort |>
   addCohortIntersectCount(
     targetCohortTable = arguments$targetCohortTable,
-    targetCohortId = targetCohortId,
+    targetCohortId = if (!is.null(arguments$targetCohortId)) as.numeric(arguments$targetCohortId) else NULL,
     window = window,
     indexDate = arguments$indexDate,
     targetStartDate = arguments$targetStartDate,
