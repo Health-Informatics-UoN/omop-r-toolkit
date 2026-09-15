@@ -25,21 +25,16 @@ library(PatientProfiles)
 library(CDMConnector)
 source("R/postgres-connect-5s-tes.R")
 source("R/summariseCohortTable.R")
+source("R/parseJSONOrDefault.R")
 
 arguments <- docopt(doc, version = "Summarise Cohort 0.1.0")
 
 parse_json_or_null <- function(x, default = NULL) {
-  if (is.null(x) || identical(x, "NULL") || identical(x, "") || identical(x, "[]") || identical(x, "{}")) {
-    return(default)
-  }
-  jsonlite::fromJSON(x)
+  parseJSONOrDefault(x, default)
 }
 
 parse_json_or_default <- function(x, default) {
-  if (is.null(x) || identical(x, "") || identical(x, "NULL") || identical(x, "[]") || identical(x, "{}")) {
-    return(default)
-  }
-  jsonlite::fromJSON(x)
+  parseJSONOrDefault(x, default)
 }
 
 cdm <- connectFiveSafesTESPg("postgres_omop", cohortTables = arguments$name)
