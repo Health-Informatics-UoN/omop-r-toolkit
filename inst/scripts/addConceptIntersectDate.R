@@ -26,7 +26,6 @@ arguments <- docopt(doc, version = "Add Concept Intersect Date 0.1.0")
 
 cdm <- connectFiveSafesTESPg("postgres_omop", cohortTables = arguments$name)
 cohort <- cdm[[arguments$name]]
-orig_names <- colnames(cohort)
 
 conceptSet <- parseJSONConceptSet(arguments$conceptSet)
 window <- parseWindows(arguments$window)
@@ -40,19 +39,4 @@ cohort <- cohort |>
     nameStyle = arguments$nameStyle
   )
 
-new_names <- setdiff(colnames(cohort), orig_names)
-
-summaries <- lapply(new_names, function(col) {
-  stats <- cohort |>
-    summarise(total = as.numeric(n()),
-              non_missing = as.numeric(sum(as.integer(!is.na(!!sym(col))))),
-              earliest = min(!!sym(col), na.rm = TRUE),
-              latest = max(!!sym(col), na.rm = TRUE)) |>
-    collect()
-  data.frame(column = col, total = stats$total, non_missing = stats$non_missing,
-             earliest = as.character(stats$earliest), latest = as.character(stats$latest),
-             stringsAsFactors = FALSE)
-})
-
-write.csv(do.call(rbind, summaries), file = arguments$output_path, row.names = FALSE)
 CDMConnector::cdmDisconnect(cdm)

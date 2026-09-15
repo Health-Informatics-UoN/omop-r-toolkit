@@ -27,7 +27,6 @@ arguments <- docopt(doc, version = "Add Cohort Intersect Date 0.2.0")
 
 cdm <- connectFiveSafesTESPg("postgres_omop", cohortTables = c(arguments$name, arguments$targetCohortTable))
 cohort <- cdm[[arguments$name]]
-orig_names <- colnames(cohort)
 
 window <- parseWindows(arguments$window)
 targetCohortId <- if (!is.null(arguments$targetCohortId)) as.numeric(arguments$targetCohortId) else NULL
@@ -43,19 +42,4 @@ cohort <- cohort |>
     nameStyle = arguments$nameStyle
   )
 
-new_names <- setdiff(colnames(cohort), orig_names)
-
-summaries <- lapply(new_names, function(col) {
-  stats <- cohort |>
-    summarise(total = as.numeric(n()),
-              non_missing = as.numeric(sum(as.integer(!is.na(!!sym(col))))),
-              earliest = min(!!sym(col), na.rm = TRUE),
-              latest = max(!!sym(col), na.rm = TRUE)) |>
-    collect()
-  data.frame(column = col, total = stats$total, non_missing = stats$non_missing,
-             earliest = as.character(stats$earliest), latest = as.character(stats$latest),
-             stringsAsFactors = FALSE)
-})
-
-write.csv(do.call(rbind, summaries), file = arguments$output_path, row.names = FALSE)
 CDMConnector::cdmDisconnect(cdm)

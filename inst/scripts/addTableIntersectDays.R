@@ -27,7 +27,6 @@ arguments <- docopt(doc, version = "Add Table Intersect Days 0.1.0")
 
 cdm <- connectFiveSafesTESPg("postgres_omop", cohortTables = arguments$name)
 cohort <- cdm[[arguments$name]]
-orig_names <- colnames(cohort)
 
 indexDate <- if (is.null(arguments$indexDate) || !nzchar(arguments$indexDate)) "cohort_start_date" else arguments$indexDate
 window <- parseWindows(arguments$window)
@@ -45,20 +44,4 @@ cohort <- cohort |>
     nameStyle = arguments$nameStyle
   )
 
-new_names <- setdiff(colnames(cohort), orig_names)
-
-summaries <- lapply(new_names, function(col) {
-  stats <- cohort |>
-    summarise(total = as.numeric(n()),
-              non_missing = as.numeric(sum(as.integer(!is.na(!!sym(col))))),
-              min_days = min(!!sym(col), na.rm = TRUE),
-              max_days = max(!!sym(col), na.rm = TRUE),
-              mean_days = mean(!!sym(col), na.rm = TRUE)) |>
-    collect()
-  data.frame(column = col, total = stats$total, non_missing = stats$non_missing,
-             min_days = stats$min_days, max_days = stats$max_days,
-             mean_days = round(stats$mean_days, 2), stringsAsFactors = FALSE)
-})
-
-write.csv(do.call(rbind, summaries), file = arguments$output_path, row.names = FALSE)
 CDMConnector::cdmDisconnect(cdm)

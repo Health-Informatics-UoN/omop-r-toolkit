@@ -35,7 +35,6 @@ multipleEvents <- parseMultipleEvents(arguments$multipleEvents)
 
 cdm <- connectFiveSafesTESPg("postgres_omop", cohortTables = arguments$name)
 cohort <- cdm[[arguments$name]]
-orig_names <- colnames(cohort)
 
 cohort <- cohort |>
   addConceptEventDate(
@@ -49,32 +48,4 @@ cohort <- cohort |>
     nameStyle = arguments$nameStyle
   )
 
-new_names <- setdiff(colnames(cohort), orig_names)
-sample_df <- cohort |> head(10) |> collect()
-
-summaries <- list()
-for (col in new_names) {
-  if (is.character(sample_df[[col]])) {
-    dist <- cohort |>
-      group_by(!!sym(col)) |>
-      summarise(estimate = as.numeric(n()), .groups = "drop") |>
-      collect() |>
-      mutate(column = col, metric = "frequency", value = !!sym(col)) |>
-      select(column, metric, value, estimate)
-    summaries[[length(summaries) + 1]] <- dist
-  } else if (inherits(sample_df[[col]], "Date")) {
-    stats <- cohort |>
-      summarise(non_missing = as.numeric(sum(as.integer(!is.na(!!sym(col))))),
-                earliest = min(!!sym(col), na.rm = TRUE),
-                latest = max(!!sym(col), na.rm = TRUE)) |>
-      collect()
-    summaries[[length(summaries) + 1]] <- data.frame(
-      column = col, metric = c("non_missing", "earliest", "latest"),
-      value = c(NA, as.character(stats$earliest), as.character(stats$latest)),
-      estimate = c(stats$non_missing, NA, NA), stringsAsFactors = FALSE
-    )
-  }
-}
-
-write.csv(do.call(rbind, summaries), file = arguments$output_path, row.names = FALSE)
 CDMConnector::cdmDisconnect(cdm)
