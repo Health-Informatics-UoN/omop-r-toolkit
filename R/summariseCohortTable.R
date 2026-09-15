@@ -28,10 +28,11 @@ summariseCohortTable <- function(cohort,
       customEstimates = customEstimates
     )
 
-  summary_df <- as.data.frame(summary_df)
-
   if (!is.null(output_path)) {
-    write.csv(summary_df, file = output_path, row.names = FALSE)
+    summary_df <- omopgenerics::exportSummarisedResult(
+      x = summary_df,
+      filename = output_path
+    )
   }
 
   summary_df
