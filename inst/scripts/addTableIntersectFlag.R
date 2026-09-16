@@ -11,7 +11,6 @@ Options:
   --indexDate=<date_col>        Date column to use as index [default: cohort_start_date]
   --targetStartDate=<col>       Start date column in target table
   --targetEndDate=<col>         End date column in target table
-  --inObservation=<logical>     Keep only records in observation [default: TRUE]
   --nameStyle=<style>           Naming pattern [default: {table_name}_{window_name}]
 ' -> doc
 
@@ -31,7 +30,6 @@ indexDate <- if (is.null(arguments$indexDate) || !nzchar(arguments$indexDate, ke
 window <- parseWindows(arguments$window)
 targetStartDate <- if (!is.null(arguments$targetStartDate) && nzchar(arguments$targetStartDate)) arguments$targetStartDate else startDateColumn(arguments$tableName)
 targetEndDate <- if (!is.null(arguments$targetEndDate) && nzchar(arguments$targetEndDate)) arguments$targetEndDate else endDateColumn(arguments$tableName)
-inObservation <- as.logical(arguments$inObservation)
 
 cohort <- cohort |>
   addTableIntersectFlag(
@@ -40,7 +38,6 @@ cohort <- cohort |>
     indexDate = indexDate,
     targetStartDate = targetStartDate,
     targetEndDate = targetEndDate,
-    inObservation = inObservation,
     nameStyle = arguments$nameStyle
   )
 
