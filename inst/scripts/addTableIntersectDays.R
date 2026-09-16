@@ -11,7 +11,6 @@ Options:
   --order=<order>               first or last [default: first]
   --indexDate=<date_col>        Date column to use as index [default: cohort_start_date]
   --targetDate=<col>            Date column in target table
-  --inObservation=<logical>     Keep only records in observation [default: TRUE]
   --nameStyle=<style>           Naming pattern [default: {table_name}_{window_name}]
 ' -> doc
 
@@ -30,7 +29,6 @@ cohort <- cdm[[arguments$name]]
 indexDate <- if (is.null(arguments$indexDate) || !nzchar(arguments$indexDate, keepNA = FALSE)) "cohort_start_date" else arguments$indexDate
 window <- parseWindows(arguments$window)
 targetDate <- if (!is.null(arguments$targetDate) && nzchar(arguments$targetDate)) arguments$targetDate else startDateColumn(arguments$tableName)
-inObservation <- as.logical(arguments$inObservation)
 
 cohort <- cohort |>
   addTableIntersectDays(
@@ -39,7 +37,6 @@ cohort <- cohort |>
     order = arguments$order,
     indexDate = indexDate,
     targetDate = targetDate,
-    inObservation = inObservation,
     nameStyle = arguments$nameStyle
   )
 

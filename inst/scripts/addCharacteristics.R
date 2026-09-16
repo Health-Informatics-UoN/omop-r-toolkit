@@ -53,10 +53,17 @@ if (arguments$useDemographics) {
     priorObservation = arguments$addPriorObservation,
     priorObservationName = "prior_observation",
     futureObservation = arguments$addFutureObservation,
-    futureObservationName = "future_observation",
-    inObservation = arguments$addInObservation,
-    inObservationName = "in_observation"
+    futureObservationName = "future_observation"
   )
+
+  if (arguments$addInObservation) {
+    inWin <- parseWindows(arguments$inObservationWindow)
+    cohort <- cohort |> addInObservation(
+      indexDate = arguments$indexDate,
+      window = inWin,
+      completeInterval = arguments$completeInterval
+    )
+  }
 } else {
   if (arguments$addAge) {
     ageArgs <- list(
