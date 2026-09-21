@@ -73,13 +73,11 @@ results <- DrugExposureDiagnostics::executeChecks(
   verbose = FALSE
 )
 
-# Write each result table as a CSV
-for (name in names(results)) {
-  df <- results[[name]]
-  if (!is.null(df) && is.data.frame(df) && nrow(df) > 0) {
-    file_path <- file.path(output_dir, paste0(name, ".csv"))
-    write.csv(df, file = file_path, row.names = FALSE)
-  }
-}
+DrugExposureDiagnostics::writeResultToDisk(
+  resultList = results,
+  databaseId = database_id,
+  outputFolder = output_dir,
+  filename = "drug_exposure_diagnostics"
+)
 
 CDMConnector::cdmDisconnect(cdm)
