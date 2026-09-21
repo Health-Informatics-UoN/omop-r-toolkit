@@ -20,6 +20,7 @@ connectFiveSafesTESPg <- function(cdmName, cohortTables=NULL) {
     port = DB_PORT,
     password = DB_PASSWORD,
     user = DB_USERNAME,
+    bigint = "numeric"
   )
 
   CDMConnector::cdmFromCon(
