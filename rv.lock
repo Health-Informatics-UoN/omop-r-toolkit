@@ -224,8 +224,8 @@ dependencies = [
 [[packages]]
 name = "PatientProfiles"
 version = "1.6.1"
-source = { git = "https://github.com/darwin-eu/PatientProfiles/", sha = "4dfd9359626e34f792453e4402033a8cd5de60f6", tag = "v1.6.1" }
-force_source = true
+source = { url = "https://packagemanager.posit.co/cran/latest/src/contrib/PatientProfiles_1.6.1.tar.gz", sha = "c046099fd4f22a9688e13e9dc09af8d11855b0c3ebfb5d7283d6536283ad99bb" }
+force_source = false
 dependencies = [
     "cli",
     "clock",

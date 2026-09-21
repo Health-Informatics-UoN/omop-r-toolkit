@@ -31,7 +31,7 @@ dependencies = [
     "CDMConnector",
     "CohortGenerator",
     "CodelistGenerator",
-    { name = "PatientProfiles", git = "https://github.com/darwin-eu/PatientProfiles/", tag = "v1.6.1"},
+    { name = "PatientProfiles", url = "https://packagemanager.posit.co/cran/latest/src/contrib/PatientProfiles_1.6.1.tar.gz" },
     "IncidencePrevalence",
     "CohortCharacteristics",
     "CohortSurvival",
