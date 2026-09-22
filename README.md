@@ -225,3 +225,43 @@ The output from this is in the [omopgenerics summarised result format](https://d
 ```R
 omopgenerics::importSummarisedResult("my-incidence-file.csv") |> plotIncidence()
 ```
+
+### PatientProfiles
+```sh
+Add patient-level cohort features using PatientProfiles.
+
+Usage:
+  addCharacteristics.R <name> [options]
+
+Options:
+  -h --help                     Show this screen
+  --version                     Show version
+  --indexDate=<date_col>        Date column to use as index [default: cohort_start_date]
+  --addAge                      Add age at index date
+  --ageGroup=<json>             JSON list of age groups [default: [[0,150]]]
+  --ageName=<name>              Name for the age column [default: age]
+  --ageMissingMonth=<m>         Month assumed if missing [default: NULL]
+  --ageMissingDay=<d>           Day assumed if missing [default: NULL]
+  --ageImposeMonth              Impose missing month to ageMissingMonth
+  --ageImposeDay                Impose missing day to ageMissingDay
+  --addSex                      Add sex
+  --addPriorObservation         Add days of prior observation
+  --addFutureObservation        Add days of future observation
+  --addInObservation            Add in-observation flag
+  --inObservationWindow=<win>   Window for in-observation [default: 0,0]
+  --completeInterval            Require complete interval for in-observation
+  --useDemographics             Use addDemographics() (more efficient, combines selected)
+```
+
+**Example:**
+```R
+Rscript inst/scripts/addCharacteristics.R skin_cancer \
+  --addAge \
+  --ageGroup='[[0,17],[18,64],[65,150]]' \
+  --addSex \
+  --addPriorObservation \
+  --addFutureObservation \
+  --addInObservation \
+  --inObservationWindow='[0,0]' \
+  --useDemographics
+```
