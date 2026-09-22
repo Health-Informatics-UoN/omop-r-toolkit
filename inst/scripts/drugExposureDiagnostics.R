@@ -52,16 +52,8 @@ min_cell <- as.numeric(arguments$min_cell_count)
 earliest_start <- as.Date(arguments$earliest_start_date)
 by_concept <- arguments$byConcept
 
-subset_ids <- NULL
-if (!is.null(arguments$subset_to_concept_id)) {
-  subset_ids <- parseIntegerVector(arguments$subset_to_concept_id)
-}
-
-exposure_type <- NULL
-if (!is.null(arguments$exposure_type_id)) {
-  exposure_type <- as.numeric(arguments$exposure_type_id)
-}
-
+subset_ids <- if (is.null(arguments$subset_to_concept_id)) NULL else parseIntegerVector(arguments$subset_to_concept_id)
+exposure_type <- if (is.null(arguments$exposure_type_id)) NULL else as.numeric(arguments$exposure_type_id)
 table_prefix <- arguments$table_prefix
 
 if (length(ingredients) == 0) {
