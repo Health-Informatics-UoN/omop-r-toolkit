@@ -44,7 +44,7 @@ cohort <- cdm[[arguments$name]]
 ageGroup <- if (arguments$addAge) parseAgeGroups(arguments$ageGroup) else NULL
 
 if (arguments$useDemographics) {
-  cohort <- cohort |> addDemographics(
+  demographicsArgs <- list(
     age = arguments$addAge,
     ageName = arguments$ageName,
     ageGroup = ageGroup,
@@ -56,7 +56,14 @@ if (arguments$useDemographics) {
     futureObservationName = "future_observation"
   )
 
-  if (arguments$addInObservation) {
+  if ("inObservation" %in% names(formals(addDemographics))) {
+    demographicsArgs$inObservation <- arguments$addInObservation
+    demographicsArgs$inObservationName <- "in_observation"
+  }
+
+  cohort <- do.call(addDemographics, c(list(x = cohort), demographicsArgs))
+
+  if (arguments$addInObservation && !("inObservation" %in% names(formals(addDemographics)))) {
     inWin <- parseWindows(arguments$inObservationWindow)
     cohort <- cohort |> addInObservation(
       indexDate = arguments$indexDate,
