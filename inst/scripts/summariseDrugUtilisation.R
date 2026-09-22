@@ -12,18 +12,18 @@ Options:
   --estimates=<json>                JSON vector of estimates [default: ["mean","sd","count_missing","percentage_missing"]]
   --indexDate=<date_col>            Index date column [default: cohort_start_date]
   --censorDate=<date_col>           Optional censor date column
-  --restrictIncident                Restrict to incident exposures
+  --restrictIncident=<logical>      Restrict to incident exposures [default: TRUE]
   --gapEra=<n>                     Gap era in days [default: 7]
-  --numberExposures                Include number of exposures
-  --numberEras                     Include number of eras
-  --daysExposed                    Include days exposed
-  --daysPrescribed                 Include days prescribed
-  --timeToExposure                 Include time to exposure
-  --initialExposureDuration        Include initial exposure duration
-  --initialQuantity                Include initial quantity
-  --cumulativeQuantity             Include cumulative quantity
-  --initialDailyDose               Include initial daily dose
-  --cumulativeDose                 Include cumulative dose
+  --numberExposures=<logical>      Include number of exposures [default: TRUE]
+  --numberEras=<logical>           Include number of eras [default: TRUE]
+  --daysExposed=<logical>          Include days exposed [default: TRUE]
+  --daysPrescribed=<logical>       Include days prescribed [default: TRUE]
+  --timeToExposure=<logical>        Include time to exposure [default: TRUE]
+  --initialExposureDuration=<logical> Include initial exposure duration [default: TRUE]
+  --initialQuantity=<logical>      Include initial quantity [default: TRUE]
+  --cumulativeQuantity=<logical>   Include cumulative quantity [default: TRUE]
+  --initialDailyDose=<logical>     Include initial daily dose [default: TRUE]
+  --cumulativeDose=<logical>       Include cumulative dose [default: TRUE]
   --output-path=<path>             Output CSV path
 ' -> doc
 

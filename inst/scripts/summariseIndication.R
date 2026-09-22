@@ -13,8 +13,8 @@ Options:
   --strata=<json>                       Optional JSON list of strata variables [default: []]
   --indexDate=<date_col>                Index date column [default: cohort_start_date]
   --censorDate=<date_col>               Optional censor date column
-  --mutuallyExclusive                   Consider mutually exclusive indication labels
-  --restrictIncident                    Restrict to incident indication events
+  --mutuallyExclusive=<logical>         Consider mutually exclusive indication labels [default: FALSE]
+  --restrictIncident=<logical>          Restrict to incident indication events [default: TRUE]
   --output-path=<path>                  Path to write output csv
 ' -> doc
 

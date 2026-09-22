@@ -12,8 +12,8 @@ Options:
   --unknownIndicationTable=<table>   Optional table for unknown indications (e.g. condition_occurrence)
   --indexDate=<date_col>             Index date column [default: cohort_start_date]
   --censorDate=<date_col>            Optional censor date column
-  --mutuallyExclusive                Consider mutually exclusive indication labels
-  --restrictIncident                 Restrict to incident indication events
+  --mutuallyExclusive=<logical>      Consider mutually exclusive indication labels [default: FALSE]
+  --restrictIncident=<logical>       Restrict to incident indication events [default: TRUE]
   --nameStyle=<style>                Naming style for the added columns [default: {window_name}]
 ' -> doc
 

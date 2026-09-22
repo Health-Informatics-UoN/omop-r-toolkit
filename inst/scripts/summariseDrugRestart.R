@@ -11,8 +11,8 @@ Options:
   --strata=<json>                    Optional JSON list of strata variables [default: []]
   --followUpDays=<n>                 Follow-up window in days [default: 365]
   --censorDate=<date_col>            Optional censor date column
-  --incident                         Restrict to incident restarts
-  --restrictToFirstDiscontinuation    Restrict to first discontinuation only
+  --incident=<logical>               Restrict to incident restarts [default: FALSE]
+  --restrictToFirstDiscontinuation=<logical> Restrict to first discontinuation only [default: TRUE]
   --output-path=<path>               Output CSV path
 ' -> doc
 
