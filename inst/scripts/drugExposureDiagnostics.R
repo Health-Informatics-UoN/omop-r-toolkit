@@ -29,7 +29,22 @@ source("R/parseIntList.R")
 arguments <- docopt(doc, version = "Drug Exposure Diagnostics 0.1.0")
 
 ingredients <- parseIntegerVector(arguments$ingredients)
-checks <- strsplit(arguments$checks, ",")[[1]]
+checks <- trimws(strsplit(arguments$checks, ",")[[1]])
+checks <- checks[nzchar(checks)]
+
+allowed_checks <- get("getAllCheckOptions", envir = asNamespace("DrugExposureDiagnostics"))()
+invalid_checks <- setdiff(checks, allowed_checks)
+if (length(invalid_checks) > 0) {
+  stop(
+    paste0(
+      "Invalid check(s) requested: ",
+      paste(invalid_checks, collapse = ", "),
+      ". Allowed options are: ",
+      paste(allowed_checks, collapse = ", ")
+    )
+  )
+}
+
 output_dir <- arguments$output_path
 database_id <- arguments$database_id
 sample_n <- as.numeric(arguments$sample)
