@@ -56,14 +56,9 @@ if (arguments$useDemographics) {
     futureObservationName = "future_observation"
   )
 
-  if ("inObservation" %in% names(formals(addDemographics))) {
-    demographicsArgs$inObservation <- arguments$addInObservation
-    demographicsArgs$inObservationName <- "in_observation"
-  }
-
   cohort <- do.call(addDemographics, c(list(x = cohort), demographicsArgs))
 
-  if (arguments$addInObservation && !("inObservation" %in% names(formals(addDemographics)))) {
+  if (arguments$addInObservation) {
     inWin <- parseWindows(arguments$inObservationWindow)
     cohort <- cohort |> addInObservation(
       indexDate = arguments$indexDate,

@@ -11,6 +11,7 @@ Options:
   --order=<order>               first or last [default: first]
   --indexDate=<date_col>        Date column to use as index [default: cohort_start_date]
   --targetDate=<col>            Date column in target table
+  --inObservation=<logical>     Keep only records in observation [default: TRUE]
   --nameStyle=<style>           Naming pattern [default: {table_name}_{window_name}]
 ' -> doc
 
@@ -37,6 +38,7 @@ cohort <- cohort |>
     order = arguments$order,
     indexDate = indexDate,
     targetDate = targetDate,
+    inObservation = parseLogical(arguments$inObservation, TRUE),
     nameStyle = arguments$nameStyle
   )
 
