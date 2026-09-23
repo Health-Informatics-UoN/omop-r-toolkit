@@ -13,8 +13,6 @@ permissions:
 
 on:
   push:
-    branches:
-      - main
 
 jobs:
   # release:
@@ -88,13 +86,13 @@ jobs:
         with:
           context: ${{ env.context }}
           file: ${{ env.dockerfile }}
-          push: true
+          # push: true
           platforms: ${{ env.platforms }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           annotations: ${{ steps.meta.outputs.annotations }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: "type=gha"
+          cache-to: "type=gha,mode=max"
   # semver-container:
   #   uses: health-informatics-uon/workflows/.github/workflows/semver-container.yml@1.4.9
   #   needs: [release, publish-container]
