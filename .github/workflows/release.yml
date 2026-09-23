@@ -91,8 +91,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           annotations: ${{ steps.meta.outputs.annotations }}
-          cache-from: "type=gha"
-          cache-to: "type=gha,mode=max"
+          cache-from: ""
+          cache-to: ""
   # semver-container:
   #   uses: health-informatics-uon/workflows/.github/workflows/semver-container.yml@1.4.9
   #   needs: [release, publish-container]
