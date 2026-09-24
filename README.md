@@ -226,34 +226,133 @@ The output from this is in the [omopgenerics summarised result format](https://d
 omopgenerics::importSummarisedResult("my-incidence-file.csv") |> plotIncidence()
 ```
 
-### Drug Exposure Diagnostics
+### PatientProfiles
 ```sh
+Add patient-level cohort features using PatientProfiles.
+
 Usage:
-  drugExposureDiagnostics.R --ingredients=<ids> [options]
+  addCharacteristics.R <name> [options]
 
 Options:
   -h --help                     Show this screen
   --version                     Show version
-  --ingredients=<ids>           Comma-separated ingredient concept IDs (e.g. 1125315,161)
-  --checks=<checks>             Comma-separated checks to run [default: missing,exposureDuration,type,route,sourceConcept,daysSupply,verbatimEndDate,dose,sig,quantity,daysBetween,diagnosticsSummary]
-  --output-path=<path>          Directory to write output csvs to [default: outputs/ded/]
-  --databaseId=<id>             Database identifier [default: OMOP_DB]
-  --sample=<n>                  Number of records to sample (0 = all) [default: 10000]
-  --minCellCount=<n>            Minimum cell count for disclosure control [default: 5]
-  --earliestStartDate=<date>    Earliest drug exposure start date [default: 1900-01-01]
-  --byConcept                   Return results broken down by drug concept
-  --subsetToConceptId=<ids>     Comma-separated concept IDs to include (+) or exclude (-)
-  --exposureTypeId=<id>         Drug exposure type concept ID to filter on
-  --tablePrefix=<prefix>        Prefix for temporary database tables
+  --indexDate=<date_col>        Date column to use as index [default: cohort_start_date]
+  --addAge                      Add age at index date
+  --ageGroup=<json>             JSON list of age groups [default: [[0,150]]]
+  --ageName=<name>              Name for the age column [default: age]
+  --ageMissingMonth=<m>         Month assumed if missing [default: NULL]
+  --ageMissingDay=<d>           Day assumed if missing [default: NULL]
+  --ageImposeMonth              Impose missing month to ageMissingMonth
+  --ageImposeDay                Impose missing day to ageMissingDay
+  --addSex                      Add sex
+  --addPriorObservation         Add days of prior observation
+  --addFutureObservation        Add days of future observation
+  --addInObservation            Add in-observation flag
+  --inObservationWindow=<win>   Window for in-observation [default: 0,0]
+  --completeInterval            Require complete interval for in-observation
+  --useDemographics             Use addDemographics() (more efficient, combines selected)
 ```
 
-This script runs drug exposure diagnostics for a list of ingredient concept IDs and writes the package-standard result files to the chosen output folder.
+**Example:**
+```R
+Rscript inst/scripts/addCharacteristics.R skin_cancer \
+  --addAge \
+  --ageGroup='[[0,17],[18,64],[65,150]]' \
+  --addSex \
+  --addPriorObservation \
+  --addFutureObservation \
+  --addInObservation \
+  --inObservationWindow='[0,0]' \
+  --useDemographics
+```
 
-Example:
-
+#### Add table intersections
 ```sh
-Rscript inst/scripts/drugExposureDiagnostics.R \
-  --ingredients=1125315 \
-  --byConcept \
-  --output-path=outputs/ded/
+Add table intersection counts, dates, days, or flags using PatientProfiles.
+
+Usage:
+  addTableIntersectCount.R <name> --tableName=<table> [options]
+  addTableIntersectDate.R <name> --tableName=<table> [options]
+  addTableIntersectDays.R <name> --tableName=<table> [options]
+  addTableIntersectFlag.R <name> --tableName=<table> [options]
+
+Options:
+  -h --help                     Show this screen
+  --version                     Show version
+  --tableName=<table>           OMOP table name
+  --window=<window>             Window [default: [-Inf,Inf]]
+  --indexDate=<date_col>        Date column to use as index [default: cohort_start_date]
+  --targetStartDate=<col>       Start date column in target table
+  --targetEndDate=<col>         End date column in target table
+  --targetDate=<col>            Date column in target table
+  --order=<order>               first or last [default: first]
+  --inObservation=<logical>     Keep only records in observation [default: TRUE]
+  --nameStyle=<style>           Naming pattern [default: {table_name}_{window_name}]
+```
+
+**Example:**
+```R
+Rscript inst/scripts/addTableIntersectCount.R skin_cancer \
+  --tableName='drug_exposure' \
+  --window='[-365,0]' \
+  --inObservation='TRUE' \
+  --nameStyle='{table_name}_{window_name}'
+```
+
+#### Add cohort intersections
+```sh
+Add cohort intersection counts, dates, days, or flags using PatientProfiles.
+
+Usage:
+  addCohortIntersectCount.R <name> --targetCohortTable=<target> [options]
+  addCohortIntersectDate.R <name> --targetCohortTable=<target> [options]
+  addCohortIntersectDays.R <name> --targetCohortTable=<target> [options]
+  addCohortIntersectFlag.R <name> --targetCohortTable=<target> [options]
+
+Options:
+  -h --help                     Show this screen
+  --version                     Show version
+  --targetCohortTable=<target>  Name of the target cohort table
+  --targetCohortId=<id>         Specific cohort definition ID (optional)
+  --window=<window>             Window [default: -Inf,Inf]
+  --indexDate=<date_col>        Date column to use as index [default: cohort_start_date]
+  --targetStartDate=<col>       Start date column in target cohort [default: cohort_start_date]
+  --targetEndDate=<col>         End date column in target cohort [default: cohort_end_date]
+  --nameStyle=<style>           Naming pattern [default: {cohort_name}_{window_name}]
+```
+
+**Example:**
+```R
+Rscript inst/scripts/addCohortIntersectCount.R skin_cancer \
+  --targetCohortTable='target_cohort' \
+  --targetCohortId='1' \
+  --window='[-365,0]' \
+  --nameStyle='{cohort_name}_{window_name}'
+```
+
+#### Add concept intersections
+```sh
+Add concept intersection counts, dates, or flags using PatientProfiles.
+
+Usage:
+  addConceptIntersectCount.R <name> --conceptSet=<json> [options]
+  addConceptIntersectDate.R <name> --conceptSet=<json> [options]
+  addConceptIntersectDays.R <name> --conceptSet=<json> [options]
+  addConceptIntersectFlag.R <name> --conceptSet=<json> [options]
+
+Options:
+  -h --help                     Show this screen
+  --version                     Show version
+  --conceptSet=<json>           JSON concept set
+  --window=<window>             Window [default: [[-Inf,Inf]]]
+  --indexDate=<date_col>        Date column to use as index [default: cohort_start_date]
+  --nameStyle=<style>           Naming pattern [default: {concept_name}_{window_name}]
+```
+
+**Example:**
+```R
+Rscript inst/scripts/addConceptIntersectCount.R skin_cancer \
+  --conceptSet='[{"concept_id": 1118084, "concept_name": "metformin"}]' \
+  --window='[[0,30],[31,365]]' \
+  --nameStyle='{concept_name}_{window_name}'
 ```

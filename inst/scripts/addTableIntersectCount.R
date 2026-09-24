@@ -31,7 +31,6 @@ indexDate <- if (is.null(arguments$indexDate) || !nzchar(arguments$indexDate, ke
 window <- parseWindows(arguments$window)
 targetStartDate <- if (!is.null(arguments$targetStartDate) && nzchar(arguments$targetStartDate)) arguments$targetStartDate else startDateColumn(arguments$tableName)
 targetEndDate <- if (!is.null(arguments$targetEndDate) && nzchar(arguments$targetEndDate)) arguments$targetEndDate else endDateColumn(arguments$tableName)
-inObservation <- as.logical(arguments$inObservation)
 
 cohort <- cohort |>
   addTableIntersectCount(
@@ -40,7 +39,7 @@ cohort <- cohort |>
     indexDate = indexDate,
     targetStartDate = targetStartDate,
     targetEndDate = targetEndDate,
-    inObservation = inObservation,
+    inObservation = parseLogical(arguments$inObservation, TRUE),
     nameStyle = arguments$nameStyle
   )
 

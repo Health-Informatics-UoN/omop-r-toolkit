@@ -30,7 +30,6 @@ cohort <- cdm[[arguments$name]]
 indexDate <- if (is.null(arguments$indexDate) || !nzchar(arguments$indexDate, keepNA = FALSE)) "cohort_start_date" else arguments$indexDate
 window <- parseWindows(arguments$window)
 targetDate <- if (!is.null(arguments$targetDate) && nzchar(arguments$targetDate)) arguments$targetDate else startDateColumn(arguments$tableName)
-inObservation <- as.logical(arguments$inObservation)
 
 cohort <- cohort |>
   addTableIntersectDate(
@@ -39,7 +38,7 @@ cohort <- cohort |>
     order = arguments$order,
     indexDate = indexDate,
     targetDate = targetDate,
-    inObservation = inObservation,
+    inObservation = parseLogical(arguments$inObservation, TRUE),
     nameStyle = arguments$nameStyle
   )
 
