@@ -265,3 +265,94 @@ Rscript inst/scripts/addCharacteristics.R skin_cancer \
   --inObservationWindow='[0,0]' \
   --useDemographics
 ```
+
+#### Add table intersections
+```sh
+Add table intersection counts, dates, days, or flags using PatientProfiles.
+
+Usage:
+  addTableIntersectCount.R <name> --tableName=<table> [options]
+  addTableIntersectDate.R <name> --tableName=<table> [options]
+  addTableIntersectDays.R <name> --tableName=<table> [options]
+  addTableIntersectFlag.R <name> --tableName=<table> [options]
+
+Options:
+  -h --help                     Show this screen
+  --version                     Show version
+  --tableName=<table>           OMOP table name
+  --window=<window>             Window [default: [-Inf,Inf]]
+  --indexDate=<date_col>        Date column to use as index [default: cohort_start_date]
+  --targetStartDate=<col>       Start date column in target table
+  --targetEndDate=<col>         End date column in target table
+  --targetDate=<col>            Date column in target table
+  --order=<order>               first or last [default: first]
+  --inObservation=<logical>     Keep only records in observation [default: TRUE]
+  --nameStyle=<style>           Naming pattern [default: {table_name}_{window_name}]
+```
+
+**Example:**
+```R
+Rscript inst/scripts/addTableIntersectCount.R skin_cancer \
+  --tableName='drug_exposure' \
+  --window='[-365,0]' \
+  --inObservation='TRUE' \
+  --nameStyle='{table_name}_{window_name}'
+```
+
+#### Add cohort intersections
+```sh
+Add cohort intersection counts, dates, days, or flags using PatientProfiles.
+
+Usage:
+  addCohortIntersectCount.R <name> --targetCohortTable=<target> [options]
+  addCohortIntersectDate.R <name> --targetCohortTable=<target> [options]
+  addCohortIntersectDays.R <name> --targetCohortTable=<target> [options]
+  addCohortIntersectFlag.R <name> --targetCohortTable=<target> [options]
+
+Options:
+  -h --help                     Show this screen
+  --version                     Show version
+  --targetCohortTable=<target>  Name of the target cohort table
+  --targetCohortId=<id>         Specific cohort definition ID (optional)
+  --window=<window>             Window [default: -Inf,Inf]
+  --indexDate=<date_col>        Date column to use as index [default: cohort_start_date]
+  --targetStartDate=<col>       Start date column in target cohort [default: cohort_start_date]
+  --targetEndDate=<col>         End date column in target cohort [default: cohort_end_date]
+  --nameStyle=<style>           Naming pattern [default: {cohort_name}_{window_name}]
+```
+
+**Example:**
+```R
+Rscript inst/scripts/addCohortIntersectCount.R skin_cancer \
+  --targetCohortTable='target_cohort' \
+  --targetCohortId='1' \
+  --window='[-365,0]' \
+  --nameStyle='{cohort_name}_{window_name}'
+```
+
+#### Add concept intersections
+```sh
+Add concept intersection counts, dates, or flags using PatientProfiles.
+
+Usage:
+  addConceptIntersectCount.R <name> --conceptSet=<json> [options]
+  addConceptIntersectDate.R <name> --conceptSet=<json> [options]
+  addConceptIntersectDays.R <name> --conceptSet=<json> [options]
+  addConceptIntersectFlag.R <name> --conceptSet=<json> [options]
+
+Options:
+  -h --help                     Show this screen
+  --version                     Show version
+  --conceptSet=<json>           JSON concept set
+  --window=<window>             Window [default: [[-Inf,Inf]]]
+  --indexDate=<date_col>        Date column to use as index [default: cohort_start_date]
+  --nameStyle=<style>           Naming pattern [default: {concept_name}_{window_name}]
+```
+
+**Example:**
+```R
+Rscript inst/scripts/addConceptIntersectCount.R skin_cancer \
+  --conceptSet='[{"concept_id": 1118084, "concept_name": "metformin"}]' \
+  --window='[[0,30],[31,365]]' \
+  --nameStyle='{concept_name}_{window_name}'
+```
