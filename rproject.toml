@@ -1,0 +1,40 @@
+[project]
+name = "omop-r-tools"
+r_version = "4.6"
+
+# Optional: base URL for `rv add owner/repo` shorthand (defaults to https://github.com).
+# git_shorthand_base_url = "https://github.example.com"
+# A list of repositories to fetch packages from. Order matters: we will try to get a package from each repository in order.
+# The alias is only used in this file if you want to specifically require a dependency to come from a certain repository.
+# Example: { alias = "PPM", url = "https://packagemanager.posit.co/cran/latest" },
+repositories = [
+  { alias = "PPM", url = "https://packagemanager.posit.co/cran/latest" },
+  { alias = "CRAN", url = "https://cloud.r-project.org/"}
+]
+
+# A list of packages to install and any additional configuration
+# Examples:
+    # "dplyr",
+    # {name = "dplyr", repository = "CRAN"},
+    # {name = "dplyr", git = "https://github.com/tidyverse/dplyr.git", tag = "v1.1.4"},
+dependencies = [
+    "DBI",
+    "RPostgres",
+    "remotes",
+    "purrr",
+    "ParallelLogger",
+    "jsonlite",
+    "docopt",
+    "SqlRender",
+    "DatabaseConnector",
+    "omopgenerics",
+    "CDMConnector",
+    "CohortGenerator",
+    "CodelistGenerator",
+    { name = "PatientProfiles", url = "https://packagemanager.posit.co/cran/latest/src/contrib/PatientProfiles_1.6.1.tar.gz" },
+    "IncidencePrevalence",
+    "CohortCharacteristics",
+    "CohortSurvival",
+    "DrugUtilisation",
+    "DrugExposureDiagnostics"
+]
