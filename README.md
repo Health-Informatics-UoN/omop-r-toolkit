@@ -404,6 +404,10 @@ Rscript inst/scripts/summariseIndication.R drug_cohort \
 ```sh
 Usage:
   summariseDoseCoverage.R <name> [options]
+### Drug Exposure Diagnostics
+```sh
+Usage:
+  drugExposureDiagnostics.R --ingredients=<ids> [options]
 
 Options:
   -h --help                     Show this screen
@@ -467,6 +471,20 @@ Options:
   --suppressGroup               Suppress group columns
   --output-path=<path>          Output CSV path
 ```
+  --ingredients=<ids>           Comma-separated ingredient concept IDs (e.g. 1125315,161)
+  --checks=<checks>             Comma-separated checks to run [default: missing,exposureDuration,type,route,sourceConcept,daysSupply,verbatimEndDate,dose,sig,quantity,daysBetween,diagnosticsSummary]
+  --output-path=<path>          Directory to write output csvs to [default: outputs/ded/]
+  --databaseId=<id>             Database identifier [default: OMOP_DB]
+  --sample=<n>                  Number of records to sample (0 = all) [default: 10000]
+  --minCellCount=<n>            Minimum cell count for disclosure control [default: 5]
+  --earliestStartDate=<date>    Earliest drug exposure start date [default: 1900-01-01]
+  --byConcept                   Return results broken down by drug concept
+  --subsetToConceptId=<ids>     Comma-separated concept IDs to include (+) or exclude (-)
+  --exposureTypeId=<id>         Drug exposure type concept ID to filter on
+  --tablePrefix=<prefix>        Prefix for temporary database tables
+```
+
+This script runs drug exposure diagnostics for a list of ingredient concept IDs and writes the package-standard result files to the chosen output folder.
 
 Example:
 
