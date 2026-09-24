@@ -12,18 +12,18 @@ Options:
   --estimates=<json>                JSON vector of estimates [default: ["mean","sd","count_missing","percentage_missing"]]
   --indexDate=<date_col>            Index date column [default: cohort_start_date]
   --censorDate=<date_col>           Optional censor date column
-  --restrictIncident=<logical>      Restrict to incident exposures [default: TRUE]
+  --restrictIncident=<logical>      Restrict to incident exposures
   --gapEra=<n>                     Gap era in days [default: 7]
-  --numberExposures=<logical>      Include number of exposures [default: TRUE]
-  --numberEras=<logical>           Include number of eras [default: TRUE]
-  --daysExposed=<logical>          Include days exposed [default: TRUE]
-  --daysPrescribed=<logical>       Include days prescribed [default: TRUE]
-  --timeToExposure=<logical>        Include time to exposure [default: TRUE]
-  --initialExposureDuration=<logical> Include initial exposure duration [default: TRUE]
-  --initialQuantity=<logical>      Include initial quantity [default: TRUE]
-  --cumulativeQuantity=<logical>   Include cumulative quantity [default: TRUE]
-  --initialDailyDose=<logical>     Include initial daily dose [default: TRUE]
-  --cumulativeDose=<logical>       Include cumulative dose [default: TRUE]
+  --numberExposures=<logical>      Include number of exposures
+  --numberEras=<logical>           Include number of eras
+  --daysExposed=<logical>          Include days exposed
+  --daysPrescribed=<logical>       Include days prescribed
+  --timeToExposure=<logical>        Include time to exposure
+  --initialExposureDuration=<logical> Include initial exposure duration
+  --initialQuantity=<logical>      Include initial quantity
+  --cumulativeQuantity=<logical>   Include cumulative quantity
+  --initialDailyDose=<logical>     Include initial daily dose
+  --cumulativeDose=<logical>       Include cumulative dose
   --output-path=<path>             Output CSV path
 ' -> doc
 
@@ -53,27 +53,33 @@ if (!is.null(arguments$conceptSet) && nzchar(arguments$conceptSet)) {
 strata <- parseJSONOrDefault(arguments$strata, list())
 estimates <- parseJSONOrDefault(arguments$estimates, c("mean", "sd", "count_missing", "percentage_missing"))
 
-result <- cohort |>
-  summariseDrugUtilisation(
-    strata = strata,
-    estimates = estimates,
-    ingredientConceptId = ingredient_ids,
-    conceptSet = concept_set,
-    indexDate = arguments$indexDate,
-    censorDate = if (is.null(arguments$censorDate) || !nzchar(arguments$censorDate)) NULL else arguments$censorDate,
-    restrictIncident = parseLogical(arguments$restrictIncident, TRUE),
-    gapEra = as.numeric(arguments$gapEra),
-    numberExposures = parseLogical(arguments$numberExposures, TRUE),
-    numberEras = parseLogical(arguments$numberEras, TRUE),
-    daysExposed = parseLogical(arguments$daysExposed, TRUE),
-    daysPrescribed = parseLogical(arguments$daysPrescribed, TRUE),
-    timeToExposure = parseLogical(arguments$timeToExposure, TRUE),
-    initialExposureDuration = parseLogical(arguments$initialExposureDuration, TRUE),
-    initialQuantity = parseLogical(arguments$initialQuantity, TRUE),
-    cumulativeQuantity = parseLogical(arguments$cumulativeQuantity, TRUE),
-    initialDailyDose = parseLogical(arguments$initialDailyDose, TRUE),
-    cumulativeDose = parseLogical(arguments$cumulativeDose, TRUE)
-  )
+utilisation_arguments <- list(
+  strata = strata,
+  estimates = estimates,
+  ingredientConceptId = ingredient_ids,
+  conceptSet = concept_set,
+  indexDate = arguments$indexDate,
+  censorDate = if (is.null(arguments$censorDate) || !nzchar(arguments$censorDate)) NULL else arguments$censorDate,
+  gapEra = as.numeric(arguments$gapEra)
+)
+utilisation_arguments <- c(utilisation_arguments, Filter(Negate(is.null), list(
+  restrictIncident = parseLogical(arguments$restrictIncident),
+  numberExposures = parseLogical(arguments$numberExposures),
+  numberEras = parseLogical(arguments$numberEras),
+  daysExposed = parseLogical(arguments$daysExposed),
+  daysPrescribed = parseLogical(arguments$daysPrescribed),
+  timeToExposure = parseLogical(arguments$timeToExposure),
+  initialExposureDuration = parseLogical(arguments$initialExposureDuration),
+  initialQuantity = parseLogical(arguments$initialQuantity),
+  cumulativeQuantity = parseLogical(arguments$cumulativeQuantity),
+  initialDailyDose = parseLogical(arguments$initialDailyDose),
+  cumulativeDose = parseLogical(arguments$cumulativeDose)
+)))
+
+result <- do.call(
+  DrugUtilisation::summariseDrugUtilisation,
+  c(list(cohort = cohort), utilisation_arguments)
+)
 
 if (!is.null(arguments$output_path) && nzchar(arguments$output_path)) {
   dir.create(dirname(arguments$output_path), recursive = TRUE, showWarnings = FALSE)

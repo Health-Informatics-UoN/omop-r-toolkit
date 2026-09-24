@@ -11,8 +11,8 @@ Options:
   --gapEra=<n>                 Gap era in days [default: 1]
   --subsetCohort=<name>        Optional cohort table to subset from
   --subsetCohortId=<ids>       Optional cohort IDs to subset
-  --numberExposures=<logical>  Add number of exposures to the output cohort [default: FALSE]
-  --daysPrescribed=<logical>   Add days prescribed to the output cohort [default: FALSE]
+  --numberExposures=<logical>  Add number of exposures to the output cohort
+  --daysPrescribed=<logical>   Add days prescribed to the output cohort
   --output-path=<path>         Optional path to write cohort settings summary csv
 ' -> doc
 
@@ -33,17 +33,21 @@ if (is.null(arguments$ingredient) || !nzchar(arguments$ingredient)) {
 
 cdm <- connectFiveSafesTESPg("postgres_omop")
 
+cohort_arguments <- Filter(Negate(is.null), list(
+  numberExposures = parseLogical(arguments$numberExposures),
+  daysPrescribed = parseLogical(arguments$daysPrescribed)
+))
+
 if (!is.null(arguments$atc) && nzchar(arguments$atc)) {
-  cdm <- DrugUtilisation::generateAtcCohortSet(
+  cohort_arguments <- c(list(
     cdm = cdm,
     name = arguments$name,
     atcName = arguments$atc,
     gapEra = as.numeric(arguments$gapEra),
     subsetCohort = if (is.null(arguments$subsetCohort) || !nzchar(arguments$subsetCohort)) NULL else arguments$subsetCohort,
-    subsetCohortId = if (is.null(arguments$subsetCohortId) || !nzchar(arguments$subsetCohortId)) NULL else parseNumericVector(arguments$subsetCohortId),
-    numberExposures = parseLogical(arguments$numberExposures, FALSE),
-    daysPrescribed = parseLogical(arguments$daysPrescribed, FALSE)
-  )
+    subsetCohortId = if (is.null(arguments$subsetCohortId) || !nzchar(arguments$subsetCohortId)) NULL else parseNumericVector(arguments$subsetCohortId)
+  ), cohort_arguments)
+  cdm <- do.call(DrugUtilisation::generateAtcCohortSet, cohort_arguments)
 } else {
   ingredients <- strsplit(arguments$ingredient, ",", fixed = TRUE)[[1]]
   ingredients <- trimws(ingredients)
@@ -53,16 +57,15 @@ if (!is.null(arguments$atc) && nzchar(arguments$atc)) {
     stop("No valid ingredient names were supplied")
   }
 
-  cdm <- DrugUtilisation::generateIngredientCohortSet(
+  cohort_arguments <- c(list(
     cdm = cdm,
     name = arguments$name,
     ingredient = ingredients,
     gapEra = as.numeric(arguments$gapEra),
     subsetCohort = if (is.null(arguments$subsetCohort) || !nzchar(arguments$subsetCohort)) NULL else arguments$subsetCohort,
-    subsetCohortId = if (is.null(arguments$subsetCohortId) || !nzchar(arguments$subsetCohortId)) NULL else parseNumericVector(arguments$subsetCohortId),
-    numberExposures = parseLogical(arguments$numberExposures, FALSE),
-    daysPrescribed = parseLogical(arguments$daysPrescribed, FALSE)
-  )
+    subsetCohortId = if (is.null(arguments$subsetCohortId) || !nzchar(arguments$subsetCohortId)) NULL else parseNumericVector(arguments$subsetCohortId)
+  ), cohort_arguments)
+  cdm <- do.call(DrugUtilisation::generateIngredientCohortSet, cohort_arguments)
 }
 
 if (!is.null(arguments$output_path) && nzchar(arguments$output_path)) {

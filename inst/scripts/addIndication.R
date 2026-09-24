@@ -12,8 +12,8 @@ Options:
   --unknownIndicationTable=<table>   Optional table for unknown indications (e.g. condition_occurrence)
   --indexDate=<date_col>             Index date column [default: cohort_start_date]
   --censorDate=<date_col>            Optional censor date column
-  --mutuallyExclusive=<logical>      Consider mutually exclusive indication labels [default: FALSE]
-  --restrictIncident=<logical>       Restrict to incident indication events [default: TRUE]
+  --mutuallyExclusive=<logical>      Consider mutually exclusive indication labels
+  --restrictIncident=<logical>       Restrict to incident indication events
   --nameStyle=<style>                Naming style for the added columns [default: {window_name}]
 ' -> doc
 
@@ -42,18 +42,24 @@ if (!is.null(arguments$unknownIndicationTable) && nzchar(arguments$unknownIndica
 
 window_list <- parseWindows(arguments$window)
 
-cohort <- cohort |>
-  addIndication(
-    indicationCohortName = arguments$indicationCohortName,
-    indicationCohortId = indication_id,
-    indicationWindow = window_list,
-    unknownIndicationTable = unknown_table,
-    indexDate = arguments$indexDate,
-    censorDate = if (is.null(arguments$censorDate) || !nzchar(arguments$censorDate)) NULL else arguments$censorDate,
-    mutuallyExclusive = parseLogical(arguments$mutuallyExclusive, FALSE),
-    nameStyle = arguments$nameStyle,
-    restrictIncident = parseLogical(arguments$restrictIncident, TRUE)
-  )
+indication_arguments <- list(
+  indicationCohortName = arguments$indicationCohortName,
+  indicationCohortId = indication_id,
+  indicationWindow = window_list,
+  unknownIndicationTable = unknown_table,
+  indexDate = arguments$indexDate,
+  censorDate = if (is.null(arguments$censorDate) || !nzchar(arguments$censorDate)) NULL else arguments$censorDate,
+  nameStyle = arguments$nameStyle
+)
+indication_arguments <- c(indication_arguments, Filter(Negate(is.null), list(
+  mutuallyExclusive = parseLogical(arguments$mutuallyExclusive),
+  restrictIncident = parseLogical(arguments$restrictIncident)
+)))
+
+cohort <- do.call(
+  DrugUtilisation::addIndication,
+  c(list(cohort = cohort), indication_arguments)
+)
 
 cdm[[arguments$name]] <- cohort
 CDMConnector::cdmDisconnect(cdm)

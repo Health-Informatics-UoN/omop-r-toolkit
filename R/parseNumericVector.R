@@ -21,17 +21,20 @@ parseNumericVector <- function(x) {
   as.numeric(values)
 }
 
-parseLogical <- function(x, default = FALSE) {
+parseLogical <- function(x) {
   if (is.null(x) || identical(x, "") || identical(x, "NULL")) {
-    return(default)
+    return(NULL)
   }
-  if (is.logical(x)) {
+  if (is.logical(x) && length(x) == 1 && !is.na(x)) {
     return(x)
   }
-  if (is.character(x)) {
+  if (is.character(x) && length(x) == 1) {
     x <- trimws(x)
     if (tolower(x) %in% c("true", "t", "1", "yes", "y")) return(TRUE)
     if (tolower(x) %in% c("false", "f", "0", "no", "n")) return(FALSE)
   }
-  default
+  stop(
+    "Invalid logical value: expected true/false, t/f, 1/0, yes/no, or y/n",
+    call. = FALSE
+  )
 }

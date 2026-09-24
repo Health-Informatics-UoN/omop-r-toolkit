@@ -11,17 +11,17 @@ Options:
   --gapEra=<n>                     Gap era in days [default: 7]
   --indexDate=<date_col>            Index date column [default: cohort_start_date]
   --censorDate=<date_col>           Optional censor date column
-  --restrictIncident=<logical>      Restrict to incident exposures [default: TRUE]
-  --numberExposures=<logical>      Include number of exposures [default: TRUE]
-  --numberEras=<logical>           Include number of eras [default: TRUE]
-  --daysExposed=<logical>          Include days exposed [default: TRUE]
-  --daysPrescribed=<logical>       Include days prescribed [default: TRUE]
-  --timeToExposure=<logical>        Include time to exposure [default: TRUE]
-  --initialExposureDuration=<logical> Include initial exposure duration [default: TRUE]
-  --initialQuantity=<logical>      Include initial quantity [default: TRUE]
-  --cumulativeQuantity=<logical>   Include cumulative quantity [default: TRUE]
-  --initialDailyDose=<logical>     Include initial daily dose [default: TRUE]
-  --cumulativeDose=<logical>       Include cumulative dose [default: TRUE]
+  --restrictIncident=<logical>      Restrict to incident exposures
+  --numberExposures=<logical>      Include number of exposures
+  --numberEras=<logical>           Include number of eras
+  --daysExposed=<logical>          Include days exposed
+  --daysPrescribed=<logical>       Include days prescribed
+  --timeToExposure=<logical>        Include time to exposure
+  --initialExposureDuration=<logical> Include initial exposure duration
+  --initialQuantity=<logical>      Include initial quantity
+  --cumulativeQuantity=<logical>   Include cumulative quantity
+  --initialDailyDose=<logical>     Include initial daily dose
+  --cumulativeDose=<logical>       Include cumulative dose
   --nameStyle=<style>              Name style for added columns [default: {variable}]
 ' -> doc
 
@@ -48,27 +48,33 @@ if (!is.null(arguments$conceptSet) && nzchar(arguments$conceptSet)) {
   concept_set <- jsonlite::fromJSON(arguments$conceptSet)
 }
 
-cohort <- cohort |>
-  DrugUtilisation::addDrugUtilisation(
-    gapEra = as.numeric(arguments$gapEra),
-    conceptSet = concept_set,
-    ingredientConceptId = ingredient_ids,
-    indexDate = arguments$indexDate,
-    censorDate = if (is.null(arguments$censorDate) || !nzchar(arguments$censorDate)) NULL else arguments$censorDate,
-    restrictIncident = parseLogical(arguments$restrictIncident, TRUE),
-    numberExposures = parseLogical(arguments$numberExposures, TRUE),
-    numberEras = parseLogical(arguments$numberEras, TRUE),
-    daysExposed = parseLogical(arguments$daysExposed, TRUE),
-    daysPrescribed = parseLogical(arguments$daysPrescribed, TRUE),
-    timeToExposure = parseLogical(arguments$timeToExposure, TRUE),
-    initialExposureDuration = parseLogical(arguments$initialExposureDuration, TRUE),
-    initialQuantity = parseLogical(arguments$initialQuantity, TRUE),
-    cumulativeQuantity = parseLogical(arguments$cumulativeQuantity, TRUE),
-    initialDailyDose = parseLogical(arguments$initialDailyDose, TRUE),
-    cumulativeDose = parseLogical(arguments$cumulativeDose, TRUE),
-    nameStyle = arguments$nameStyle,
-    name = arguments$name
-  )
+utilisation_arguments <- list(
+  gapEra = as.numeric(arguments$gapEra),
+  conceptSet = concept_set,
+  ingredientConceptId = ingredient_ids,
+  indexDate = arguments$indexDate,
+  censorDate = if (is.null(arguments$censorDate) || !nzchar(arguments$censorDate)) NULL else arguments$censorDate,
+  nameStyle = arguments$nameStyle,
+  name = arguments$name
+)
+utilisation_arguments <- c(utilisation_arguments, Filter(Negate(is.null), list(
+  restrictIncident = parseLogical(arguments$restrictIncident),
+  numberExposures = parseLogical(arguments$numberExposures),
+  numberEras = parseLogical(arguments$numberEras),
+  daysExposed = parseLogical(arguments$daysExposed),
+  daysPrescribed = parseLogical(arguments$daysPrescribed),
+  timeToExposure = parseLogical(arguments$timeToExposure),
+  initialExposureDuration = parseLogical(arguments$initialExposureDuration),
+  initialQuantity = parseLogical(arguments$initialQuantity),
+  cumulativeQuantity = parseLogical(arguments$cumulativeQuantity),
+  initialDailyDose = parseLogical(arguments$initialDailyDose),
+  cumulativeDose = parseLogical(arguments$cumulativeDose)
+)))
+
+cohort <- do.call(
+  DrugUtilisation::addDrugUtilisation,
+  c(list(cohort = cohort), utilisation_arguments)
+)
 
 cdm[[arguments$name]] <- cohort
 CDMConnector::cdmDisconnect(cdm)

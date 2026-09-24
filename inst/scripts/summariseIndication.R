@@ -13,8 +13,8 @@ Options:
   --strata=<json>                       Optional JSON list of strata variables [default: []]
   --indexDate=<date_col>                Index date column [default: cohort_start_date]
   --censorDate=<date_col>               Optional censor date column
-  --mutuallyExclusive=<logical>         Consider mutually exclusive indication labels [default: FALSE]
-  --restrictIncident=<logical>          Restrict to incident indication events [default: TRUE]
+  --mutuallyExclusive=<logical>         Consider mutually exclusive indication labels
+  --restrictIncident=<logical>          Restrict to incident indication events
   --output-path=<path>                  Path to write output csv
 ' -> doc
 
@@ -45,18 +45,24 @@ if (!is.null(arguments$unknownIndicationTable) && nzchar(arguments$unknownIndica
 
 strata <- parseJSONOrDefault(arguments$strata, list())
 
-result <- cohort |>
-  summariseIndication(
-    indicationCohortName = arguments$indicationCohortName,
-    indicationCohortId = indication_id,
-    indicationWindow = window_list,
-    unknownIndicationTable = unknown_table,
-    strata = strata,
-    indexDate = arguments$indexDate,
-    censorDate = if (is.null(arguments$censorDate) || !nzchar(arguments$censorDate)) NULL else arguments$censorDate,
-    mutuallyExclusive = parseLogical(arguments$mutuallyExclusive, FALSE),
-    restrictIncident = parseLogical(arguments$restrictIncident, TRUE)
-  )
+indication_arguments <- list(
+  indicationCohortName = arguments$indicationCohortName,
+  indicationCohortId = indication_id,
+  indicationWindow = window_list,
+  unknownIndicationTable = unknown_table,
+  strata = strata,
+  indexDate = arguments$indexDate,
+  censorDate = if (is.null(arguments$censorDate) || !nzchar(arguments$censorDate)) NULL else arguments$censorDate
+)
+indication_arguments <- c(indication_arguments, Filter(Negate(is.null), list(
+  mutuallyExclusive = parseLogical(arguments$mutuallyExclusive),
+  restrictIncident = parseLogical(arguments$restrictIncident)
+)))
+
+result <- do.call(
+  DrugUtilisation::summariseIndication,
+  c(list(cohort = cohort), indication_arguments)
+)
 
 if (!is.null(arguments$output_path) && nzchar(arguments$output_path)) {
   dir.create(dirname(arguments$output_path), recursive = TRUE, showWarnings = FALSE)
