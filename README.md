@@ -305,7 +305,7 @@ Options:
 ```
 
 
-The defaults for `minEraDuration`, `combinationWindow` and `minPostCombinationDuration` are all 30, following the [TreatmentPatterns best practices](https://darwin-eu-dev.github.io/TreatmentPatterns/articles/a000_bestPractices.html) (`minPostCombinationDuration <= minEraDuration`, `combinationWindow >= minEraDuration`). The script warns if you choose settings that break these rules.
+The defaults for `minEraDuration`, `combinationWindow` and `minPostCombinationDuration` are all 30, following the [TreatmentPatterns best practices](https://darwin-eu-dev.github.io/TreatmentPatterns/articles/a000_bestPractices.html) (`minPostCombinationDuration <= minEraDuration`, `combinationWindow >= minEraDuration`). The script warns if you choose settings outside these suggestions.
 
 Only aggregate results are written, with counts below `--minCellCount` censored. Patient-level export and plots are not supported; plot the exported csvs outside the TRE.
 
