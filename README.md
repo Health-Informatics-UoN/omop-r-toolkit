@@ -228,7 +228,8 @@ omopgenerics::importSummarisedResult("my-incidence-file.csv") |> plotIncidence()
 
 ### Drug utilisation
 
-The following scripts provide cohort generation, patient-level variables, and summarised analyses using the [DrugUtilisation package](https://darwin-eu.github.io/DrugUtilisation/). Logical options accept explicit values such as `TRUE` or `FALSE`; when omitted, the DrugUtilisation package default is used.
+The following scripts provide cohort generation, patient-level variables, and summarised analyses using the [DrugUtilisation package](https://darwin-eu.github.io/DrugUtilisation/).
+Logical options take an explicit value such as `TRUE` or `FALSE`; invalid values cause the task to fail. When an option is omitted, the default shown in `[default: ...]` is used.
 
 #### Generate an ingredient or ATC cohort set
 
@@ -404,10 +405,6 @@ Rscript inst/scripts/summariseIndication.R drug_cohort \
 ```sh
 Usage:
   summariseDoseCoverage.R <name> [options]
-### Drug Exposure Diagnostics
-```sh
-Usage:
-  drugExposureDiagnostics.R --ingredients=<ids> [options]
 
 Options:
   -h --help                     Show this screen
@@ -471,6 +468,25 @@ Options:
   --suppressGroup               Suppress group columns
   --output-path=<path>          Output CSV path
 ```
+
+Example:
+
+```sh
+Rscript inst/scripts/finaliseDrugUtilisationResults.R \
+  outputs/drug-utilisation.csv \
+  outputs/indications.csv \
+  --suppressCounts \
+  --output-path=outputs/final-drug-utilisation.csv
+```
+
+### Drug Exposure Diagnostics
+```sh
+Usage:
+  drugExposureDiagnostics.R --ingredients=<ids> [options]
+
+Options:
+  -h --help                     Show this screen
+  --version                     Show version
   --ingredients=<ids>           Comma-separated ingredient concept IDs (e.g. 1125315,161)
   --checks=<checks>             Comma-separated checks to run [default: missing,exposureDuration,type,route,sourceConcept,daysSupply,verbatimEndDate,dose,sig,quantity,daysBetween,diagnosticsSummary]
   --output-path=<path>          Directory to write output csvs to [default: outputs/ded/]
@@ -489,9 +505,8 @@ This script runs drug exposure diagnostics for a list of ingredient concept IDs 
 Example:
 
 ```sh
-Rscript inst/scripts/finaliseDrugUtilisationResults.R \
-  outputs/drug-utilisation.csv \
-  outputs/indications.csv \
-  --suppressCounts \
-  --output-path=outputs/final-drug-utilisation.csv
+Rscript inst/scripts/drugExposureDiagnostics.R \
+  --ingredients=1125315 \
+  --byConcept \
+  --output-path=outputs/ded/
 ```
