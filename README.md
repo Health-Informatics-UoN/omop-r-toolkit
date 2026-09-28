@@ -295,7 +295,7 @@ Options:
   --eraCollapseSize=<days>                 Gap within which repeated eras of the same event are collapsed [default: 30]
   --combinationWindow=<days>               Minimum overlap for two events to count as a combination [default: 30]
   --minPostCombinationDuration=<days>      Minimum duration of eras left after splitting out a combination [default: 30]
-  --overlapMethod=<method>                 How to handle non-significant overlap. One of truncate, keep [default: truncate]
+  --overlapWithKeep=<method>               Keep both records dates for non-significant overlap (overlapMethod = "keep"). Otherwise the first record is truncated.
   --maxPathLength=<n>                      Maximum number of steps in a pathway [default: 5]
   --concatTargets=<logical>                Concatenate multiple target cohort entries per person [default: TRUE]
   --minCellCount=<n>                       Minimum cell count for disclosure control [default: 5]
