@@ -50,6 +50,8 @@ source("R/postgres-connect-5s-tes.R")
 source("R/cleanCohortTables.R")
 source("R/parseIntList.R")
 source("R/treatmentPatternsCohorts.R")
+source("R/parseStringVector.R")
+source("R/checkChoice.R")
 
 arguments <- docopt(doc, version = "Treatment Patterns 0.1.0")
 
