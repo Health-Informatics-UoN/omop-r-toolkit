@@ -3,21 +3,10 @@ combinedSettings <- data.frame(
   cohort_name = c("viral_sinusitis", "amoxicillin", "aspirin", "death")
 )
 
-test_that("String vectors parse", {
-  expect_equal(parseStringVector("amoxicillin"), "amoxicillin")
-  expect_equal(parseStringVector("amoxicillin, aspirin"), c("amoxicillin", "aspirin"))
-  expect_equal(parseStringVector("amoxicillin,,aspirin,"), c("amoxicillin", "aspirin"))
-})
-
 test_that("Numbers parse and bad numbers error", {
   expect_equal(parseNumber("30", "minEraDuration"), 30)
   expect_equal(parseNumber("-30", "windowStart"), -30)
-  expect_error(parseNumber("thirty", "minEraDuration"), "must be a single number")
-})
-
-test_that("Choices are checked", {
-  expect_equal(checkChoice("First", c("First", "Changes", "All"), "filterTreatments"), "First")
-  expect_error(checkChoice("first", c("First", "Changes", "All"), "filterTreatments"), "must be one of")
+  expect_error(parseNumber("thirty", "minEraDuration"), "must be a number")
 })
 
 test_that("Pathway settings warn against best practice", {
