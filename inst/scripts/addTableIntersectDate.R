@@ -21,6 +21,7 @@ library(PatientProfiles)
 library(CDMConnector)
 source("R/postgres-connect-5s-tes.R")
 source("R/parseWindows.R")
+source("R/parseNumericVector.R")
 
 arguments <- docopt(doc, version = "Add Table Intersect Date 0.1.0")
 
@@ -38,7 +39,7 @@ cohort <- cohort |>
     order = arguments$order,
     indexDate = indexDate,
     targetDate = targetDate,
-    inObservation = parseLogical(arguments$inObservation, TRUE),
+    inObservation = parseLogical(arguments$inObservation),
     nameStyle = arguments$nameStyle
   )
 
