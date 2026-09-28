@@ -32,7 +32,7 @@ Options:
   --eraCollapseSize=<days>                 Gap within which repeated eras of the same event are collapsed [default: 30]
   --combinationWindow=<days>               Minimum overlap for two events to count as a combination [default: 30]
   --minPostCombinationDuration=<days>      Minimum duration of eras left after splitting out a combination [default: 30]
-  --overlapMethod=<method>                 How to handle non-significant overlap. One of truncate, keep [default: truncate]
+  --overlapWithKeep                        Keep both records dates for non-significant overlap (overlapMethod = "keep"). Otherwise the first record is truncated
   --maxPathLength=<n>                      Maximum number of steps in a pathway [default: 5]
   --concatTargets=<logical>                Concatenate multiple target cohort entries per person [default: TRUE]
   --minCellCount=<n>                       Minimum cell count for disclosure control [default: 5]
@@ -59,7 +59,7 @@ arguments <- docopt(doc, version = "Treatment Patterns 0.1.0")
 startAnchor <- checkChoice(arguments$startAnchor, c("startDate", "endDate"), "startAnchor")
 endAnchor <- checkChoice(arguments$endAnchor, c("startDate", "endDate"), "endAnchor")
 filterTreatments <- checkChoice(arguments$filterTreatments, c("First", "Changes", "All"), "filterTreatments")
-overlapMethod <- checkChoice(arguments$overlapMethod, c("truncate", "keep"), "overlapMethod")
+overlapMethod <- if (arguments$overlapWithKeep) "keep" else "truncate"
 censorType <- checkChoice(arguments$censorType, c("minCellCount", "remove", "mean"), "censorType")
 
 analysisId <- parseNumber(arguments$analysisId, "analysisId")
