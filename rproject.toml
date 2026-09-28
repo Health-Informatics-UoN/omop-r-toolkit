@@ -36,6 +36,6 @@ dependencies = [
     "CohortCharacteristics",
     "CohortSurvival",
     "DrugUtilisation",
-    "DrugExposureDiagnostics"
+    "DrugExposureDiagnostics",
     "TreatmentPatterns",
 ]
