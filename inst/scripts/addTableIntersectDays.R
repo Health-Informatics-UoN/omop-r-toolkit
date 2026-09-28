@@ -21,6 +21,7 @@ library(PatientProfiles)
 library(CDMConnector)
 source("R/postgres-connect-5s-tes.R")
 source("R/parseWindows.R")
+source("R/parseNumericVector.R")
 
 arguments <- docopt(doc, version = "Add Table Intersect Days 0.1.0")
 
@@ -30,7 +31,6 @@ cohort <- cdm[[arguments$name]]
 indexDate <- if (is.null(arguments$indexDate) || !nzchar(arguments$indexDate, keepNA = FALSE)) "cohort_start_date" else arguments$indexDate
 window <- parseWindows(arguments$window)
 targetDate <- if (!is.null(arguments$targetDate) && nzchar(arguments$targetDate)) arguments$targetDate else startDateColumn(arguments$tableName)
-inObservation <- as.logical(arguments$inObservation)
 
 cohort <- cohort |>
   addTableIntersectDays(
@@ -39,7 +39,7 @@ cohort <- cohort |>
     order = arguments$order,
     indexDate = indexDate,
     targetDate = targetDate,
-    inObservation = inObservation,
+    inObservation = parseLogical(arguments$inObservation),
     nameStyle = arguments$nameStyle
   )
 
