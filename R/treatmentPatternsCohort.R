@@ -4,29 +4,12 @@
 #' cohort settings (e.g. first occurrence until observation end for the target, all occurrences until
 #' event end for treatments). The script binds them into one table, and these helpers check and label them.
 
-parseStringVector <- function(string) {
-  values <- trimws(strsplit(string, ",")[[1]])
-  values[nzchar(values)]
-}
-
 parseNumber <- function(value, argName) {
   number <- suppressWarnings(as.numeric(value))
-  if (length(number) != 1 || is.na(number)) {
-    stop(sprintf("--%s must be a single number, got: %s", argName, value))
+  if (is.na(number)) {
+    stop(sprintf("--%s must be a number, got: %s", argName, value))
   }
   number
-}
-
-checkChoice <- function(value, choices, argName) {
-  if (length(value) != 1 || !value %in% choices) {
-    stop(sprintf(
-      "--%s must be one of %s, got: %s",
-      argName,
-      paste(choices, collapse = ", "),
-      value
-    ))
-  }
-  value
 }
 
 #' Warn when settings go against the TreatmentPatterns best-practice guidance:
