@@ -244,8 +244,8 @@ Options:
   --gapEra=<n>                  Gap era in days [default: 1]
   --subsetCohort=<name>         Optional cohort table to subset from
   --subsetCohortId=<ids>        Optional cohort IDs to subset
-  --numberExposures=<logical>   Add number of exposures to the output cohort
-  --daysPrescribed=<logical>    Add days prescribed to the output cohort
+  --numberExposures=<logical>   Add number of exposures to the output cohort [default: FALSE]
+  --daysPrescribed=<logical>    Add days prescribed to the output cohort [default: FALSE]
   --output-path=<path>          Optional path to write cohort settings summary csv
 ```
 
@@ -273,17 +273,17 @@ Options:
   --gapEra=<n>                        Gap era in days [default: 7]
   --indexDate=<date_col>              Index date column [default: cohort_start_date]
   --censorDate=<date_col>             Optional censor date column
-  --restrictIncident=<logical>        Restrict to incident exposures
-  --numberExposures=<logical>         Include number of exposures
-  --numberEras=<logical>              Include number of eras
-  --daysExposed=<logical>             Include days exposed
-  --daysPrescribed=<logical>          Include days prescribed
-  --timeToExposure=<logical>          Include time to exposure
-  --initialExposureDuration=<logical> Include initial exposure duration
-  --initialQuantity=<logical>         Include initial quantity
-  --cumulativeQuantity=<logical>      Include cumulative quantity
-  --initialDailyDose=<logical>        Include initial daily dose
-  --cumulativeDose=<logical>          Include cumulative dose
+  --restrictIncident=<logical>        Restrict to incident exposures [default: TRUE]
+  --numberExposures=<logical>         Include number of exposures [default: TRUE]
+  --numberEras=<logical>              Include number of eras [default: TRUE]
+  --daysExposed=<logical>             Include days exposed [default: TRUE]
+  --daysPrescribed=<logical>          Include days prescribed [default: TRUE]
+  --timeToExposure=<logical>          Include time to exposure [default: TRUE]
+  --initialExposureDuration=<logical> Include initial exposure duration [default: TRUE]
+  --initialQuantity=<logical>         Include initial quantity [default: TRUE]
+  --cumulativeQuantity=<logical>      Include cumulative quantity [default: TRUE]
+  --initialDailyDose=<logical>        Include initial daily dose [default: TRUE]
+  --cumulativeDose=<logical>          Include cumulative dose [default: TRUE]
   --nameStyle=<style>                 Name style for added columns [default: {variable}]
 ```
 
@@ -312,18 +312,18 @@ Options:
   --estimates=<json>                  JSON vector of estimates [default: ["mean","sd","count_missing","percentage_missing"]]
   --indexDate=<date_col>              Index date column [default: cohort_start_date]
   --censorDate=<date_col>             Optional censor date column
-  --restrictIncident=<logical>        Restrict to incident exposures
+  --restrictIncident=<logical>        Restrict to incident exposures [default: TRUE]
   --gapEra=<n>                        Gap era in days [default: 7]
-  --numberExposures=<logical>         Include number of exposures
-  --numberEras=<logical>              Include number of eras
-  --daysExposed=<logical>             Include days exposed
-  --daysPrescribed=<logical>          Include days prescribed
-  --timeToExposure=<logical>          Include time to exposure
-  --initialExposureDuration=<logical> Include initial exposure duration
-  --initialQuantity=<logical>         Include initial quantity
-  --cumulativeQuantity=<logical>      Include cumulative quantity
-  --initialDailyDose=<logical>        Include initial daily dose
-  --cumulativeDose=<logical>          Include cumulative dose
+  --numberExposures=<logical>         Include number of exposures [default: TRUE]
+  --numberEras=<logical>              Include number of eras [default: TRUE]
+  --daysExposed=<logical>             Include days exposed [default: TRUE]
+  --daysPrescribed=<logical>          Include days prescribed [default: TRUE]
+  --timeToExposure=<logical>          Include time to exposure [default: TRUE]
+  --initialExposureDuration=<logical> Include initial exposure duration [default: TRUE]
+  --initialQuantity=<logical>         Include initial quantity [default: TRUE]
+  --cumulativeQuantity=<logical>      Include cumulative quantity [default: TRUE]
+  --initialDailyDose=<logical>        Include initial daily dose [default: TRUE]
+  --cumulativeDose=<logical>          Include cumulative dose [default: TRUE]
   --output-path=<path>                Output CSV path
 ```
 
@@ -353,8 +353,8 @@ Options:
   --unknownIndicationTable=<table>  Optional table for unknown indications
   --indexDate=<date_col>            Index date column [default: cohort_start_date]
   --censorDate=<date_col>           Optional censor date column
-  --mutuallyExclusive=<logical>     Consider mutually exclusive indication labels
-  --restrictIncident=<logical>      Restrict to incident indication events
+  --mutuallyExclusive=<logical>     Consider mutually exclusive indication labels [default: FALSE]
+  --restrictIncident=<logical>      Restrict to incident indication events [default: TRUE]
   --nameStyle=<style>               Naming style for the added columns [default: {window_name}]
 ```
 
@@ -384,8 +384,8 @@ Options:
   --strata=<json>                   Optional JSON list of strata variables [default: []]
   --indexDate=<date_col>            Index date column [default: cohort_start_date]
   --censorDate=<date_col>           Optional censor date column
-  --mutuallyExclusive=<logical>     Consider mutually exclusive indication labels
-  --restrictIncident=<logical>      Restrict to incident indication events
+  --mutuallyExclusive=<logical>     Consider mutually exclusive indication labels [default: FALSE]
+  --restrictIncident=<logical>      Restrict to incident indication events [default: TRUE]
   --output-path=<path>              Path to write output csv
 ```
 
@@ -442,8 +442,8 @@ Options:
   --strata=<json>                            Optional JSON list of strata variables [default: []]
   --followUpDays=<n>                         Follow-up window in days [default: 365]
   --censorDate=<date_col>                    Optional censor date column
-  --incident=<logical>                       Restrict to incident restarts
-  --restrictToFirstDiscontinuation=<logical> Restrict to first discontinuation only
+  --incident=<logical>                       Restrict to incident restarts [default: FALSE]
+  --restrictToFirstDiscontinuation=<logical> Restrict to first discontinuation only [default: TRUE]
   --output-path=<path>                       Output CSV path
 ```
 
