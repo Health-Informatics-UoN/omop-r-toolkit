@@ -25,25 +25,15 @@ library(DrugExposureDiagnostics)
 library(CDMConnector)
 source("R/postgres-connect-5s-tes.R")
 source("R/parseIntList.R")
+source("R/parseStringVector.R")
+source("R/checkChoice.R")
 
 arguments <- docopt(doc, version = "Drug Exposure Diagnostics 0.1.0")
 
 ingredients <- parseIntegerVector(arguments$ingredients)
-checks <- trimws(strsplit(arguments$checks, ",")[[1]])
-checks <- checks[nzchar(checks)]
-
+checks <- parseStringVector(arguments$checks)
 allowed_checks <- get("getAllCheckOptions", envir = asNamespace("DrugExposureDiagnostics"))()
-invalid_checks <- setdiff(checks, allowed_checks)
-if (length(invalid_checks) > 0) {
-  stop(
-    paste0(
-      "Invalid check(s) requested: ",
-      paste(invalid_checks, collapse = ", "),
-      ". Allowed options are: ",
-      paste(allowed_checks, collapse = ", ")
-    )
-  )
-}
+checkChoice(checks, allowed_checks, "checks")
 
 output_dir <- arguments$output_path
 database_id <- arguments$database_id
