@@ -226,28 +226,223 @@ The output from this is in the [omopgenerics summarised result format](https://d
 omopgenerics::importSummarisedResult("my-incidence-file.csv") |> plotIncidence()
 ```
 
-### Drug Exposure Diagnostics
+### Drug utilisation
+
+The following scripts provide cohort generation, patient-level variables, and summarised analyses using the [DrugUtilisation package](https://darwin-eu.github.io/DrugUtilisation/).
+Logical options take an explicit value such as `TRUE` or `FALSE`; invalid values cause the task to fail. When an option is omitted, the default shown in `[default: ...]` is used.
+
+#### Generate an ingredient or ATC cohort set
+
 ```sh
 Usage:
-  drugExposureDiagnostics.R --ingredients=<ids> [options]
+  generateIngredientCohortSet.R <name> [options]
 
 Options:
   -h --help                     Show this screen
   --version                     Show version
-  --ingredients=<ids>           Comma-separated ingredient concept IDs (e.g. 1125315,161)
-  --checks=<checks>             Comma-separated checks to run [default: missing,exposureDuration,type,route,sourceConcept,daysSupply,verbatimEndDate,dose,sig,quantity,daysBetween,diagnosticsSummary]
-  --output-path=<path>          Directory to write output csvs to [default: outputs/ded/]
-  --databaseId=<id>             Database identifier [default: OMOP_DB]
-  --sample=<n>                  Number of records to sample (0 = all) [default: 10000]
-  --minCellCount=<n>            Minimum cell count for disclosure control [default: 5]
-  --earliestStartDate=<date>    Earliest drug exposure start date [default: 1900-01-01]
-  --byConcept                   Return results broken down by drug concept
-  --subsetToConceptId=<ids>     Comma-separated concept IDs to include (+) or exclude (-)
-  --exposureTypeId=<id>         Drug exposure type concept ID to filter on
-  --tablePrefix=<prefix>        Prefix for temporary database tables
+  --ingredient=<names>          Comma-separated ingredient names (e.g. acetaminophen,metformin)
+  --atc=<name>                  ATC name to use instead of ingredient names
+  --gapEra=<n>                  Gap era in days [default: 1]
+  --subsetCohort=<name>         Optional cohort table to subset from
+  --subsetCohortId=<ids>        Optional cohort IDs to subset
+  --numberExposures=<logical>   Add number of exposures to the output cohort [default: FALSE]
+  --daysPrescribed=<logical>    Add days prescribed to the output cohort [default: FALSE]
+  --output-path=<path>          Optional path to write cohort settings summary csv
 ```
 
-This script runs drug exposure diagnostics for a list of ingredient concept IDs and writes the package-standard result files to the chosen output folder.
+Example:
+
+```sh
+Rscript inst/scripts/generateIngredientCohortSet.R metformin_users \
+  --ingredient=metformin \
+  --gapEra=7 \
+  --numberExposures=TRUE \
+  --output-path=outputs/metformin-cohort-settings.csv
+```
+
+#### Add drug utilisation variables
+
+```sh
+Usage:
+  addDrugUtilisation.R <name> [options]
+
+Options:
+  -h --help                           Show this screen
+  --version                           Show version
+  --ingredientConceptId=<ids>         Comma-separated ingredient concept IDs
+  --conceptSet=<json>                 Optional concept set JSON for custom concept definitions
+  --gapEra=<n>                        Gap era in days [default: 7]
+  --indexDate=<date_col>              Index date column [default: cohort_start_date]
+  --censorDate=<date_col>             Optional censor date column
+  --restrictIncident=<logical>        Restrict to incident exposures [default: TRUE]
+  --numberExposures=<logical>         Include number of exposures [default: TRUE]
+  --numberEras=<logical>              Include number of eras [default: TRUE]
+  --daysExposed=<logical>             Include days exposed [default: TRUE]
+  --daysPrescribed=<logical>          Include days prescribed [default: TRUE]
+  --timeToExposure=<logical>          Include time to exposure [default: TRUE]
+  --initialExposureDuration=<logical> Include initial exposure duration [default: TRUE]
+  --initialQuantity=<logical>         Include initial quantity [default: TRUE]
+  --cumulativeQuantity=<logical>      Include cumulative quantity [default: TRUE]
+  --initialDailyDose=<logical>        Include initial daily dose [default: TRUE]
+  --cumulativeDose=<logical>          Include cumulative dose [default: TRUE]
+  --nameStyle=<style>                 Name style for added columns [default: {variable}]
+```
+
+Example:
+
+```sh
+Rscript inst/scripts/addDrugUtilisation.R study_cohort \
+  --ingredientConceptId=1503297 \
+  --restrictIncident=FALSE \
+  --daysExposed=TRUE \
+  --cumulativeDose=TRUE
+```
+
+#### Summarise drug utilisation
+
+```sh
+Usage:
+  summariseDrugUtilisation.R <name> [options]
+
+Options:
+  -h --help                           Show this screen
+  --version                           Show version
+  --ingredientConceptId=<ids>         Comma-separated ingredient concept IDs
+  --conceptSet=<json>                 Optional concept set JSON for custom concepts
+  --strata=<json>                     Optional JSON list of strata variables [default: []]
+  --estimates=<json>                  JSON vector of estimates [default: ["mean","sd","count_missing","percentage_missing"]]
+  --indexDate=<date_col>              Index date column [default: cohort_start_date]
+  --censorDate=<date_col>             Optional censor date column
+  --restrictIncident=<logical>        Restrict to incident exposures [default: TRUE]
+  --gapEra=<n>                        Gap era in days [default: 7]
+  --numberExposures=<logical>         Include number of exposures [default: TRUE]
+  --numberEras=<logical>              Include number of eras [default: TRUE]
+  --daysExposed=<logical>             Include days exposed [default: TRUE]
+  --daysPrescribed=<logical>          Include days prescribed [default: TRUE]
+  --timeToExposure=<logical>          Include time to exposure [default: TRUE]
+  --initialExposureDuration=<logical> Include initial exposure duration [default: TRUE]
+  --initialQuantity=<logical>         Include initial quantity [default: TRUE]
+  --cumulativeQuantity=<logical>      Include cumulative quantity [default: TRUE]
+  --initialDailyDose=<logical>        Include initial daily dose [default: TRUE]
+  --cumulativeDose=<logical>          Include cumulative dose [default: TRUE]
+  --output-path=<path>                Output CSV path
+```
+
+Example:
+
+```sh
+Rscript inst/scripts/summariseDrugUtilisation.R study_cohort \
+  --ingredientConceptId=1503297 \
+  --strata='["age_group","sex"]' \
+  --numberExposures=TRUE \
+  --daysExposed=TRUE \
+  --output-path=outputs/drug-utilisation.csv
+```
+
+#### Add indications
+
+```sh
+Usage:
+  addIndication.R <name> --indicationCohortName=<table> [options]
+
+Options:
+  -h --help                         Show this screen
+  --version                         Show version
+  --indicationCohortName=<table>    Indication cohort table name in the cdm
+  --indicationCohortId=<ids>        Optional indication cohort IDs
+  --window=<windows>                Indication window(s), e.g. [-30,0] or [[-30,0],[0,0]] [default: [-30,0]]
+  --unknownIndicationTable=<table>  Optional table for unknown indications
+  --indexDate=<date_col>            Index date column [default: cohort_start_date]
+  --censorDate=<date_col>           Optional censor date column
+  --mutuallyExclusive=<logical>     Consider mutually exclusive indication labels [default: FALSE]
+  --restrictIncident=<logical>      Restrict to incident indication events [default: TRUE]
+  --nameStyle=<style>               Naming style for the added columns [default: {window_name}]
+```
+
+Example:
+
+```sh
+Rscript inst/scripts/addIndication.R drug_cohort \
+  --indicationCohortName=condition_cohort \
+  --indicationCohortId=1,2 \
+  --window='[[-30,0],[0,0]]' \
+  --mutuallyExclusive=FALSE
+```
+
+#### Summarise indications
+
+```sh
+Usage:
+  summariseIndication.R <name> --indicationCohortName=<table> [options]
+
+Options:
+  -h --help                         Show this screen
+  --version                         Show version
+  --indicationCohortName=<table>    Indication cohort table name in the cdm
+  --indicationCohortId=<ids>        Optional indication cohort IDs
+  --window=<windows>                Indication window(s), e.g. [-30,0] or [[-30,0],[0,0]] [default: [-30,0]]
+  --unknownIndicationTable=<table>  Optional table for unknown indications
+  --strata=<json>                   Optional JSON list of strata variables [default: []]
+  --indexDate=<date_col>            Index date column [default: cohort_start_date]
+  --censorDate=<date_col>           Optional censor date column
+  --mutuallyExclusive=<logical>     Consider mutually exclusive indication labels [default: FALSE]
+  --restrictIncident=<logical>      Restrict to incident indication events [default: TRUE]
+  --output-path=<path>              Path to write output csv
+```
+
+Example:
+
+```sh
+Rscript inst/scripts/summariseIndication.R drug_cohort \
+  --indicationCohortName=condition_cohort \
+  --window='[-30,0]' \
+  --restrictIncident=TRUE \
+  --output-path=outputs/indications.csv
+```
+
+#### Summarise dose coverage
+
+```sh
+Usage:
+  summariseDoseCoverage.R <name> [options]
+
+Options:
+  -h --help                     Show this screen
+  --version                     Show version
+  --ingredientConceptId=<ids>   Comma-separated ingredient concept IDs
+  --conceptSet=<json>           Optional concept set JSON for custom concept definitions
+  --estimates=<json>            Optional JSON vector of estimates [default: ["mean","sd","min","max"]]
+  --sampleSize=<n>              Optional sample-size override
+  --output-path=<path>          Output CSV path
+```
+
+Example:
+
+```sh
+Rscript inst/scripts/summariseDoseCoverage.R drug_cohort \
+  --ingredientConceptId=1503297 \
+  --estimates='["mean","sd","min","max"]' \
+  --output-path=outputs/dose-coverage.csv
+```
+
+#### Summarise drug restarts
+
+```sh
+Usage:
+  summariseDrugRestart.R <name> --switchCohortTable=<table> [options]
+
+Options:
+  -h --help                                  Show this screen
+  --version                                  Show version
+  --switchCohortTable=<table>                Switch cohort table in the cdm
+  --switchCohortId=<ids>                     Optional switch cohort IDs
+  --strata=<json>                            Optional JSON list of strata variables [default: []]
+  --followUpDays=<n>                         Follow-up window in days [default: 365]
+  --censorDate=<date_col>                    Optional censor date column
+  --incident=<logical>                       Restrict to incident restarts [default: FALSE]
+  --restrictToFirstDiscontinuation=<logical> Restrict to first discontinuation only [default: TRUE]
+  --output-path=<path>                       Output CSV path
+```
 
 Example:
 
@@ -331,4 +526,165 @@ Rscript inst/scripts/treatmentPatterns.R \
   --output-path=outputs/treatment_patterns/
 
 Rscript inst/scripts/cleanUpCohortTables.R sinusitis_target sinusitis_treatments
+Rscript inst/scripts/summariseDrugRestart.R drug_cohort \
+  --switchCohortTable=switch_cohort \
+  --switchCohortId=1 \
+  --followUpDays=365 \
+  --incident=TRUE \
+  --output-path=outputs/drug-restarts.csv
+```
+
+#### Finalise DrugUtilisation results
+
+```sh
+Usage:
+  finaliseDrugUtilisationResults.R <result1> [<result2> ...] [options]
+
+Options:
+  -h --help                     Show this screen
+  --version                     Show version
+  --suppressCounts              Suppress counts in the final output
+  --suppressGroup               Suppress group columns
+  --output-path=<path>          Output CSV path
+```
+
+Example:
+
+```sh
+Rscript inst/scripts/finaliseDrugUtilisationResults.R \
+  outputs/drug-utilisation.csv \
+  outputs/indications.csv \
+  --suppressCounts \
+  --output-path=outputs/final-drug-utilisation.csv
+```
+
+### PatientProfiles
+```sh
+Add patient-level cohort features using PatientProfiles.
+
+Usage:
+  addCharacteristics.R <name> [options]
+
+Options:
+  -h --help                     Show this screen
+  --version                     Show version
+  --indexDate=<date_col>        Date column to use as index [default: cohort_start_date]
+  --addAge                      Add age at index date
+  --ageGroup=<json>             JSON list of age groups [default: [[0,150]]]
+  --ageName=<name>              Name for the age column [default: age]
+  --ageMissingMonth=<m>         Month assumed if missing [default: NULL]
+  --ageMissingDay=<d>           Day assumed if missing [default: NULL]
+  --ageImposeMonth              Impose missing month to ageMissingMonth
+  --ageImposeDay                Impose missing day to ageMissingDay
+  --addSex                      Add sex
+  --addPriorObservation         Add days of prior observation
+  --addFutureObservation        Add days of future observation
+  --addInObservation            Add in-observation flag
+  --inObservationWindow=<win>   Window for in-observation [default: 0,0]
+  --completeInterval            Require complete interval for in-observation
+  --useDemographics             Use addDemographics() (more efficient, combines selected)
+```
+
+**Example:**
+```R
+Rscript inst/scripts/addCharacteristics.R skin_cancer \
+  --addAge \
+  --ageGroup='[[0,17],[18,64],[65,150]]' \
+  --addSex \
+  --addPriorObservation \
+  --addFutureObservation \
+  --addInObservation \
+  --inObservationWindow='[0,0]' \
+  --useDemographics
+```
+
+#### Add table intersections
+```sh
+Add table intersection counts, dates, days, or flags using PatientProfiles.
+
+Usage:
+  addTableIntersectCount.R <name> --tableName=<table> [options]
+  addTableIntersectDate.R <name> --tableName=<table> [options]
+  addTableIntersectDays.R <name> --tableName=<table> [options]
+  addTableIntersectFlag.R <name> --tableName=<table> [options]
+
+Options:
+  -h --help                     Show this screen
+  --version                     Show version
+  --tableName=<table>           OMOP table name
+  --window=<window>             Window [default: [-Inf,Inf]]
+  --indexDate=<date_col>        Date column to use as index [default: cohort_start_date]
+  --targetStartDate=<col>       Start date column in target table
+  --targetEndDate=<col>         End date column in target table
+  --targetDate=<col>            Date column in target table
+  --order=<order>               first or last [default: first]
+  --inObservation=<logical>     Keep only records in observation [default: TRUE]
+  --nameStyle=<style>           Naming pattern [default: {table_name}_{window_name}]
+```
+
+**Example:**
+```R
+Rscript inst/scripts/addTableIntersectCount.R skin_cancer \
+  --tableName='drug_exposure' \
+  --window='[-365,0]' \
+  --inObservation='TRUE' \
+  --nameStyle='{table_name}_{window_name}'
+```
+
+#### Add cohort intersections
+```sh
+Add cohort intersection counts, dates, days, or flags using PatientProfiles.
+
+Usage:
+  addCohortIntersectCount.R <name> --targetCohortTable=<target> [options]
+  addCohortIntersectDate.R <name> --targetCohortTable=<target> [options]
+  addCohortIntersectDays.R <name> --targetCohortTable=<target> [options]
+  addCohortIntersectFlag.R <name> --targetCohortTable=<target> [options]
+
+Options:
+  -h --help                     Show this screen
+  --version                     Show version
+  --targetCohortTable=<target>  Name of the target cohort table
+  --targetCohortId=<id>         Specific cohort definition ID (optional)
+  --window=<window>             Window [default: -Inf,Inf]
+  --indexDate=<date_col>        Date column to use as index [default: cohort_start_date]
+  --targetStartDate=<col>       Start date column in target cohort [default: cohort_start_date]
+  --targetEndDate=<col>         End date column in target cohort [default: cohort_end_date]
+  --nameStyle=<style>           Naming pattern [default: {cohort_name}_{window_name}]
+```
+
+**Example:**
+```R
+Rscript inst/scripts/addCohortIntersectCount.R skin_cancer \
+  --targetCohortTable='target_cohort' \
+  --targetCohortId='1' \
+  --window='[-365,0]' \
+  --nameStyle='{cohort_name}_{window_name}'
+```
+
+#### Add concept intersections
+```sh
+Add concept intersection counts, dates, or flags using PatientProfiles.
+
+Usage:
+  addConceptIntersectCount.R <name> --conceptSet=<json> [options]
+  addConceptIntersectDate.R <name> --conceptSet=<json> [options]
+  addConceptIntersectDays.R <name> --conceptSet=<json> [options]
+  addConceptIntersectFlag.R <name> --conceptSet=<json> [options]
+
+Options:
+  -h --help                     Show this screen
+  --version                     Show version
+  --conceptSet=<json>           JSON concept set
+  --window=<window>             Window [default: [[-Inf,Inf]]]
+  --indexDate=<date_col>        Date column to use as index [default: cohort_start_date]
+  --nameStyle=<style>           Naming pattern [default: {concept_name}_{window_name}]
+```
+
+**Example:**
+```R
+Rscript inst/scripts/addConceptIntersectCount.R skin_cancer \
+  --conceptSet='[{"concept_id": 1118084, "concept_name": "metformin"}]' \
+  --window='[[0,30],[31,365]]' \
+  --nameStyle='{concept_name}_{window_name}'
 ```
