@@ -257,3 +257,78 @@ Rscript inst/scripts/drugExposureDiagnostics.R \
   --byConcept \
   --output-path=outputs/ded/
 ```
+
+### Treatment Patterns
+
+TreatmentPatterns builds pathways of *event* cohorts (usually treatments) occurring during a *target* cohort (usually a disease), optionally ending with an *exit* cohort (e.g. death).
+
+The target, event and exit cohorts are defined in separate tables, so each can use different settings: typically the first occurrence until observation end for the target, and all occurrences until the event end for treatments.
+The script binds them into one temporary table (`--combinedCohortTable`), labels each cohort with its type, runs `computePathways()`, exports the results and drops the temporary table.
+
+Because cohort IDs are reassigned when the tables are combined, cohorts are referred to by name, e.g. in `--splitEventCohorts`, and cohort names must be unique across the tables.
+
+```sh
+Compute treatment pathways with TreatmentPatterns and export aggregate results.
+
+Usage:
+  treatmentPatterns.R --targetCohortTable=<table> --eventCohortTable=<table> [options]
+
+Options:
+  -h --help                                Show this screen
+  --version                                Show version
+  --targetCohortTable=<table>              Cohort table holding the target cohort(s), e.g. a disease
+  --eventCohortTable=<table>               Cohort table holding the event cohorts, e.g. treatments
+  --exitCohortTable=<table>                Optional cohort table holding exit cohorts, e.g. death
+  --combinedCohortTable=<table>            Name of the table the cohorts are combined into. Dropped at the end [default: tp_cohorts]
+  --output-path=<path>                     Directory to write output csvs to [default: outputs/treatment_patterns/]
+  --archiveName=<name>                     Optional name of a zip file (in the output directory) to bundle the csvs into
+  --analysisId=<id>                        Analysis identifier [default: 1]
+  --description=<text>                     Analysis description [default: Treatment Patterns analysis]
+  --startAnchor=<anchor>                   Anchor for the window start. One of startDate, endDate [default: startDate]
+  --windowStart=<days>                     Offset in days from startAnchor [default: 0]
+  --endAnchor=<anchor>                     Anchor for the window end. One of startDate, endDate [default: endDate]
+  --windowEnd=<days>                       Offset in days from endAnchor [default: 0]
+  --splitEventCohorts=<names>              Optional comma-separated event cohort names to split into acute and therapy
+  --splitTime=<days>                       Days classified as acute before therapy. One value, or one per split cohort
+  --minEraDuration=<days>                  Minimum duration of an event era [default: 30]
+  --filterTreatments=<method>              One of First, Changes, All [default: First]
+  --eraCollapseSize=<days>                 Gap within which repeated eras of the same event are collapsed [default: 30]
+  --combinationWindow=<days>               Minimum overlap for two events to count as a combination [default: 30]
+  --minPostCombinationDuration=<days>      Minimum duration of eras left after splitting out a combination [default: 30]
+  --overlapMethod=<method>                 How to handle non-significant overlap. One of truncate, keep [default: truncate]
+  --maxPathLength=<n>                      Maximum number of steps in a pathway [default: 5]
+  --concatTargets=<logical>                Concatenate multiple target cohort entries per person [default: TRUE]
+  --minCellCount=<n>                       Minimum cell count for disclosure control [default: 5]
+  --censorType=<type>                      How to censor counts below minCellCount. One of minCellCount, remove, mean [default: minCellCount]
+  --ageWindow=<ages>                       Age group width in years, or comma-separated age breaks (e.g. 0,18,65,150) [default: 10]
+  --nonePaths                              Include pathways where no events occurred
+```
+
+
+The defaults for `minEraDuration`, `combinationWindow` and `minPostCombinationDuration` are all 30, following the [TreatmentPatterns best practices](https://darwin-eu-dev.github.io/TreatmentPatterns/articles/a000_bestPractices.html) (`minPostCombinationDuration <= minEraDuration`, `combinationWindow >= minEraDuration`). The script warns if you choose settings that break these rules.
+
+Only aggregate results are written, with counts below `--minCellCount` censored. Patient-level export and plots are not supported; plot the exported csvs outside the TRE.
+
+`defineConceptCohortSet.R` does not include descendant concepts. Drug exposures are usually recorded as clinical drug concepts, so listing only an ingredient concept ID will match few or no records; list the drug concepts themselves.
+
+Example executors:
+
+```sh
+Rscript inst/scripts/defineConceptCohortSet.R sinusitis_target \
+  --conceptSet='{"viral_sinusitis": [40481087]}'
+
+Rscript inst/scripts/defineConceptCohortSet.R sinusitis_treatments \
+  --conceptSet='{"amoxicillin": [19073183, 19073188], "acetaminophen": [1127433, 1127078]}' \
+  --alloccurrences \
+  --end=event_end_date
+
+Rscript inst/scripts/treatmentPatterns.R \
+  --targetCohortTable=sinusitis_target \
+  --eventCohortTable=sinusitis_treatments \
+  --minEraDuration=7 \
+  --combinationWindow=7 \
+  --minPostCombinationDuration=7 \
+  --output-path=outputs/treatment_patterns/
+
+Rscript inst/scripts/cleanUpCohortTables.R sinusitis_target sinusitis_treatments
+```
