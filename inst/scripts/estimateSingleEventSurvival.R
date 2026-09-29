@@ -58,7 +58,7 @@ surv <- CohortSurvival::estimateSingleEventSurvival(
   outcomeDateVariable = arguments$outcomerDateVariable,
   outcomeWashout = outcomeWashout,
   censorOnCohortExit = !is.null(censorOnCohortExit),
-  censorOnDate = parseMaybeDate(arguments$censorOnDate),
+  censorOnDate = parseMaybeDate(arguments$censorOnDate), # Distressingly, this can be a date or a column name
   weight = arguments$weight,
   followUpDays = followUpDays,
   strata = strata,
