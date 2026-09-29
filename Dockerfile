@@ -1,7 +1,8 @@
-FROM rocker/r-ver:4.4.1
+FROM rocker/r-ver:4.6.1
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+        curl \
         openjdk-11-jdk \
         libxml2-dev \
         libpcre2-dev \
@@ -14,26 +15,17 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && R CMD javareconf
+RUN curl -sSL https://raw.githubusercontent.com/A2-ai/rv/refs/heads/main/scripts/install.sh | bash
 
-RUN install2.r --error --ncpus -1 \
-    rJava \
-    RPostgres \
-    remotes \
-    ParallelLogger \
-    jsonlite \
-    docopt \
-    SqlRender \
-    DatabaseConnector \
-    omopgenerics \
-    CDMConnector \
-    CohortGenerator \
-    CodelistGenerator \
-    PatientProfiles \
-    IncidencePrevalence \
-    CohortCharacteristics \
-    CohortSurvival \
-    DrugUtilisation \
-    DrugExposureDiagnostics
+RUN mv ~/.local/bin/rv /usr/local/bin/rv
+
+COPY rproject.toml rproject.toml
+
+COPY rv.lock rv.lock
+
+RUN rv sync
+
+RUN rv activate
 
 RUN mkdir -p /output /jdbc \
     && R -e 'DatabaseConnector::downloadJdbcDrivers("postgresql", pathToDriver = "/jdbc")'
