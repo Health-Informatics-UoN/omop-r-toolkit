@@ -43,4 +43,7 @@ cohort <- cohort |>
     nameStyle = arguments$nameStyle
   )
 
+cdm[[arguments$name]] <- cohort |>
+  dplyr::compute(name = arguments$name, temporary = FALSE, overwrite = TRUE)
+
 CDMConnector::cdmDisconnect(cdm)

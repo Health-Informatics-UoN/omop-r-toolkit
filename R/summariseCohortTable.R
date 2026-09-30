@@ -29,9 +29,12 @@ summariseCohortTable <- function(cohort,
     )
 
   if (!is.null(output_path)) {
-    summary_df <- omopgenerics::exportSummarisedResult(
-      x = summary_df,
-      filename = output_path
+    dir.create(dirname(output_path), recursive = TRUE, showWarnings = FALSE)
+    omopgenerics::exportSummarisedResult(
+      summary_df,
+      minCellCount = 5,
+      fileName = basename(output_path),
+      path = dirname(output_path)
     )
   }
 
