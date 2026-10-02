@@ -42,7 +42,10 @@ RUN mkdir -p /output /jdbc \
 COPY . .
 
 # Give the researcher user permissions to execute the scripts we defined
+RUN chmod -R +x /inst/scripts
 
+# Give the researcher write permissions for the output directory?
+RUN chmod -R +w /output
 
 # Run as researcher instead of root
     
