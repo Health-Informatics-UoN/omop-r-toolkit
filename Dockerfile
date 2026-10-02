@@ -1,5 +1,14 @@
 FROM rocker/r-ver:4.6.1
 
+# Add a non-root user
+ARG USERNAME=researcher
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+
+RUN groupadd --gid $USER_GID $USERNAME \
+    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME
+
+# Continue installing things as root
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         curl \
@@ -31,5 +40,12 @@ RUN mkdir -p /output /jdbc \
     && R -e 'DatabaseConnector::downloadJdbcDrivers("postgresql", pathToDriver = "/jdbc")'
 
 COPY . .
+
+# Give the researcher user permissions to execute the scripts we defined
+
+
+# Run as researcher instead of root
     
+USER $USERNAME
+
 CMD ["Rscript", "./R/count-cohorts.R"]
