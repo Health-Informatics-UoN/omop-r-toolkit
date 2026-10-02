@@ -11,6 +11,7 @@ RUN groupadd --gid $USER_GID $USERNAME \
 # Continue installing things as root
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+        xz-utils \
         curl \
         openjdk-11-jdk \
         libxml2-dev \
@@ -42,12 +43,13 @@ RUN mkdir -p /output /jdbc \
 COPY . .
 
 # Give the researcher user permissions to execute the scripts we defined
-RUN chmod -R +x /inst/scripts
+RUN chmod -R +rx /inst/scripts
+#RUN chmod -R -x /usr/bin/env
 
 # Give the researcher write permissions for the output directory?
 RUN chmod -R +w /output
 
 # Run as researcher instead of root
-USER $USERNAME
+#USER $USERNAME
 
 CMD ["/inst/scripts/count-cohorts.R"]
