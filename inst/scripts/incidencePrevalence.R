@@ -1,4 +1,4 @@
-#!/usr/bin/env/Rscript --vanilla
+#!/usr/bin/env Rscript --vanilla
 
 # This script runs a basic workflow of using the [IncidencePrevalence](https://darwin-eu.github.io/IncidencePrevalence/) package
 # The CLI options are designed to supply the arguments to the central functions of the package

@@ -1,4 +1,4 @@
-#!/usr/bin/env/Rscript --vanilla
+#!/usr/bin/env Rscript --vanilla
 'Find first or last concept event days and summarize.
 
 Usage:

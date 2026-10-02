@@ -1,4 +1,4 @@
-#!/usr/bin/env/Rscript --vanilla
+#!/usr/bin/env Rscript --vanilla
 'Add cohort intersection days and summarize.
 
 Usage:

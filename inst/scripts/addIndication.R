@@ -1,4 +1,4 @@
-#!/usr/bin/env/Rscript --vanilla
+#!/usr/bin/env Rscript --vanilla
 'Add indication flags to a cohort using DrugUtilisation.
 
 Usage:
