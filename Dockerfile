@@ -48,7 +48,6 @@ RUN chmod -R +x /inst/scripts
 RUN chmod -R +w /output
 
 # Run as researcher instead of root
-    
 USER $USERNAME
 
-CMD ["Rscript", "./R/count-cohorts.R"]
+CMD ["/inst/scripts/count-cohorts.R"]
