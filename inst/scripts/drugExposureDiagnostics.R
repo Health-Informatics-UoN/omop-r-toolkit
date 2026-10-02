@@ -1,3 +1,4 @@
+#!/usr/bin/env/Rscript --vanilla
 'Run Drug Exposure Diagnostics on OMOP CDM drug records.
 
 Usage:

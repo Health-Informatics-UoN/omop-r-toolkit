@@ -1,3 +1,4 @@
+#!/usr/bin/env/Rscript --vanilla
 'Create a drug cohort using ingredient-based DrugUtilisation functions.
 
 Usage:

@@ -1,3 +1,4 @@
+#!/usr/bin/env/Rscript --vanilla
 'Define a cohort using a concept set
 
 Usage:

@@ -1,3 +1,4 @@
+#!/usr/bin/env/Rscript --vanilla
 'Summarise drug utilisation metrics for a cohort using DrugUtilisation.
 
 Usage:

@@ -1,3 +1,4 @@
+#!/usr/bin/env/Rscript --vanilla
 'Bind and suppress final DrugUtilisation results.
 
 Usage:

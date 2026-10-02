@@ -1,3 +1,4 @@
+#!/usr/bin/env/Rscript --vanilla
 'Find first or last cohort event days and summarize.
 
 Usage:

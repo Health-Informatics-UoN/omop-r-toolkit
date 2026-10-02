@@ -1,3 +1,4 @@
+#!/usr/bin/env/Rscript --vanilla
 'Add cohort intersection date and summarize.
 
 Usage:

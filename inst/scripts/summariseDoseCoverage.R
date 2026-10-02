@@ -1,3 +1,4 @@
+#!/usr/bin/env/Rscript --vanilla
 'Summarise dose coverage using DrugUtilisation.
 
 Usage:

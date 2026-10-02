@@ -1,3 +1,4 @@
+#!/usr/bin/env/Rscript --vanilla
 'Clean up cohort tables
 
 Usage:

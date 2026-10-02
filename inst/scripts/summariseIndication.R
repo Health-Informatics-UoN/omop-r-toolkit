@@ -1,3 +1,4 @@
+#!/usr/bin/env/Rscript --vanilla
 'Summarise indication patterns in a cohort using DrugUtilisation.
 
 Usage:

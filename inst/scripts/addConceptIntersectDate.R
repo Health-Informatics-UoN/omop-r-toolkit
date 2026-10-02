@@ -1,3 +1,4 @@
+#!/usr/bin/env/Rscript --vanilla
 'Add concept intersection date and summarize.
 
 Usage:

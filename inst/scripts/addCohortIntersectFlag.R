@@ -1,3 +1,4 @@
+#!/usr/bin/env/Rscript --vanilla
 'Add cohort intersection flag and summarize.
 
 Usage:

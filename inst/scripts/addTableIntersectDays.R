@@ -1,3 +1,4 @@
+#!/usr/bin/env/Rscript --vanilla
 'Add table intersection days and summarize.
 
 Usage:

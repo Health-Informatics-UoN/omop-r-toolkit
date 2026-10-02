@@ -1,3 +1,4 @@
+#!/usr/bin/env/Rscript --vanilla
 'Add drug utilisation metrics to a cohort using DrugUtilisation.
 
 Usage:

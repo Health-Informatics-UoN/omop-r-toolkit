@@ -1,3 +1,4 @@
+#!/usr/bin/env/Rscript --vanilla
 'Add concept intersection count and summarize.
 
 Usage:

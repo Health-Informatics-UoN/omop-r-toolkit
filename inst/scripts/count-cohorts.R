@@ -1,3 +1,4 @@
+#!/usr/bin/env/Rscript --vanilla
 'Count members of a cohort.
 
 Usage:

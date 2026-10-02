@@ -1,3 +1,4 @@
+#!/usr/bin/env/Rscript --vanilla
 'Find first or last concept event date and summarize.
 
 Usage:

@@ -1,3 +1,4 @@
+#!/usr/bin/env/Rscript --vanilla
 'Summarise drug restart patterns for a cohort.
 
 Usage:

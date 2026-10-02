@@ -1,3 +1,4 @@
+#!/usr/bin/env/Rscript --vanilla
 'Summarise a cohort after feature generation using the PatientProfiles standard API.
 
 Usage:

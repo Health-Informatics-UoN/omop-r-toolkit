@@ -1,3 +1,5 @@
+#!/usr/bin/env/Rscript --vanilla
+
 # This script runs a basic workflow of using the [TreatmentPatterns](https://darwin-eu-dev.github.io/TreatmentPatterns/) package
 # 1. Bind the target, event and (optional) exit cohort tables into one cohort table
 # 2. computePathways

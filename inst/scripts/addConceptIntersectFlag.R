@@ -1,3 +1,4 @@
+#!/usr/bin/env/Rscript --vanilla
 'Add concept intersection flag and summarize.
 
 Usage:
