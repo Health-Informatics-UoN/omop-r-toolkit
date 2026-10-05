@@ -44,10 +44,13 @@ cohort <- cdm[[arguments$name]]
 ageGroup <- if (arguments$addAge) parseAgeGroups(arguments$ageGroup) else NULL
 
 if (arguments$useDemographics) {
-  demographicsArgs <- list(
+    demographicsArgs <- list(
+    indexDate = arguments$indexDate,
     age = arguments$addAge,
     ageName = arguments$ageName,
     ageGroup = ageGroup,
+    ageImposeMonth = arguments$ageImposeMonth,
+    ageImposeDay = arguments$ageImposeDay,
     sex = arguments$addSex,
     sexName = "sex",
     priorObservation = arguments$addPriorObservation,
@@ -55,6 +58,12 @@ if (arguments$useDemographics) {
     futureObservation = arguments$addFutureObservation,
     futureObservationName = "future_observation"
   )
+  if (!is.null(arguments$ageMissingMonth) && !identical(arguments$ageMissingMonth, "NULL")) {
+    demographicsArgs$ageMissingMonth <- as.numeric(arguments$ageMissingMonth)
+  }
+  if (!is.null(arguments$ageMissingDay) && !identical(arguments$ageMissingDay, "NULL")) {
+    demographicsArgs$ageMissingDay <- as.numeric(arguments$ageMissingDay)
+  }
 
   cohort <- do.call(addDemographics, c(list(x = cohort), demographicsArgs))
 
