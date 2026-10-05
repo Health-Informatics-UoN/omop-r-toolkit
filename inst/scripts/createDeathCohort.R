@@ -18,6 +18,7 @@ arguments <- docopt::docopt(doc, version = "Cohort Survival 0.1.0")
 cdm <- connectFiveSafesTESPg("postgres_omop", cohortTables = arguments$subsetCohort) 
 
 deathCohort <- CohortConstructor::deathCohort(
+    cdm,
     name = arguments$name,
     subsetCohort = arguments$subsetCohort,
     subsetCohortId = if (is.null(arguments$subsetCohortId)) NULL else parseStringAsInts(arguments$subsetCohortId)
