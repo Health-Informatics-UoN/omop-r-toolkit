@@ -7,7 +7,7 @@ checkInts <- function(nums) {
   if (any(is.na(nums))) {
     stop("Couldn't parse one or more values as numbers")
   }
-  if (any(nums %% 1 != 0)){
+  if (any(nums %% 1 != 0 && nums != Inf)){
     stop("Not all of these are integers!")
   }
   nums
