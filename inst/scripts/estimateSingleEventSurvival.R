@@ -8,7 +8,7 @@ Options:
   --version                           Show version
   --targetCohortTable=<tableName>     Name of the cohort table containing the target cohorts. The table must be present in cdm and contain standard OMOP cohort columns.
   --outcomeCohortTable=<tableName>    Name of the cohort table containing the outcome cohorts. The table must be present in cdm and contain standard OMOP cohort columns.
-  --outputPath                        Path for saving the survival table as a csv [default: output/single-event-survival.csv]
+  --outputPath=<path>                 Path for saving the survival table as a csv [default: outputs/single-event-survival.csv]
   --targetCohortId=<cohortId>         Target cohorts to include. It can either be a cohort_definition_id value or a cohort_name. Multiple ids are allowed. If not provided, all non-empty cohorts in targetCohortTable are used.
   --outcomeCohortId=<cohortId>        Outcome cohorts to include. It can either be a cohort_definition_id value or a cohort_name. Multiple ids are allowed. If not provided, all outcome cohorts in outcomeCohortTable are used.
   --outcomeDateVariable=<columnName>  Variable containing the outcome event date. This is usually cohort_start_date, but another date column in the outcome cohort can be used.  [default: cohort_start_date]
@@ -40,14 +40,20 @@ if (is.null(arguments$targetCohortTable)
 
 outcomeWashout <- parseStringAsInts(arguments$outcomeWashout, 1, 0, Inf)
 followUpDays <- parseStringAsInts(arguments$followUpDays, 1, 1, Inf)
-strata <- ifelse(is.null(arguments$strata), NULL, parseStrata(arguments$strata))
+strata <- if (is.null(arguments$strata)) NULL else parseStrata(arguments$strata)
 eventGap <- parseStringAsInts(arguments$eventGap, 1, 1, Inf)
 estimateGap <- parseStringAsInts(arguments$estimateGap, 1, 1, Inf)
-restrictedMeanFollowUp <- ifelse(arguments$restrictedMeanFollowUp == "NULL", NULL, parseStringAsInts(arguments$restrictedMeanFollowUp, 1, 1, Inf))
-minimumSurvivalDays <- parseStringAsInts(arguments$minimumSurvivalDays, 1, 1, Inf)
+restrictedMeanFollowUp <- if (is.null(arguments$restrictedMeanFollowUp)) NULL else parseStringAsInts(arguments$restrictedMeanFollowUp, 1, 1, Inf)
+minimumSurvivalDays <- ifelse(is.null(arguments$minimumSurvivalDays), NULL, parseStringAsInts(arguments$minimumSurvivalDays, 1, 1, Inf))
 
 # If arguments are OK, connect to database
-cdm <- connectFiveSafesTESPg("postgres_omop", cohortTables = arguments$outcomeCohortName)
+cdm <- connectFiveSafesTESPg(
+  "postgres_omop",
+  cohortTables = c(
+    arguments$targetCohortTable,
+    arguments$outcomeCohortTable
+  )
+)
 
 surv <- CohortSurvival::estimateSingleEventSurvival(
   cdm = cdm,
@@ -55,17 +61,20 @@ surv <- CohortSurvival::estimateSingleEventSurvival(
   outcomeCohortTable = arguments$outcomeCohortTable,
   targetCohortId = arguments$targetCohortId,
   outcomeCohortId = arguments$outcomeCohortId,
-  outcomeDateVariable = arguments$outcomerDateVariable,
+  outcomeDateVariable = arguments$outcomeDateVariable,
   outcomeWashout = outcomeWashout,
-  censorOnCohortExit = !is.null(censorOnCohortExit),
-  censorOnDate = parseMaybeDate(arguments$censorOnDate), # Distressingly, this can be a date or a column name
+  censorOnCohortExit = !is.null(arguments$censorOnCohortExit),
+  censorOnDate = if (is.null(arguments$censorOnDate)) NULL else parseMaybeDate(arguments$censorOnDate), # Distressingly, this can be a date, or a column name, or NULL
   weight = arguments$weight,
   followUpDays = followUpDays,
   strata = strata,
   eventGap = eventGap,
   estimateGap = estimateGap,
   restrictedMeanFollowUp = restrictedMeanFollowUp,
-  minumumSurvivalDays = minumumSurvivalDays
+  minimumSurvivalDays = minimumSurvivalDays
 )
 
+print(arguments$outputPath)
 omopgenerics::exportSummarisedResult(surv, fileName = arguments$outputPath)
+
+CDMConnector::cdmDisconnect(cdm)
