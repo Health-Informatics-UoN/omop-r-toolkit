@@ -156,6 +156,16 @@ This starts the version of the container with the hash specified, passing it the
 Most of the rest is descriptive, refer to [5s-TES docs](https://docs.federated-analytics.ac.uk/) for more details
 
 ## Scripts
+
+- [Define a concept cohort set](#define-a-concept-cohort-set)
+- [Count a cohort](#count-a-cohort)
+- [Clean up cohort tables](#clean-up-cohort-tables)
+- [Incidence and Prevalence](#incidence-and-prevalence)
+- [Drug utilisation](#drug-utilisation)
+- [Treatment patterns](#treatment-patterns)
+- [Patient Profiles](#patientprofiles)
+- [Cohort survival](#cohortsurvival)
+
 ### Define a concept cohort set
 ```sh
 Usage:
@@ -747,4 +757,25 @@ Options:
   --estimateGap=<gap>                        Days between time points for which to report survival estimates. First day will be day zero with risk estimates provided for times up to the end of follow-up, with a gap in days equivalent to estimateGap. [default: 1]
   --restrictedMeanFollowUp=<days>            Number of days of follow-up to use when calculating restricted mean summaries. See Details.
   --minimumSurvivalDays=<days>               Minimum number of days required for the main cohort to contribute to the analysis. [default: 1]
+```
+
+#### addCohortSurvival
+Add time and event status to a cohort table.
+Scripts to analyse these variables are not included in this package, see the source library's [vignette](https://darwin-eu.github.io/CohortSurvival/articles/a03_Further_survival_analyses.html) for details.
+
+```sh
+Usage:
+  addCohortSurvival.R <tableName> [options]
+
+Options:
+  -h --help                           Show this screen
+  --version                           Show version
+  --name=<tableName>                  Name of the new table. In the library this is optional, but must be specified to use the output.
+  --outcomeCohortTable=<table>        Name of the cohort table containing the outcome of interest
+  --outcomeCohortId=<id>              IDs of event cohorts to include. Values can be cohort definition IDs or cohort names [default: 1]
+  --outcomeDateVariable=<variable>    Variable containing date of outcome event. [default: cohort_start_date]
+  --outcomeWashout=<days>             Washout time in days for the outcome. If an individual has an outcome during the washout period before target cohort entry, status and time will be set to NA. Use Inf for any prior outcome and 0 for no pre-index washout. [default: Inf]
+  --censorOnCohortExit                If active, an individual\'s follow up will be censored at their target cohort exit.
+  --censorOnDate=<date>               If specified, an individual\'s follow up will be censored at the given date. This can be a scalar Date or the name of a date column
+  --followUpDays=<days>               Number of days to follow up individuals (lower bound 1, upper bound Inf). Follow-up is censored at this value. [default: Inf]
 ```
