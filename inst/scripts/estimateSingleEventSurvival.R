@@ -39,6 +39,7 @@ if (is.null(arguments$targetCohortTable)
 }
 
 outcomeWashout <- parseStringAsInts(arguments$outcomeWashout, 1, 0, Inf)
+censorOnDate <- if (is.null(arguments$censorOnDate)) NULL else parseMaybeDate(arguments$censorOnDate)
 followUpDays <- parseStringAsInts(arguments$followUpDays, 1, 1, Inf)
 strata <- if (is.null(arguments$strata)) NULL else parseStrata(arguments$strata)
 eventGap <- parseStringAsInts(arguments$eventGap, 1, 1, Inf)
@@ -64,7 +65,7 @@ surv <- CohortSurvival::estimateSingleEventSurvival(
   outcomeDateVariable = arguments$outcomeDateVariable,
   outcomeWashout = outcomeWashout,
   censorOnCohortExit = !is.null(arguments$censorOnCohortExit),
-  censorOnDate = if (is.null(arguments$censorOnDate)) NULL else parseMaybeDate(arguments$censorOnDate), # Distressingly, this can be a date, or a column name, or NULL
+  censorOnDate = censorOnDate, # Distressingly, this can be a date, or a column name, or NULL
   weight = arguments$weight,
   followUpDays = followUpDays,
   strata = strata,
@@ -74,7 +75,6 @@ surv <- CohortSurvival::estimateSingleEventSurvival(
   minimumSurvivalDays = minimumSurvivalDays
 )
 
-print(arguments$outputPath)
 omopgenerics::exportSummarisedResult(surv, fileName = arguments$outputPath)
 
 CDMConnector::cdmDisconnect(cdm)
