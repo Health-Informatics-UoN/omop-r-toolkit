@@ -36,15 +36,15 @@ allowed_checks <- get("getAllCheckOptions", envir = asNamespace("DrugExposureDia
 checkChoice(checks, allowed_checks, "checks")
 
 output_dir <- arguments$output_path
-database_id <- arguments$database_id
+database_id <- arguments$databaseId
 sample_n <- as.numeric(arguments$sample)
-min_cell <- as.numeric(arguments$min_cell_count)
-earliest_start <- as.Date(arguments$earliest_start_date)
+min_cell <- as.numeric(arguments$minCellCount)
+earliest_start <- as.Date(arguments$earliestStartDate)
 by_concept <- arguments$byConcept
 
-subset_ids <- if (is.null(arguments$subset_to_concept_id)) NULL else parseIntegerVector(arguments$subset_to_concept_id)
-exposure_type <- if (is.null(arguments$exposure_type_id)) NULL else as.numeric(arguments$exposure_type_id)
-table_prefix <- arguments$table_prefix
+subset_ids <- if (is.null(arguments$subsetToConceptId)) NULL else parseIntegerVector(arguments$subsetToConceptId)
+exposure_type <- if (is.null(arguments$exposureTypeId)) NULL else as.numeric(arguments$exposureTypeId)
+table_prefix <- arguments$tablePrefix
 
 if (length(ingredients) == 0) {
   stop("You must specify at least one ingredient concept ID")
