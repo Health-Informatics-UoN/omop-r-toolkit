@@ -35,7 +35,7 @@ checks <- parseStringVector(arguments$checks)
 allowed_checks <- get("getAllCheckOptions", envir = asNamespace("DrugExposureDiagnostics"))()
 checkChoice(checks, allowed_checks, "checks")
 
-output_dir <- arguments$output_path
+output_dir <- arguments$outputPath
 database_id <- arguments$databaseId
 sample_n <- as.numeric(arguments$sample)
 min_cell <- as.numeric(arguments$minCellCount)
