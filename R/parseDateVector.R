@@ -17,3 +17,12 @@ parseNDates <- function(dateString, n) {
   }
   dates
 }
+
+parseMaybeDate <- function(dateString) {
+  maybeDate = as.Date(dateString, optional=TRUE)
+  if (is.na(maybeDate)){
+    dateString
+  } else {
+    maybeDate
+  }
+}

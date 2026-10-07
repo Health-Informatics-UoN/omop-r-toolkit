@@ -17,3 +17,8 @@ test_that("The wrong number of dates will error", {
   expect_error(parseNDates("2026-08-17,2021-09-25,2023-02-08", 2), "When parsing dates")
   expect_error(parseNDates("2026-08-17,2021-09-25,2023-02-08", 4), "When parsing dates")
 })
+
+test_that("Silly maybe dates pass the right value", {
+  expect_equal(parseMaybeDate("2026-08-17"), as.Date("2026-08-17"))
+  expect_equal(parseMaybeDate("date_column"), "date_column")
+})

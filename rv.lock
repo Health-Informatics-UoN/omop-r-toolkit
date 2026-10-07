@@ -90,6 +90,25 @@ dependencies = [
 ]
 
 [[packages]]
+name = "CohortConstructor"
+version = "0.6.3"
+source = { repository = "https://packagemanager.posit.co/cran/latest" }
+force_source = false
+dependencies = [
+    "cli",
+    "clock",
+    "dplyr",
+    "glue",
+    { name = "omopgenerics", requirement = "(>= 1.3.2)" },
+    { name = "PatientProfiles", requirement = "(>= 1.4.4)" },
+    { name = "CodelistGenerator", requirement = "(>= 4.0.0)" },
+    "purrr",
+    "rlang",
+    "tibble",
+    "tidyr",
+]
+
+[[packages]]
 name = "CohortGenerator"
 version = "1.1.1"
 source = { repository = "https://packagemanager.posit.co/cran/latest" }
