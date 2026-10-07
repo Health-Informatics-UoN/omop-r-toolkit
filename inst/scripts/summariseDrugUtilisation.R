@@ -11,7 +11,7 @@ Options:
   --strata=<json>                   Optional JSON list of strata variables [default: []]
   --estimates=<json>                JSON vector of estimates [default: ["mean","sd","count_missing","percentage_missing"]]
   --indexDate=<date_col>            Index date column [default: cohort_start_date]
-  --censorDate=<date_col>           Optional censor date column
+  --censorDate=<date_col>           Censor date column [default: cohort_end_date]
   --restrictIncident=<logical>      Restrict to incident exposures [default: TRUE]
   --gapEra=<n>                     Gap era in days [default: 7]
   --numberExposures=<logical>      Include number of exposures [default: TRUE]
@@ -59,7 +59,7 @@ utilisation_arguments <- list(
   ingredientConceptId = ingredient_ids,
   conceptSet = concept_set,
   indexDate = arguments$indexDate,
-  censorDate = if (is.null(arguments$censorDate) || !nzchar(arguments$censorDate)) NULL else arguments$censorDate,
+  censorDate = arguments$censorDate,
   gapEra = as.numeric(arguments$gapEra)
 )
 utilisation_arguments <- c(utilisation_arguments, Filter(Negate(is.null), list(
