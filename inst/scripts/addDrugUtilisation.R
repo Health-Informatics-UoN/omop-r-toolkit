@@ -22,7 +22,7 @@ Options:
   --cumulativeQuantity=<logical>   Include cumulative quantity [default: TRUE]
   --initialDailyDose=<logical>     Include initial daily dose [default: TRUE]
   --cumulativeDose=<logical>       Include cumulative dose [default: TRUE]
-  --nameStyle=<style>              Name style for added columns [default: {variable}]
+  --nameStyle=<style>              Name style for added columns [default: {value}_{concept_name}_{ingredient}]
 ' -> doc
 
 library(dplyr, warn.conflicts = FALSE)

@@ -14,7 +14,7 @@ Options:
   --censorDate=<date_col>            Optional censor date column
   --mutuallyExclusive=<logical>      Consider mutually exclusive indication labels [default: FALSE]
   --restrictIncident=<logical>       Restrict to incident indication events [default: TRUE]
-  --nameStyle=<style>                Naming style for the added columns [default: {window_name}]
+  --nameStyle=<style>                Optional naming style for the added columns
 ' -> doc
 
 library(dplyr, warn.conflicts = FALSE)
@@ -49,8 +49,11 @@ indication_arguments <- list(
   unknownIndicationTable = unknown_table,
   indexDate = arguments$indexDate,
   censorDate = if (is.null(arguments$censorDate) || !nzchar(arguments$censorDate)) NULL else arguments$censorDate,
-  nameStyle = arguments$nameStyle
+  name = arguments$name
 )
+if (!is.null(arguments$nameStyle) && nzchar(arguments$nameStyle)) {
+  indication_arguments$nameStyle <- arguments$nameStyle
+}
 indication_arguments <- c(indication_arguments, Filter(Negate(is.null), list(
   mutuallyExclusive = parseLogical(arguments$mutuallyExclusive),
   restrictIncident = parseLogical(arguments$restrictIncident)
