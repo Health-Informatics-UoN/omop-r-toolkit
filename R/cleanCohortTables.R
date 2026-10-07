@@ -9,3 +9,9 @@ cleanUpTables <- function(cdm, names) {
   omopgenerics::dropSourceTable(cdm = cdm, name = cohortTableNames(names))
   cdm
 }
+
+cleanPrefixTables <- function(cdm, prefix) {
+  tables <- omopgenerics::listSourceTables(cdm)
+  prefixTables <- tables[grep(paste0(c("^", prefix), collapse=""), tables)]
+  omopgenerics::dropSourceTable(cdm = cdm, name = prefixTables)
+}

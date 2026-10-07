@@ -32,6 +32,7 @@ source("R/postgres-connect-5s-tes.R")
 source("R/parseIntList.R")
 source("R/parseDateVector.R")
 source("R/parseStrata.R")
+source("R/cleanCohortTables.R")
 
 arguments <- docopt::docopt(doc)
 
@@ -91,5 +92,9 @@ surv <- CohortSurvival::estimateCompetingRiskSurvival(
 )
 
 omopgenerics::exportSummarisedResult(surv, fileName = arguments$outputPath)
+
+# Estimating survival means generating lots of temporary tables beginning with the prefix og_
+# At first, I thought this would be way harder, but the cdm object only keeps track of your tables, so it's not so bad
+cleanPrefixTables(cdm, "og_")
 
 CDMConnector::cdmDisconnect(cdm)
