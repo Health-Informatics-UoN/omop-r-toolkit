@@ -8,7 +8,7 @@ Options:
   --version                     Show version
   --ingredients=<ids>           Comma-separated ingredient concept IDs (e.g. 1125315,161)
   --checks=<checks>             Comma-separated checks to run [default: missing,exposureDuration,quantity]
-  --output-path=<path>          Directory to write output csvs to [default: outputs/ded/]
+  --outputPath=<path>          Directory to write output csvs to [default: outputs/ded/]
   --databaseId=<id>             Database identifier [default: OMOP_DB]
   --sample=<n>                  Number of records to sample (0 = all) [default: 10000]
   --minCellCount=<n>            Minimum cell count for disclosure control [default: 5]
