@@ -14,7 +14,7 @@ Options:
   --indexDate=<date_col>                Index date column [default: cohort_start_date]
   --censorDate=<date_col>               Optional censor date column
   --mutuallyExclusive=<logical>         Consider mutually exclusive indication labels [default: FALSE]
-  --restrictIncident=<logical>          Restrict to incident indication events [default: TRUE]
+  --restrictIncident=<logical>          Restrict to incident indication events [default: FALSE]
   --output-path=<path>                  Path to write output csv
 ' -> doc
 
