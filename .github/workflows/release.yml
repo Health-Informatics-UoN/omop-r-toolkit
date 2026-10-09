@@ -15,7 +15,6 @@ on:
   push:
     branches:
       - main
-      - Publish-Build-Failed-Fix
 
 jobs:
   # release:
