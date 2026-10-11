@@ -9,6 +9,7 @@ RUN apt-get update \
         libdeflate-dev \
         liblzma-dev \
         libbz2-dev \
+        xz-utils \
         zlib1g-dev \
         pkg-config \
         libpq-dev \
@@ -31,5 +32,5 @@ RUN mkdir -p /output /jdbc \
     && R -e 'DatabaseConnector::downloadJdbcDrivers("postgresql", pathToDriver = "/jdbc")'
 
 COPY . .
-    
+
 CMD ["Rscript", "./R/count-cohorts.R"]
