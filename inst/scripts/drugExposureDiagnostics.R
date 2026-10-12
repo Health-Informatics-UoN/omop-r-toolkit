@@ -30,7 +30,7 @@ source("R/checkChoice.R")
 
 arguments <- docopt(doc, version = "Drug Exposure Diagnostics 0.1.0")
 
-ingredients <- parseIntegerVector(arguments$ingredients)
+ingredients <- parseStringAsInts(arguments$ingredients)
 checks <- parseStringVector(arguments$checks)
 allowed_checks <- get("getAllCheckOptions", envir = asNamespace("DrugExposureDiagnostics"))()
 checkChoice(checks, allowed_checks, "checks")
@@ -42,7 +42,7 @@ min_cell <- as.numeric(arguments$minCellCount)
 earliest_start <- as.Date(arguments$earliestStartDate)
 by_concept <- arguments$byConcept
 
-subset_ids <- if (is.null(arguments$subsetToConceptId)) NULL else parseIntegerVector(arguments$subsetToConceptId)
+subset_ids <- if (is.null(arguments$subsetToConceptId)) NULL else parseStringAsInts(arguments$subsetToConceptId)
 exposure_type <- if (is.null(arguments$exposureTypeId)) NULL else as.numeric(arguments$exposureTypeId)
 table_prefix <- arguments$tablePrefix
 
