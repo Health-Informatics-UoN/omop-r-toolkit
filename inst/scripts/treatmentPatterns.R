@@ -49,7 +49,7 @@ library(omopgenerics)
 source("R/postgres-connect-5s-tes.R")
 source("R/cleanCohortTables.R")
 source("R/parseIntList.R")
-source("R/treatmentPatternsCohorts.R")
+source("R/treatmentPatternsCohort.R")
 source("R/parseStringVector.R")
 source("R/checkChoice.R")
 
@@ -71,7 +71,7 @@ combinationWindow <- parseNumber(arguments$combinationWindow, "combinationWindow
 minPostCombinationDuration <- parseNumber(arguments$minPostCombinationDuration, "minPostCombinationDuration")
 maxPathLength <- parseNumber(arguments$maxPathLength, "maxPathLength")
 minCellCount <- parseNumber(arguments$minCellCount, "minCellCount")
-ageWindow <- parseIntegerVector(arguments$ageWindow)
+ageWindow <- parseStringAsInts(arguments$ageWindow)
 
 concatTargets <- as.logical(arguments$concatTargets)
 if (is.na(concatTargets)) {
@@ -81,7 +81,7 @@ if (is.na(concatTargets)) {
 checkPathwaySettings(minEraDuration, combinationWindow, minPostCombinationDuration)
 
 splitEventCohortNames <- if (is.null(arguments$splitEventCohorts)) NULL else parseStringVector(arguments$splitEventCohorts)
-splitTime <- if (is.null(arguments$splitTime)) NULL else parseIntegerVector(arguments$splitTime)
+splitTime <- if (is.null(arguments$splitTime)) NULL else parseStringAsInts(arguments$splitTime)
 if (xor(is.null(splitEventCohortNames), is.null(splitTime))) {
   stop("--splitEventCohorts and --splitTime must be specified together")
 }
