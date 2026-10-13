@@ -8,7 +8,7 @@ Options:
   --version                     Show version
   --ingredients=<ids>           Comma-separated ingredient concept IDs (e.g. 1125315,161)
   --checks=<checks>             Comma-separated checks to run [default: missing,exposureDuration,quantity]
-  --outputPath=<path>          Directory to write output csvs to [default: outputs/ded/]
+  --outputPath=<path>           Directory to write output csvs to [default: outputs/ded/]
   --databaseId=<id>             Database identifier [default: OMOP_DB]
   --sample=<n>                  Number of records to sample (0 = all) [default: 10000]
   --minCellCount=<n>            Minimum cell count for disclosure control [default: 5]
@@ -54,6 +54,8 @@ if (!dir.exists(output_dir)) {
   dir.create(output_dir, recursive = TRUE)
 }
 
+output_dir <- normalizePath(output_dir)
+
 cdm <- connectFiveSafesTESPg("postgres_omop")
 
 results <- DrugExposureDiagnostics::executeChecks(
@@ -70,11 +72,15 @@ results <- DrugExposureDiagnostics::executeChecks(
   verbose = FALSE
 )
 
-DrugExposureDiagnostics::writeResultToDisk(
-  resultList = results,
-  databaseId = database_id,
-  outputFolder = output_dir,
-  filename = "drug_exposure_diagnostics"
+original_dir <- setwd(output_dir)
+tryCatch(
+  DrugExposureDiagnostics::writeResultToDisk(
+    resultList = results,
+    databaseId = database_id,
+    outputFolder = output_dir,
+    filename = "drug_exposure_diagnostics"
+  ),
+  finally = setwd(original_dir)
 )
 
 CDMConnector::cdmDisconnect(cdm)
