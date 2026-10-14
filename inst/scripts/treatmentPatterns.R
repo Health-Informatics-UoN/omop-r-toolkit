@@ -18,7 +18,7 @@ Options:
   --eventCohortTable=<table>               Cohort table holding the event cohorts, e.g. treatments
   --exitCohortTable=<table>                Optional cohort table holding exit cohorts, e.g. death
   --combinedCohortTable=<table>            Name of the combined cohort table. Dropped at the end [default: tp_cohorts]
-  --output-path=<path>                     Directory to write output CSVs to [default: outputs/treatment_patterns/]
+  --outputPath=<path>                      Directory to write output CSVs to [default: outputs/treatment_patterns/]
   --archiveName=<name>                     Optional ZIP file name in the output directory
   --analysisId=<id>                        Analysis identifier [default: 1]
   --description=<text>                     Analysis description [default: Treatment Patterns analysis]
@@ -205,7 +205,7 @@ if (combinedCohortTable %in% cohortTableNames) {
 
 # ---- Prepare output directory ----
 
-output_dir <- arguments$output_path
+output_dir <- arguments$outputPath
 
 if (!dir.exists(output_dir)) {
   dir.create(output_dir, recursive = TRUE)
