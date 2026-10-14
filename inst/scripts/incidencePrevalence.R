@@ -21,14 +21,14 @@ Options:
   --denominatorDaysPriorObservation=<days>            The number of days of prior observation observed in the database required for an individual to start contributing time in a cohort. [default: 0]
   --requirementInteractions                           If TRUE, cohorts will be created for all combinations of ageGroup, sex, and daysPriorObservation. If FALSE, only the first value specified for the other factors will be used. Consequently, order of values matters when requirementInteractions is FALSE. [default: TRUE]
   --outcomeCohortName=<cohortName>                    Name of the outcome cohort in the cdm database
-  --estimateIncidenceOutputPath=<output_path>         A path to which the output of estimateIncidence is saved. [default: ]
+  --estimateIncidenceOutputPath=<outputPath>         A path to which the output of estimateIncidence is saved. [default: ]
   --incidenceInterval=<interval>                      The interval for incidence, if estimating incidence. [default: years]
   --incidenceOutcomeWashout=<washout>                 The washout for incidence, if estimating incidence. [default: 0]
   --incidenceRepeatedEvents                           Whether to measure repeated events if estimating incidence
-  --estimatePointPrevalenceOutputPath=<output_path>   A path to which the output of estimatePointPrevalence is saved. [default: ]
+  --estimatePointPrevalenceOutputPath=<outputPath>   A path to which the output of estimatePointPrevalence is saved. [default: ]
   --pointPrevalenceInterval=<interval>                The interval for point prevalence, if estimating point prevalence [default: Years]
   --pointPrevalenceTimePoint=<timePoint>              The time point for point prevalence, if estimating point prevalence [default: start]
-  --estimatePeriodPrevalenceOutputPath=<output_path>  A path to which the output of estimatePeriodPrevalence is saved. [default: ]
+  --estimatePeriodPrevalenceOutputPath=<outputPath>  A path to which the output of estimatePeriodPrevalence is saved. [default: ]
   --periodPrevalenceInterval=<interval>               The interval for period prevalence, if estimating period prevalence [default: Years]
 ' -> doc
 

@@ -15,7 +15,7 @@ Options:
   --censorDate=<date_col>               Optional censor date column
   --mutuallyExclusive=<logical>         Consider mutually exclusive indication labels [default: FALSE]
   --restrictIncident=<logical>          Restrict to incident indication events [default: FALSE]
-  --output-path=<path>                  Path to write output csv
+  --outputPath=<path>                  Path to write output csv
 ' -> doc
 
 library(dplyr, warn.conflicts = FALSE)
@@ -64,9 +64,9 @@ result <- do.call(
   c(list(cohort = cohort), indication_arguments)
 )
 
-if (!is.null(arguments$output_path) && nzchar(arguments$output_path)) {
-  dir.create(dirname(arguments$output_path), recursive = TRUE, showWarnings = FALSE)
-  write.csv(as.data.frame(result), arguments$output_path, row.names = FALSE)
+if (!is.null(arguments$outputPath) && nzchar(arguments$outputPath)) {
+  dir.create(dirname(arguments$outputPath), recursive = TRUE, showWarnings = FALSE)
+  write.csv(as.data.frame(result), arguments$outputPath, row.names = FALSE)
 }
 
 CDMConnector::cdmDisconnect(cdm)

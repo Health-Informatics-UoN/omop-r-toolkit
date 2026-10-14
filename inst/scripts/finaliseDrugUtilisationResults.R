@@ -8,7 +8,7 @@ Options:
   --version                         Show version
   --suppressCounts                  Suppress counts in the final output
   --suppressGroup                  Suppress group columns
-  --output-path=<path>             Output CSV path
+  --outputPath=<path>             Output CSV path
 ' -> doc
 
 library(docopt)
@@ -42,9 +42,9 @@ if (arguments$suppressGroup) {
   final_result <- omopgenerics::suppressGroup(final_result)
 }
 
-if (!is.null(arguments$output_path) && nzchar(arguments$output_path)) {
-  dir.create(dirname(arguments$output_path), recursive = TRUE, showWarnings = FALSE)
-  write.csv(as.data.frame(final_result), arguments$output_path, row.names = FALSE)
+if (!is.null(arguments$outputPath) && nzchar(arguments$outputPath)) {
+  dir.create(dirname(arguments$outputPath), recursive = TRUE, showWarnings = FALSE)
+  write.csv(as.data.frame(final_result), arguments$outputPath, row.names = FALSE)
 }
 
 final_result

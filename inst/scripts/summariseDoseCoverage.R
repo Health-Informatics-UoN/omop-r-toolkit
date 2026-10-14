@@ -10,7 +10,7 @@ Options:
   --conceptSet=<json>               Optional concept set JSON for custom concept definitions
   --estimates=<json>                Optional JSON vector of estimates [default: ["mean","sd","min","max"]]
   --sampleSize=<n>                  Optional sample-size override
-  --output-path=<path>              Output CSV path
+  --outputPath=<path>              Output CSV path
 ' -> doc
 
 library(dplyr, warn.conflicts = FALSE)
@@ -45,9 +45,9 @@ result <- DrugUtilisation::summariseDoseCoverage(
   sampleSize = if (is.null(arguments$sampleSize) || !nzchar(arguments$sampleSize)) NULL else as.numeric(arguments$sampleSize)
 )
 
-if (!is.null(arguments$output_path) && nzchar(arguments$output_path)) {
-  dir.create(dirname(arguments$output_path), recursive = TRUE, showWarnings = FALSE)
-  write.csv(as.data.frame(result), arguments$output_path, row.names = FALSE)
+if (!is.null(arguments$outputPath) && nzchar(arguments$outputPath)) {
+  dir.create(dirname(arguments$outputPath), recursive = TRUE, showWarnings = FALSE)
+  write.csv(as.data.frame(result), arguments$outputPath, row.names = FALSE)
 }
 
 CDMConnector::cdmDisconnect(cdm)
