@@ -182,20 +182,20 @@ if (
 
 combinedCohortTable <- arguments$combinedCohortTable
 
-cohortTableNames <- c(
+inputCohortTables <- c(
   arguments$targetCohortTable,
   arguments$eventCohortTable,
   arguments$exitCohortTable
 )
 
-if (anyDuplicated(cohortTableNames)) {
+if (anyDuplicated(inputCohortTables)) {
   stop(
     "Target, event and exit cohorts must be in different tables. ",
     "Define them with separate defineConceptCohortSet runs."
   )
 }
 
-if (combinedCohortTable %in% cohortTableNames) {
+if (combinedCohortTable %in% inputCohortTables) {
   stop(
     "--combinedCohortTable must not be the same as an input cohort table, ",
     "as it is dropped at the end"
@@ -213,7 +213,7 @@ if (!dir.exists(output_dir)) {
 
 cdm <- connectFiveSafesTESPg(
   "postgres_omop",
-  cohortTables = cohortTableNames
+  cohortTables = inputCohortTables
 )
 
 cohortNamesByType <- list(
@@ -240,7 +240,7 @@ checkDistinctCohortNames(cohortNamesByType)
 # ---- Combine cohorts into one table ----
 
 cohortTablesToBind <- lapply(
-  cohortTableNames,
+  inputCohortTables,
   function(tableName) cdm[[tableName]]
 )
 
