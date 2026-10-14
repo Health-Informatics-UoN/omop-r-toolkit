@@ -6,7 +6,7 @@ Usage:
 Options:
   -h --help                     Show this screen
   --version                     Show version
-  --output-path=<output_path>   Path to write the summary csv to [default: outputs/cohort_summary.csv]
+  --outputPath=<outputPath>   Path to write the summary csv to [default: outputs/cohort_summary.csv]
   --group=<group>               Optional group variable name
   --includeOverallGroup=<logical>  Include overall group [default: TRUE]
   --strata=<json>               JSON vector/list of strata variable names [default: []]
@@ -42,7 +42,7 @@ group <- if (is.null(arguments$group) || !nzchar(arguments$group)) list() else a
 
 summary_df <- summariseCohortTable(
   cohort = cohort,
-  output_path = arguments$output_path,
+  outputPath = arguments$outputPath,
   group = group,
   includeOverallGroup = as.logical(arguments$includeOverallGroup),
   strata = strata,

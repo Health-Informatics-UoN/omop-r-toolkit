@@ -118,7 +118,7 @@ This means a basic example of running this using a TES message looks like this:
                                     "Rscript",
                                     "inst/scripts/count-cohorts.R",
                                     "skin_cancer_20260713",
-                                    "--output-path=outputs/output.csv"
+                                    "--outputPath=outputs/output.csv"
                            ],
                            "workdir": null,
                            "stdin": null,
@@ -183,12 +183,12 @@ Options:
 ### Count a cohort
 ```sh
 Usage:
-  count-cohorts.R <name> [--output-path=<output_path>]
+  count-cohorts.R <name> [--outputPath=<outputPath>]
 
 Options:
   -h --help                     Show this screen
   --version                     Show version
-  --output-path=<output_path>   Path to write the output csv to [default: outputs/output.csv]
+  --outputPath=<outputPath>   Path to write the output csv to [default: outputs/output.csv]
 ```
 
 ### Clean up cohort tables
@@ -219,14 +219,14 @@ Options:
   --denominatorDaysPriorObservation=<days>            The number of days of prior observation observed in the database required for an individual to start contributing time in a cohort. [default: 0]
   --requirementInteractions                           If TRUE, cohorts will be created for all combinations of ageGroup, sex, and daysPriorObservation. If FALSE, only the first value specified for the other factors will be used. Consequently, order of values matters when requirementInteractions is FALSE. [default: TRUE]
   --outcomeCohortName=<cohortName>                    Name of the outcome cohort in the cdm database
-  --estimateIncidenceOutputPath=<output_path>         A path to which the output of estimateIncidence is saved. [default: ]
+  --estimateIncidenceOutputPath=<outputPath>         A path to which the output of estimateIncidence is saved. [default: ]
   --incidenceInterval=<interval>                      The interval for incidence, if estimating incidence. [default: years]
   --incidenceOutcomeWashout=<washout>                 The washout for incidence, if estimating incidence. [default: 0]
   --incidenceRepeatedEvents                           Whether to measure repeated events if estimating incidence
-  --estimatePointPrevalenceOutputPath=<output_path>   A path to which the output of estimatePointPrevalence is saved. [default: ]
+  --estimatePointPrevalenceOutputPath=<outputPath>   A path to which the output of estimatePointPrevalence is saved. [default: ]
   --pointPrevalenceInterval=<interval>                The interval for point prevalence, if estimating point prevalence [default: Years]
   --pointPrevalenceTimePoint=<timePoint>              The time point for point prevalence, if estimating point prevalence [default: start]
-  --estimatePeriodPrevalenceOutputPath=<output_path>  A path to which the output of estimatePeriodPrevalence is saved. [default: ]
+  --estimatePeriodPrevalenceOutputPath=<outputPath>  A path to which the output of estimatePeriodPrevalence is saved. [default: ]
   --periodPrevalenceInterval=<interval>               The interval for period prevalence, if estimating period prevalence [default: Years]
 ```
 
@@ -257,7 +257,7 @@ Options:
   --subsetCohortId=<ids>        Optional cohort IDs to subset
   --numberExposures=<logical>   Add number of exposures to the output cohort [default: FALSE]
   --daysPrescribed=<logical>    Add days prescribed to the output cohort [default: FALSE]
-  --output-path=<path>          Optional path to write cohort settings summary csv
+  --outputPath=<path>          Optional path to write cohort settings summary csv
 ```
 
 Example:
@@ -267,7 +267,7 @@ Rscript inst/scripts/generateIngredientCohortSet.R metformin_users \
   --ingredient=metformin \
   --gapEra=7 \
   --numberExposures=TRUE \
-  --output-path=outputs/metformin-cohort-settings.csv
+  --outputPath=outputs/metformin-cohort-settings.csv
 ```
 
 #### Add drug utilisation variables
@@ -335,7 +335,7 @@ Options:
   --cumulativeQuantity=<logical>      Include cumulative quantity [default: TRUE]
   --initialDailyDose=<logical>        Include initial daily dose [default: TRUE]
   --cumulativeDose=<logical>          Include cumulative dose [default: TRUE]
-  --output-path=<path>                Output CSV path
+  --outputPath=<path>                Output CSV path
 ```
 
 Example:
@@ -346,7 +346,7 @@ Rscript inst/scripts/summariseDrugUtilisation.R study_cohort \
   --strata='["age_group","sex"]' \
   --numberExposures=TRUE \
   --daysExposed=TRUE \
-  --output-path=outputs/drug-utilisation.csv
+  --outputPath=outputs/drug-utilisation.csv
 ```
 
 #### Add indications
@@ -397,7 +397,7 @@ Options:
   --censorDate=<date_col>           Optional censor date column
   --mutuallyExclusive=<logical>     Consider mutually exclusive indication labels [default: FALSE]
   --restrictIncident=<logical>      Restrict to incident indication events [default: TRUE]
-  --output-path=<path>              Path to write output csv
+  --outputPath=<path>              Path to write output csv
 ```
 
 Example:
@@ -407,7 +407,7 @@ Rscript inst/scripts/summariseIndication.R drug_cohort \
   --indicationCohortName=condition_cohort \
   --window='[-30,0]' \
   --restrictIncident=TRUE \
-  --output-path=outputs/indications.csv
+  --outputPath=outputs/indications.csv
 ```
 
 #### Summarise dose coverage
@@ -423,7 +423,7 @@ Options:
   --conceptSet=<json>           Optional concept set JSON for custom concept definitions
   --estimates=<json>            Optional JSON vector of estimates [default: ["mean","sd","min","max"]]
   --sampleSize=<n>              Optional sample-size override
-  --output-path=<path>          Output CSV path
+  --outputPath=<path>          Output CSV path
 ```
 
 Example:
@@ -432,7 +432,7 @@ Example:
 Rscript inst/scripts/summariseDoseCoverage.R drug_cohort \
   --ingredientConceptId=1503297 \
   --estimates='["mean","sd","min","max"]' \
-  --output-path=outputs/dose-coverage.csv
+  --outputPath=outputs/dose-coverage.csv
 ```
 
 #### Summarise drug restarts
@@ -451,7 +451,7 @@ Options:
   --censorDate=<date_col>                    Optional censor date column
   --incident=<logical>                       Restrict to incident restarts [default: FALSE]
   --restrictToFirstDiscontinuation=<logical> Restrict to first discontinuation only [default: TRUE]
-  --output-path=<path>                       Output CSV path
+  --outputPath=<path>                       Output CSV path
 ```
 
 Example:
@@ -460,7 +460,7 @@ Example:
 Rscript inst/scripts/drugExposureDiagnostics.R \
   --ingredients=1125315 \
   --byConcept \
-  --output-path=outputs/ded/
+  --outputPath=outputs/ded/
 ```
 
 ### Treatment Patterns
@@ -541,7 +541,7 @@ Rscript inst/scripts/summariseDrugRestart.R drug_cohort \
   --switchCohortId=1 \
   --followUpDays=365 \
   --incident=TRUE \
-  --output-path=outputs/drug-restarts.csv
+  --outputPath=outputs/drug-restarts.csv
 ```
 
 #### Finalise DrugUtilisation results
@@ -555,7 +555,7 @@ Options:
   --version                     Show version
   --suppressCounts              Suppress counts in the final output
   --suppressGroup               Suppress group columns
-  --output-path=<path>          Output CSV path
+  --outputPath=<path>          Output CSV path
 ```
 
 Example:
@@ -565,7 +565,7 @@ Rscript inst/scripts/finaliseDrugUtilisationResults.R \
   outputs/drug-utilisation.csv \
   outputs/indications.csv \
   --suppressCounts \
-  --output-path=outputs/final-drug-utilisation.csv
+  --outputPath=outputs/final-drug-utilisation.csv
 ```
 
 ### PatientProfiles
