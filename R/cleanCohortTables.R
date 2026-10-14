@@ -6,7 +6,11 @@ cohortTableNames <- function(names) {
 }
 
 cleanUpTables <- function(cdm, names) {
-  omopgenerics::dropSourceTable(cdm = cdm, name = cohortTableNames(names))
+  tablesToDrop <- cohortTableNames(names)
+  cdm <- omopgenerics::dropSourceTable(
+    cdm = cdm,
+    name = tidyselect::any_of(tablesToDrop)
+  )
   cdm
 }
 
