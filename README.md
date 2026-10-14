@@ -485,7 +485,7 @@ Options:
   --eventCohortTable=<table>               Cohort table holding the event cohorts, e.g. treatments
   --exitCohortTable=<table>                Optional cohort table holding exit cohorts, e.g. death
   --combinedCohortTable=<table>            Name of the table the cohorts are combined into. Dropped at the end [default: tp_cohorts]
-  --output-path=<path>                     Directory to write output csvs to [default: outputs/treatment_patterns/]
+  --outputPath=<path>                      Directory to write output csvs to [default: outputs/treatment_patterns/]
   --archiveName=<name>                     Optional name of a zip file (in the output directory) to bundle the csvs into
   --analysisId=<id>                        Analysis identifier [default: 1]
   --description=<text>                     Analysis description [default: Treatment Patterns analysis]
@@ -533,7 +533,7 @@ Rscript inst/scripts/treatmentPatterns.R \
   --minEraDuration=7 \
   --combinationWindow=7 \
   --minPostCombinationDuration=7 \
-  --output-path=outputs/treatment_patterns/
+  --outputPath=outputs/treatment_patterns/
 
 Rscript inst/scripts/cleanUpCohortTables.R sinusitis_target sinusitis_treatments
 Rscript inst/scripts/summariseDrugRestart.R drug_cohort \
