@@ -118,7 +118,7 @@ This means a basic example of running this using a TES message looks like this:
                                     "Rscript",
                                     "inst/scripts/count-cohorts.R",
                                     "skin_cancer_20260713",
-                                    "--output-path=outputs/output.csv"
+                                    "--outputPath=outputs/output.csv"
                            ],
                            "workdir": null,
                            "stdin": null,
@@ -156,6 +156,16 @@ This starts the version of the container with the hash specified, passing it the
 Most of the rest is descriptive, refer to [5s-TES docs](https://docs.federated-analytics.ac.uk/) for more details
 
 ## Scripts
+
+- [Define a concept cohort set](#define-a-concept-cohort-set)
+- [Count a cohort](#count-a-cohort)
+- [Clean up cohort tables](#clean-up-cohort-tables)
+- [Incidence and Prevalence](#incidence-and-prevalence)
+- [Drug utilisation](#drug-utilisation)
+- [Treatment patterns](#treatment-patterns)
+- [Patient Profiles](#patientprofiles)
+- [Cohort survival](#cohortsurvival)
+
 ### Define a concept cohort set
 ```sh
 Usage:
@@ -173,12 +183,12 @@ Options:
 ### Count a cohort
 ```sh
 Usage:
-  count-cohorts.R <name> [--output-path=<output_path>]
+  count-cohorts.R <name> [--outputPath=<outputPath>]
 
 Options:
   -h --help                     Show this screen
   --version                     Show version
-  --output-path=<output_path>   Path to write the output csv to [default: outputs/output.csv]
+  --outputPath=<outputPath>   Path to write the output csv to [default: outputs/output.csv]
 ```
 
 ### Clean up cohort tables
@@ -209,14 +219,14 @@ Options:
   --denominatorDaysPriorObservation=<days>            The number of days of prior observation observed in the database required for an individual to start contributing time in a cohort. [default: 0]
   --requirementInteractions                           If TRUE, cohorts will be created for all combinations of ageGroup, sex, and daysPriorObservation. If FALSE, only the first value specified for the other factors will be used. Consequently, order of values matters when requirementInteractions is FALSE. [default: TRUE]
   --outcomeCohortName=<cohortName>                    Name of the outcome cohort in the cdm database
-  --estimateIncidenceOutputPath=<output_path>         A path to which the output of estimateIncidence is saved. [default: ]
+  --estimateIncidenceOutputPath=<outputPath>         A path to which the output of estimateIncidence is saved. [default: ]
   --incidenceInterval=<interval>                      The interval for incidence, if estimating incidence. [default: years]
   --incidenceOutcomeWashout=<washout>                 The washout for incidence, if estimating incidence. [default: 0]
   --incidenceRepeatedEvents                           Whether to measure repeated events if estimating incidence
-  --estimatePointPrevalenceOutputPath=<output_path>   A path to which the output of estimatePointPrevalence is saved. [default: ]
+  --estimatePointPrevalenceOutputPath=<outputPath>   A path to which the output of estimatePointPrevalence is saved. [default: ]
   --pointPrevalenceInterval=<interval>                The interval for point prevalence, if estimating point prevalence [default: Years]
   --pointPrevalenceTimePoint=<timePoint>              The time point for point prevalence, if estimating point prevalence [default: start]
-  --estimatePeriodPrevalenceOutputPath=<output_path>  A path to which the output of estimatePeriodPrevalence is saved. [default: ]
+  --estimatePeriodPrevalenceOutputPath=<outputPath>  A path to which the output of estimatePeriodPrevalence is saved. [default: ]
   --periodPrevalenceInterval=<interval>               The interval for period prevalence, if estimating period prevalence [default: Years]
 ```
 
@@ -247,7 +257,7 @@ Options:
   --subsetCohortId=<ids>        Optional cohort IDs to subset
   --numberExposures=<logical>   Add number of exposures to the output cohort [default: FALSE]
   --daysPrescribed=<logical>    Add days prescribed to the output cohort [default: FALSE]
-  --output-path=<path>          Optional path to write cohort settings summary csv
+  --outputPath=<path>          Optional path to write cohort settings summary csv
 ```
 
 Example:
@@ -257,7 +267,7 @@ Rscript inst/scripts/generateIngredientCohortSet.R metformin_users \
   --ingredient=metformin \
   --gapEra=7 \
   --numberExposures=TRUE \
-  --output-path=outputs/metformin-cohort-settings.csv
+  --outputPath=outputs/metformin-cohort-settings.csv
 ```
 
 #### Add drug utilisation variables
@@ -325,7 +335,7 @@ Options:
   --cumulativeQuantity=<logical>      Include cumulative quantity [default: TRUE]
   --initialDailyDose=<logical>        Include initial daily dose [default: TRUE]
   --cumulativeDose=<logical>          Include cumulative dose [default: TRUE]
-  --output-path=<path>                Output CSV path
+  --outputPath=<path>                Output CSV path
 ```
 
 Example:
@@ -336,7 +346,7 @@ Rscript inst/scripts/summariseDrugUtilisation.R study_cohort \
   --strata='["age_group","sex"]' \
   --numberExposures=TRUE \
   --daysExposed=TRUE \
-  --output-path=outputs/drug-utilisation.csv
+  --outputPath=outputs/drug-utilisation.csv
 ```
 
 #### Add indications
@@ -387,7 +397,7 @@ Options:
   --censorDate=<date_col>           Optional censor date column
   --mutuallyExclusive=<logical>     Consider mutually exclusive indication labels [default: FALSE]
   --restrictIncident=<logical>      Restrict to incident indication events [default: TRUE]
-  --output-path=<path>              Path to write output csv
+  --outputPath=<path>              Path to write output csv
 ```
 
 Example:
@@ -397,7 +407,7 @@ Rscript inst/scripts/summariseIndication.R drug_cohort \
   --indicationCohortName=condition_cohort \
   --window='[-30,0]' \
   --restrictIncident=TRUE \
-  --output-path=outputs/indications.csv
+  --outputPath=outputs/indications.csv
 ```
 
 #### Summarise dose coverage
@@ -413,7 +423,7 @@ Options:
   --conceptSet=<json>           Optional concept set JSON for custom concept definitions
   --estimates=<json>            Optional JSON vector of estimates [default: ["mean","sd","min","max"]]
   --sampleSize=<n>              Optional sample-size override
-  --output-path=<path>          Output CSV path
+  --outputPath=<path>          Output CSV path
 ```
 
 Example:
@@ -422,7 +432,7 @@ Example:
 Rscript inst/scripts/summariseDoseCoverage.R drug_cohort \
   --ingredientConceptId=1503297 \
   --estimates='["mean","sd","min","max"]' \
-  --output-path=outputs/dose-coverage.csv
+  --outputPath=outputs/dose-coverage.csv
 ```
 
 #### Summarise drug restarts
@@ -441,7 +451,7 @@ Options:
   --censorDate=<date_col>                    Optional censor date column
   --incident=<logical>                       Restrict to incident restarts [default: FALSE]
   --restrictToFirstDiscontinuation=<logical> Restrict to first discontinuation only [default: TRUE]
-  --output-path=<path>                       Output CSV path
+  --outputPath=<path>                       Output CSV path
 ```
 
 Example:
@@ -450,7 +460,7 @@ Example:
 Rscript inst/scripts/drugExposureDiagnostics.R \
   --ingredients=1125315 \
   --byConcept \
-  --output-path=outputs/ded/
+  --outputPath=outputs/ded/
 ```
 
 ### Treatment Patterns
@@ -475,7 +485,7 @@ Options:
   --eventCohortTable=<table>               Cohort table holding the event cohorts, e.g. treatments
   --exitCohortTable=<table>                Optional cohort table holding exit cohorts, e.g. death
   --combinedCohortTable=<table>            Name of the table the cohorts are combined into. Dropped at the end [default: tp_cohorts]
-  --output-path=<path>                     Directory to write output csvs to [default: outputs/treatment_patterns/]
+  --outputPath=<path>                      Directory to write output csvs to [default: outputs/treatment_patterns/]
   --archiveName=<name>                     Optional name of a zip file (in the output directory) to bundle the csvs into
   --analysisId=<id>                        Analysis identifier [default: 1]
   --description=<text>                     Analysis description [default: Treatment Patterns analysis]
@@ -523,7 +533,7 @@ Rscript inst/scripts/treatmentPatterns.R \
   --minEraDuration=7 \
   --combinationWindow=7 \
   --minPostCombinationDuration=7 \
-  --output-path=outputs/treatment_patterns/
+  --outputPath=outputs/treatment_patterns/
 
 Rscript inst/scripts/cleanUpCohortTables.R sinusitis_target sinusitis_treatments
 Rscript inst/scripts/summariseDrugRestart.R drug_cohort \
@@ -531,7 +541,7 @@ Rscript inst/scripts/summariseDrugRestart.R drug_cohort \
   --switchCohortId=1 \
   --followUpDays=365 \
   --incident=TRUE \
-  --output-path=outputs/drug-restarts.csv
+  --outputPath=outputs/drug-restarts.csv
 ```
 
 #### Finalise DrugUtilisation results
@@ -545,7 +555,7 @@ Options:
   --version                     Show version
   --suppressCounts              Suppress counts in the final output
   --suppressGroup               Suppress group columns
-  --output-path=<path>          Output CSV path
+  --outputPath=<path>          Output CSV path
 ```
 
 Example:
@@ -555,7 +565,7 @@ Rscript inst/scripts/finaliseDrugUtilisationResults.R \
   outputs/drug-utilisation.csv \
   outputs/indications.csv \
   --suppressCounts \
-  --output-path=outputs/final-drug-utilisation.csv
+  --outputPath=outputs/final-drug-utilisation.csv
 ```
 
 ### PatientProfiles
@@ -687,4 +697,85 @@ Rscript inst/scripts/addConceptIntersectCount.R skin_cancer \
   --conceptSet='[{"concept_id": 1118084, "concept_name": "metformin"}]' \
   --window='[[0,30],[31,365]]' \
   --nameStyle='{concept_name}_{window_name}'
+```
+
+### CohortSurvival
+#### `estimateSingleEventSurvival`
+Estimate survival for a single event of interest
+
+```sh
+Usage:
+  estimateSingleEventSurvival.R [options]
+
+Options:
+  -h --help                           Show this screen
+  --version                           Show version
+  --targetCohortTable=<tableName>     Name of the cohort table containing the target cohorts. The table must be present in cdm and contain standard OMOP cohort columns.
+  --outcomeCohortTable=<tableName>    Name of the cohort table containing the outcome cohorts. The table must be present in cdm and contain standard OMOP cohort columns.
+  --outputPath=<path>                 Path for saving the survival table as a csv [default: outputs/single-event-survival.csv]
+  --targetCohortId=<cohortId>         Target cohorts to include. It can either be a cohort_definition_id value or a cohort_name. Multiple ids are allowed. If not provided, all non-empty cohorts in targetCohortTable are used.
+  --outcomeCohortId=<cohortId>        Outcome cohorts to include. It can either be a cohort_definition_id value or a cohort_name. Multiple ids are allowed. If not provided, all outcome cohorts in outcomeCohortTable are used.
+  --outcomeDateVariable=<columnName>  Variable containing the outcome event date. This is usually cohort_start_date, but another date column in the outcome cohort can be used.  [default: cohort_start_date]
+  --outcomeWashout=<days>             Number of days before target cohort entry used to exclude people with a prior outcome. Inf excludes people with any prior outcome before index; 0 applies no pre-index washout. [default: Inf]
+  --censorOnCohortExit                If TRUE, an individual\'s follow up will be censored at their target cohort exit date.
+  --censorOnDate=<date>               If provided, an individual\'s follow up will be censored at the given date. This can be a scalar Date or the name of a date column in the target cohort table.
+  --weight=<columnName>               If provided, the name of a numeric column in the target cohort table containing observation weights to use in the Kaplan-Meier estimation.
+  --followUpDays=<days>               Number of days to follow up individuals (lower bound 1, upper bound Inf). Follow-up is censored at this value. [default: Inf]
+  --strata=<columnNames>              An optional list of target cohort column names to stratify by. Each element can be one column name or a character vector of column names for a combined stratum, for example the input could be ["sex", ["age_group", "sex"]] which will be interpreted as list("sex", c("age_group", "sex")).
+  --eventGap=<days>                   Days between time points for which to report survival events, which are grouped into the specified intervals. [default: 30]
+  --estimateGap=<days>                Days between time points for which to report survival estimates. First day will be day zero with risk estimates provided for times up to the end of follow-up, with a gap in days equivalent to estimateGap. [default: 1]
+  --restrictedMeanFollowUp=<days>     Number of days of follow-up to use when calculating restricted mean survival. See Details.
+  --minimumSurvivalDays=<days>        Minimum number of days required for the main cohort to contribute to the analysis. [default: 1]
+```
+#### `estimateCompetingEventSurvival`
+Estimate time-to-event probabilities for one or more target cohorts when an event of interest can be precluded by a competing outcome.
+
+```sh
+Usage:
+  estimateCompetingEventSurvial.R [options]
+
+Options:
+  -h --help                                  Show this screen
+  --version                                  Show version
+  --targetCohortTable=<table>                Name of the cohort table containing the target cohorts. The table must be present in cdm and contain standard OMOP cohort columns.
+  --outcomeCohortTable=<table>               Name of the cohort table containing the outcome of interest.
+  --competingOutcomeCohortTable=<table>      Name of the cohort table containing the competing outcome.
+  --outputPath=<path>                 Path for saving the survival table as a csv [default: outputs/competing-event-survival.csv]
+  --targetCohortId=<id>                      Target cohorts to include. It can either be a cohort_definition_id value or a cohort_name. Multiple ids are allowed. If omitted, all non-empty cohorts in targetCohortTable are used.
+  --outcomeCohortId=<id>                     Outcome cohorts to include. It can either be a cohort_definition_id value or a cohort_name. Multiple ids are allowed. If omitted, all outcome cohorts in outcomeCohortTable are used.
+  --outcomeDateVariable=<variable>           Variable containing the outcome event date. This is usually "cohort_start_date", but another date column in the outcome cohort can be used. [default: cohort_start_date]
+  --outcomeWashout=<days>                    Number of days before target cohort entry used to exclude people with a prior outcome. Inf excludes people with any prior outcome before index; 0 applies no pre-index washout. [default: Inf]
+  --competingOutcomeCohortId=<id>            Competing outcome cohorts to include. It can either be a cohort_definition_id value or a cohort_name. Multiple ids are allowed. If omitted, all competing outcome cohorts in competingOutcomeCohortTable are used.
+  --competingOutcomeDateVariable=<variable>  Variable containing the competing outcome event date. [default: cohort_start_date]
+  --competingOutcomeWashout=<days>           Number of days before target cohort entry used to exclude people with a prior competing outcome. Inf excludes people with any prior competing outcome before index; 0 applies no pre-index washout. [default: Inf]
+  --censorOnCohortExit                       If active, an individual\'s follow up will be censored at their target cohort exit date.
+  --censorOnDate=<date>                      If specified, an individual\'s follow up will be censored at the given date. This can be a scalar Date or the name of a date column in the target cohort table.
+  --weight=<weight>                          If specified, the name of a numeric column in the target cohort table containing observation weights.
+  --followUpDays=<days>                      Number of days to follow up individuals (lower bound 1, upper bound Inf). Follow-up is censored at this value. [default: Inf]
+  --strata=<strata>                          A list of target cohort column names to stratify by. Each element can be one column name or a character vector of column names for a combined stratum, for example list("sex", c("age_group", "sex")).
+  --eventGap=<gap>                           Days between time points for which to report survival events, which are grouped into the specified intervals. [default: 30]
+  --estimateGap=<gap>                        Days between time points for which to report survival estimates. First day will be day zero with risk estimates provided for times up to the end of follow-up, with a gap in days equivalent to estimateGap. [default: 1]
+  --restrictedMeanFollowUp=<days>            Number of days of follow-up to use when calculating restricted mean summaries. See Details.
+  --minimumSurvivalDays=<days>               Minimum number of days required for the main cohort to contribute to the analysis. [default: 1]
+```
+
+#### addCohortSurvival
+Add time and event status to a cohort table.
+Scripts to analyse these variables are not included in this package, see the source library's [vignette](https://darwin-eu.github.io/CohortSurvival/articles/a03_Further_survival_analyses.html) for details.
+
+```sh
+Usage:
+  addCohortSurvival.R <tableName> [options]
+
+Options:
+  -h --help                           Show this screen
+  --version                           Show version
+  --name=<tableName>                  Name of the new table. In the library this is optional, but must be specified to use the output.
+  --outcomeCohortTable=<table>        Name of the cohort table containing the outcome of interest
+  --outcomeCohortId=<id>              IDs of event cohorts to include. Values can be cohort definition IDs or cohort names [default: 1]
+  --outcomeDateVariable=<variable>    Variable containing date of outcome event. [default: cohort_start_date]
+  --outcomeWashout=<days>             Washout time in days for the outcome. If an individual has an outcome during the washout period before target cohort entry, status and time will be set to NA. Use Inf for any prior outcome and 0 for no pre-index washout. [default: Inf]
+  --censorOnCohortExit                If active, an individual\'s follow up will be censored at their target cohort exit.
+  --censorOnDate=<date>               If specified, an individual\'s follow up will be censored at the given date. This can be a scalar Date or the name of a date column
+  --followUpDays=<days>               Number of days to follow up individuals (lower bound 1, upper bound Inf). Follow-up is censored at this value. [default: Inf]
 ```

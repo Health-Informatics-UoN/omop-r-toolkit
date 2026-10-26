@@ -24,7 +24,7 @@ source("R/parseConceptSet.R")
 arguments <- docopt(doc, version = "Define Concept Cohort set 0.1.0")
 
 # requiredObservation arrives as a string like "0,0" - split into a numeric vector of length 2
-requiredObservation <- parseNInts(arguments$requiredObservation, 2)
+requiredObservation <- parseStringAsInts(arguments$requiredObservation, 2)
 
 # conceptSet arrives as a JSON string - parse it into an R list
 conceptSet <- parseJSONConceptSet(arguments$conceptSet)

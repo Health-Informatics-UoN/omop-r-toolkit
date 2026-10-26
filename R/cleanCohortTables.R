@@ -1,9 +1,21 @@
-library(CDMConnector)
+#' Names of a cohort table and its companion tables (_attrition, _codelist, _set), for one or more cohorts
 
-cleanUpTables <- function(cdm, prefix) {
-  names <- c("_attrition", "_codelist", "_set")
-  tables <- sprintf("%s%s", prefix, names)
-  CDMConnector::dropTable(cdm, tables)
-  CDMConnector::dropTable(cdm, prefix)
+cohortTableNames <- function(names) {
+  suffixes <- c("_attrition", "_codelist", "_set")
+  c(names, as.vector(outer(names, suffixes, paste0)))
+}
+
+cleanUpTables <- function(cdm, names) {
+  tablesToDrop <- cohortTableNames(names)
+  cdm <- omopgenerics::dropSourceTable(
+    cdm = cdm,
+    name = tidyselect::any_of(tablesToDrop)
+  )
   cdm
+}
+
+cleanPrefixTables <- function(cdm, prefix) {
+  tables <- omopgenerics::listSourceTables(cdm)
+  prefixTables <- tables[grep(paste0(c("^", prefix), collapse=""), tables)]
+  omopgenerics::dropSourceTable(cdm = cdm, name = prefixTables)
 }

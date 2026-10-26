@@ -10,7 +10,7 @@ Options:
   --conceptSet=<json>               Optional concept set JSON for custom concept definitions
   --gapEra=<n>                     Gap era in days [default: 7]
   --indexDate=<date_col>            Index date column [default: cohort_start_date]
-  --censorDate=<date_col>           Optional censor date column
+  --censorDate=<date_col>           Censor date column [default: cohort_end_date]
   --restrictIncident=<logical>      Restrict to incident exposures [default: TRUE]
   --numberExposures=<logical>      Include number of exposures [default: TRUE]
   --numberEras=<logical>           Include number of eras [default: TRUE]
@@ -22,7 +22,7 @@ Options:
   --cumulativeQuantity=<logical>   Include cumulative quantity [default: TRUE]
   --initialDailyDose=<logical>     Include initial daily dose [default: TRUE]
   --cumulativeDose=<logical>       Include cumulative dose [default: TRUE]
-  --nameStyle=<style>              Name style for added columns [default: {variable}]
+  --nameStyle=<style>              Name style for added columns [default: {value}_{concept_name}_{ingredient}]
 ' -> doc
 
 library(dplyr, warn.conflicts = FALSE)
@@ -53,7 +53,7 @@ utilisation_arguments <- list(
   conceptSet = concept_set,
   ingredientConceptId = ingredient_ids,
   indexDate = arguments$indexDate,
-  censorDate = if (is.null(arguments$censorDate) || !nzchar(arguments$censorDate)) NULL else arguments$censorDate,
+  censorDate = arguments$censorDate,
   nameStyle = arguments$nameStyle,
   name = arguments$name
 )

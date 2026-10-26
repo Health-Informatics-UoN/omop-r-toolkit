@@ -13,7 +13,7 @@ Options:
   --subsetCohortId=<ids>       Optional cohort IDs to subset
   --numberExposures=<logical>  Add number of exposures to the output cohort [default: FALSE]
   --daysPrescribed=<logical>   Add days prescribed to the output cohort [default: FALSE]
-  --output-path=<path>         Optional path to write cohort settings summary csv
+  --outputPath=<path>         Optional path to write cohort settings summary csv
 ' -> doc
 
 library(dplyr, warn.conflicts = FALSE)
@@ -68,11 +68,11 @@ if (!is.null(arguments$atc) && nzchar(arguments$atc)) {
   cdm <- do.call(DrugUtilisation::generateIngredientCohortSet, cohort_arguments)
 }
 
-if (!is.null(arguments$output_path) && nzchar(arguments$output_path)) {
+if (!is.null(arguments$outputPath) && nzchar(arguments$outputPath)) {
   settings_out <- as.data.frame(settings(cdm[[arguments$name]]))
   if (nrow(settings_out) > 0) {
-    dir.create(dirname(arguments$output_path), recursive = TRUE, showWarnings = FALSE)
-    write.csv(settings_out, arguments$output_path, row.names = FALSE)
+    dir.create(dirname(arguments$outputPath), recursive = TRUE, showWarnings = FALSE)
+    write.csv(settings_out, arguments$outputPath, row.names = FALSE)
   }
 }
 

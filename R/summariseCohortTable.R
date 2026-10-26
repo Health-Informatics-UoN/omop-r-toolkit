@@ -1,7 +1,7 @@
 #' Summarise a cohort table using the standard PatientProfiles summary API.
 
 summariseCohortTable <- function(cohort,
-                                 output_path = NULL,
+                                 outputPath = NULL,
                                  group = list(),
                                  includeOverallGroup = FALSE,
                                  strata = list(),
@@ -28,10 +28,13 @@ summariseCohortTable <- function(cohort,
       customEstimates = customEstimates
     )
 
-  if (!is.null(output_path)) {
-    summary_df <- omopgenerics::exportSummarisedResult(
-      x = summary_df,
-      filename = output_path
+  if (!is.null(outputPath)) {
+    dir.create(dirname(outputPath), recursive = TRUE, showWarnings = FALSE)
+    omopgenerics::exportSummarisedResult(
+      summary_df,
+      minCellCount = 5,
+      fileName = basename(outputPath),
+      path = dirname(outputPath)
     )
   }
 

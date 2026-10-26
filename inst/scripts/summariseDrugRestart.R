@@ -13,7 +13,7 @@ Options:
   --censorDate=<date_col>            Optional censor date column
   --incident=<logical>               Restrict to incident restarts [default: FALSE]
   --restrictToFirstDiscontinuation=<logical> Restrict to first discontinuation only [default: TRUE]
-  --output-path=<path>               Output CSV path
+  --outputPath=<path>               Output CSV path
 ' -> doc
 
 library(dplyr, warn.conflicts = FALSE)
@@ -52,9 +52,9 @@ restart_arguments <- c(restart_arguments, Filter(Negate(is.null), list(
 
 result <- do.call(DrugUtilisation::summariseDrugRestart, restart_arguments)
 
-if (!is.null(arguments$output_path) && nzchar(arguments$output_path)) {
-  dir.create(dirname(arguments$output_path), recursive = TRUE, showWarnings = FALSE)
-  write.csv(as.data.frame(result), arguments$output_path, row.names = FALSE)
+if (!is.null(arguments$outputPath) && nzchar(arguments$outputPath)) {
+  dir.create(dirname(arguments$outputPath), recursive = TRUE, showWarnings = FALSE)
+  write.csv(as.data.frame(result), arguments$outputPath, row.names = FALSE)
 }
 
 CDMConnector::cdmDisconnect(cdm)

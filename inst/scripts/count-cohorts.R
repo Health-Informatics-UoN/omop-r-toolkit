@@ -1,12 +1,12 @@
 'Count members of a cohort.
 
 Usage:
-  count_cohorts.R <name> [--output-path=<output_path>]
+  count_cohorts.R <name> [--outputPath=<outputPath>]
 
 Options:
   -h --help                     Show this screen
   --version                     Show version
-  --output-path=<output_path>   Path to write the output csv to [default: outputs/output.csv]
+  --outputPath=<outputPath>   Path to write the output csv to [default: outputs/output.csv]
 
 ' -> doc
 
@@ -19,6 +19,6 @@ arguments <- docopt(doc, version = "Count cohorts 0.1.0")
 
 cdm <- connectFiveSafesTESPg("postgres_omop", cohortTables = arguments$name)
 
-write.table(summariseCohortCount(cdm[[arguments$name]]), arguments$output_path)
+write.table(summariseCohortCount(cdm[[arguments$name]]), arguments$outputPath)
 
 CDMConnector::cdmDisconnect(cdm)
