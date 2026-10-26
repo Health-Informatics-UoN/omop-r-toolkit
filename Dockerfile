@@ -3,6 +3,7 @@ FROM rocker/r-ver:4.6.1
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         curl \
+        libcurl4-openssl-dev \
         openjdk-11-jdk \
         libxml2-dev \
         libpcre2-dev \
