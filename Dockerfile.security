@@ -67,7 +67,7 @@ RUN apt-get update \
 # Copy preinstalled R packages
 COPY --from=builder /rlib/ /opt/omop-r-toolkit/library/
 
-# Replaces the rv .Rprofile activation, which needs the rv binary at runtime.
+# Puts the copied rv library on R's search path - runtime can identify the packages installed by rv.
 ENV R_LIBS=/opt/omop-r-toolkit/library
 
 # Copy application files
