@@ -30,17 +30,7 @@ RUN curl -fsSL https://raw.githubusercontent.com/A2-ai/rv/refs/heads/main/script
 # Install locked R dependencies
 COPY rproject.toml rv.lock ./
 
-
-# The cache mount keeps compiled packages across failed or repeated builds (should be removed - later).
-
-ARG MAKE_JOBS=4
-ENV MAKEFLAGS="-j${MAKE_JOBS}" \
-    RV_CACHE_DIR=/rv-cache
-
-RUN --mount=type=cache,target=/rv-cache,sharing=locked \
-    rv sync --locked
-
-# ------- Remove until this comment after testing -------
+RUN rv sync --locked
 
 # rv nests the library by R version, arch and distro; copy it to a fixed path for the runtime stage.
 RUN mkdir -p /rlib \
