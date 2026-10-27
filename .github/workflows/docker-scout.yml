@@ -1,17 +1,15 @@
 name: Docker Scout
+permissions:
+  contents: read
+  packages: read
+  pull-requests: write
 
 on:
   pull_request:
     branches: [ "**" ]
-    inputs:
-      registry:
-        description: "Container registry host (e.g. ghcr.io)"
-        required: false
-        default: "ghcr.io"
-        type: string
 
 env:
-  REGISTRY: ${{ inputs.registry }}
+  REGISTRY: "ghcr.io"
   IMAGE_NAME: ${{ github.repository }}
   SHA: ${{ github.event.pull_request.head.sha }}
   COMPARE_TAG: edge
@@ -24,10 +22,10 @@ jobs:
       pull-requests: write   # needed for write-comment
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Check out the repo
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ env.SHA }}
+          fetch-depth: 0
 
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@v3
@@ -41,7 +39,7 @@ jobs:
 
       # Build only, load into the runner's local Docker daemon, no push
       - name: Build image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc
         with:
           context: .
           push: false
