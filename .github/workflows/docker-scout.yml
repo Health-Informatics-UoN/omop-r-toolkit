@@ -1,8 +1,10 @@
 name: Docker Scout
 permissions:
   contents: read
-  packages: read
   pull-requests: write
+  issues: write
+  packages: read
+  id-token: write
 
 on:
   pull_request:
