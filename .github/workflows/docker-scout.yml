@@ -11,7 +11,7 @@ on:
     branches: [ "**" ]
 
 env:
-  REGISTRY: "ghcr.io"
+  registry: "ghcr.io"
   IMAGE_NAME: ${{ github.repository }}
   SHA: ${{ github.event.pull_request.head.sha }}
   COMPARE_TAG: edge
