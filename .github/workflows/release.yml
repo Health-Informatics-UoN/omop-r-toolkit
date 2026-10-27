@@ -15,7 +15,6 @@ on:
   push:
     branches:
       - main
-      - feat-workflows
 
 jobs:
    release:
