@@ -6,9 +6,7 @@ permissions:
   packages: read
   id-token: write
 
-on:
-  pull_request:
-    branches: [ "**" ]
+on: [workflow_dispatch]
 
 env:
   registry: "ghcr.io"
