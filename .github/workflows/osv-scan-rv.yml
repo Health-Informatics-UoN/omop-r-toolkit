@@ -20,8 +20,14 @@ jobs:
         run: curl -sSL https://raw.githubusercontent.com/A2-ai/rv/refs/heads/main/scripts/install.sh | bash
       - name: Make renv lockfile
         run: ~/.local/bin/rv export renv -o ./renv.lock
+      - name: Upload lockfile
+        uses: actions/upload-artifact@v4
+        with:
+          name: lockfile
+          path: ./renv.lock
   scan:
+    needs: build-renv-lockfile
     uses: "google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@v2.7.0"
     with:
      scan-args: |-
-       --lockfile=./renv.lock
+       --lockfile=${{needs.build-renv-lockfile.outputs}}
