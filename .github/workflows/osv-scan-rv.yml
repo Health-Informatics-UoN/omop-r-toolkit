@@ -1,0 +1,37 @@
+name: OSV scan rv
+
+on: [workflow_call]
+
+permissions:
+  # Required to upload SARIF file to CodeQL. See: https://github.com/github/codeql-action/issues/2117
+  actions: read
+  # Require writing security events to upload SARIF file to security tab
+  security-events: write
+  # Only need to read contents
+  contents: read
+
+jobs:
+  build-renv-lockfile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository to the runner
+        uses: actions/checkout@v6
+      - name: Load RV
+        run: curl -sSL https://raw.githubusercontent.com/A2-ai/rv/refs/heads/main/scripts/install.sh | bash
+      - name: Make renv lockfile
+        run: ~/.local/bin/rv export renv -o ./renv.lock
+      - name: Label PPM packages as CRAN for osv-scanner
+        run: |-
+          sed -i 's/"Repository": "PPM"/"Repository": "CRAN"/' renv.lock
+      - name: Upload lockfile
+        uses: actions/upload-artifact@v4
+        with:
+          name: lockfile
+          path: ./renv.lock
+  scan:
+    needs: build-renv-lockfile
+    uses: "google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@v2.7.0"
+    with:
+      download-artifact: lockfile
+      scan-args: |-
+        --lockfile=renv.lock

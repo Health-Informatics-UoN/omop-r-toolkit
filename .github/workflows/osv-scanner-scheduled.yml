@@ -16,5 +16,8 @@ permissions:
   contents: read
 
 jobs:
-  scan-scheduled:
-    uses: "google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@v2.7.0"
+  export-renv-lockfile:
+  # osv doesn't support rv lockfiles, but it does support renv
+  # rv can export an renv lockfile
+  uses: ./.github/workflows/osv-scan-rv.yml
+  secrets: inherit
