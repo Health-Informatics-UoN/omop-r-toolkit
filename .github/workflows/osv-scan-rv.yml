@@ -31,4 +31,4 @@ jobs:
     with:
      download-artifact: lockfile
      scan-args: |-
-       --lockfile=${{needs.build-renv-lockfile.outputs}}
+       --lockfile=renv.lock
