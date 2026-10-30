@@ -101,7 +101,7 @@ if (!is.null(arguments$estimatePeriodPrevalenceOutputPath)) {
     cdm = cdm,
     denominatorTable = arguments$denominatorCohortName,
     outcomeTable = arguments$outcomeCohortName,
-    interval = arguments$periodPrevalenceInterval,
+    interval = arguments$periodPrevalenceInterval
   ) |>
     omopgenerics::exportSummarisedResult(fileName = arguments$estimatePeriodPrevalenceOutputPath)
 }
