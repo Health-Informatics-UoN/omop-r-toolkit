@@ -1,7 +1,7 @@
 'Estimate time-to-event probabilities for one or more target cohorts when an event of interest can be precluded by a competing outcome.
 
 Usage:
-  estimateCompetingEventSurvial.R [options]
+  estimateCompetingEventSurvival.R [options]
 
 Options:
   -h --help                                  Show this screen
