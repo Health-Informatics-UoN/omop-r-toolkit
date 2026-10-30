@@ -17,9 +17,9 @@ jobs:
       - name: Check out the repository to the runner
         uses: actions/checkout@v6
       - name: Load RV
-        run: curl -sSL https://raw.githubusercontent.com/A2-ai/rv/refs/heads/main/scripts/install.sh 
+        run: curl -sSL https://raw.githubusercontent.com/A2-ai/rv/refs/heads/main/scripts/install.sh | sh
       - name: Make renv lockfile
-        run: rv export renv
+        run: ~/.local/bin/rv export renv
   scan:
     uses: "google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@v2.7.0"
     with:
