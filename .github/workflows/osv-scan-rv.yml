@@ -23,7 +23,7 @@ jobs:
       - name: Debug lockfile
         run: |
           ls -la
-          head -c 30 renv.lock
+          head -c 2000 renv.lock
       - name: Upload lockfile
         uses: actions/upload-artifact@v4
         with:
