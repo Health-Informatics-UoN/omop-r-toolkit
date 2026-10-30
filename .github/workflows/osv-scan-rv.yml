@@ -30,5 +30,5 @@ jobs:
     uses: "google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@v2.7.0"
     with:
       download-artifact: lockfile
-      args:
+      args: |-
         - "renv.lock"
