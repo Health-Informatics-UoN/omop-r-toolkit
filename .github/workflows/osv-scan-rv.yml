@@ -21,7 +21,8 @@ jobs:
       - name: Make renv lockfile
         run: ~/.local/bin/rv export renv -o ./renv.lock
       - name: Label PPM packages as CRAN for osv-scanner
-        run: sed -i 's/"Repository": "PPM"/"Repository": "CRAN"/' renv.lock
+        run: |-
+          sed -i 's/"Repository": "PPM"/"Repository": "CRAN"/' renv.lock
       - name: Upload lockfile
         uses: actions/upload-artifact@v4
         with:
