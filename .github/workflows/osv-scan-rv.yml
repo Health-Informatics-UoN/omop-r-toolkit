@@ -34,4 +34,4 @@ jobs:
     with:
       download-artifact: lockfile
       scan-args: |-
-        --lockfile=osv-scanner:renv.lock
+        --lockfile=renv.lock
