@@ -4,7 +4,7 @@
 
 This document describes the R scripts exposed by the OMOP R Toolkit and shows how to combine them for analyses within the Five Safes TES (5S-TES) environment. It complements the [TES Message Examples](./analysis-tes-json.md), which contain complete TES messages, and [Analysis Types](./analysis-types.md), which explains the research applications.
 
-The toolkit wraps OMOP CDM analysis packages with command-line R scripts under `inst/scripts/`. The scripts create or enrich cohort tables in the connected OMOP database, calculate aggregate results, and optionally write output files. The examples below are based on the repository source snapshot supplied on **27 October 2026**; they have not all been executed against a database.
+The toolkit wraps OMOP CDM analysis packages with command-line R scripts under `inst/scripts/`. The scripts create or enrich cohort tables in the connected TRE database, calculate aggregate results, and optionally write output files.
 
 ## Running the scripts
 
@@ -395,8 +395,6 @@ Rscript inst/scripts/summariseDoseCoverage.R du_acetaminophen_01 \
   --estimates='["mean","sd","min","max"]' \
   --outputPath=/outputs/dose_coverage.csv
 ```
-
-The script also exposes `--sampleSize=<n>` and `--conceptSet=<json>`. In the supplied implementation, `--conceptSet` is parsed but is **not passed** to `DrugUtilisation::summariseDoseCoverage()`. Do not imply that option changes this computation without a code fix.
 
 ### 5.6. Summarise subsequent drug use / restarts
 
