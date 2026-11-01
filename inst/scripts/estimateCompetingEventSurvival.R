@@ -1,7 +1,7 @@
 'Estimate time-to-event probabilities for one or more target cohorts when an event of interest can be precluded by a competing outcome.
 
 Usage:
-  estimateCompetingEventSurvial.R [options]
+  estimateCompetingEventSurvival.R [options]
 
 Options:
   -h --help                                  Show this screen
@@ -9,7 +9,7 @@ Options:
   --targetCohortTable=<table>                Name of the cohort table containing the target cohorts. The table must be present in cdm and contain standard OMOP cohort columns.
   --outcomeCohortTable=<table>               Name of the cohort table containing the outcome of interest.
   --competingOutcomeCohortTable=<table>      Name of the cohort table containing the competing outcome.
-  --outputPath=<path>                 Path for saving the survival table as a csv [default: outputs/competing-event-survival.csv]
+  --outputPath=<path>                        Path for saving the survival table as a csv [default: outputs/competing-event-survival.csv]
   --targetCohortId=<id>                      Target cohorts to include. It can either be a cohort_definition_id value or a cohort_name. Multiple ids are allowed. If omitted, all non-empty cohorts in targetCohortTable are used.
   --outcomeCohortId=<id>                     Outcome cohorts to include. It can either be a cohort_definition_id value or a cohort_name. Multiple ids are allowed. If omitted, all outcome cohorts in outcomeCohortTable are used.
   --outcomeDateVariable=<variable>           Variable containing the outcome event date. This is usually "cohort_start_date", but another date column in the outcome cohort can be used. [default: cohort_start_date]
@@ -72,7 +72,7 @@ surv <- CohortSurvival::estimateCompetingRiskSurvival(
   cdm,
   targetCohortTable = arguments$targetCohortTable ,
   outcomeCohortTable = arguments$outcomeCohortTable,
-  competingOutcomeCohortTable = arguments$competingOutcomeCohortTabl,
+  competingOutcomeCohortTable = arguments$competingOutcomeCohortTable,
   targetCohortId = targetCohortId,
   outcomeCohortId = outcomeCohortId,
   outcomeDateVariable = arguments$outcomeDateVariable,
