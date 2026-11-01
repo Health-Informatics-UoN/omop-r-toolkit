@@ -69,8 +69,6 @@ Rscript inst/scripts/cleanUpCohortTables.R \
 | `--estimatePointPrevalenceOutputPath=<path>`, `--pointPrevalenceInterval=years`, `--pointPrevalenceTimePoint=start` | Point-prevalence output, period and time point |
 | `--estimatePeriodPrevalenceOutputPath=<path>`, `--periodPrevalenceInterval=years` | Period-prevalence output and interval |
 
-**Source-code caveat:** The supplied `incidencePrevalence.R` has a trailing comma after `interval = arguments$periodPrevalenceInterval` in `estimatePeriodPrevalence()`. Correct that call before relying on the period-prevalence branch. The example documents the exposed CLI; it is not a claim that all three estimators succeed without that fix.
-
 ---
 
 ## 2. PatientProfiles
