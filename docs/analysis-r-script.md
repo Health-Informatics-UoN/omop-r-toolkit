@@ -31,35 +31,7 @@ For individual script help:
 Rscript inst/scripts/<script>.R --help
 ```
 
-## 1. Shared cohort utilities
-
-The following scripts are used by several analysis workflows.
-
-| Script | Purpose | Main arguments |
-|---|---|---|
-| `defineConceptCohortSet.R` | Generate OMOP concept-based cohorts | `<name>`, `--conceptSet`, `--alloccurrences`, `--end`, `--requiredObservation` |
-| `count-cohorts.R` | Count cohort members and write a table | `<name>`, `--outputPath` |
-| `cleanUpCohortTables.R` | Remove one or more study cohort tables | `<name> ...` |
-
-### Create, count and clean up a cohort
-
-```bash
-Rscript inst/scripts/defineConceptCohortSet.R skin_cancer_demo \
-  --conceptSet='{"skin_cancer":[139750]}'
-
-Rscript inst/scripts/count-cohorts.R skin_cancer_demo \
-  --outputPath=/outputs/skin_cancer_count.csv
-
-Rscript inst/scripts/cleanUpCohortTables.R skin_cancer_demo
-```
-
-Optional cohort settings include `--alloccurrences` (all matching occurrences instead of the first), `--end=event_end_date` or `--end=observation_period_end_date`, and `--requiredObservation=365,0` (days before and after the index event).
-
-**Output note:** `count-cohorts.R` currently writes with `write.table()` rather than `write.csv()`. Its `.csv` path therefore does not guarantee comma-separated content; change the implementation if a standard CSV is required.
-
----
-
-## 2. Incidence and Prevalence
+## 1. Incidence and Prevalence
 
 `incidencePrevalence.R` creates a denominator cohort, then estimates incidence, point prevalence, and/or period prevalence for an existing outcome cohort. Provide at least one output-path option to select the required estimator.
 
@@ -101,11 +73,11 @@ Rscript inst/scripts/cleanUpCohortTables.R \
 
 ---
 
-## 3. PatientProfiles
+## 2. PatientProfiles
 
 `PatientProfiles` scripts add demographic, observation, cohort-event, concept-event, or OMOP-table features to an existing cohort. Most scripts follow a common workflow: create a cohort, enrich it, summarise selected columns, and clean up. Use `summariseCohort.R` for aggregate output.
 
-### 3.1. Cohort characteristics
+### 2.1. Cohort characteristics
 
 Calculate age, age groups, sex, prior/future observation days, and an in-observation flag. This example uses `cohort_end_date` as the index date and the combined `addDemographics()` path.
 
@@ -133,7 +105,7 @@ Rscript inst/scripts/cleanUpCohortTables.R pp_characteristics_01
 
 Other relevant characteristics options: `--ageName=<column>`, `--indexDate=<date_column>`, and the individual `--addAge`, `--addSex`, `--addPriorObservation`, `--addFutureObservation`, and `--addInObservation` switches. `--useDemographics` combines supported demographic features; the observation flag is added separately by the wrapper.
 
-### 3.2. Cohort intersections
+### 2.2. Cohort intersections
 
 Cohort intersections compare a study cohort with another existing cohort table. The target cohort must exist before running these commands. The example creates both cohorts so it does not depend on a previous TES task.
 
@@ -188,7 +160,7 @@ Rscript inst/scripts/addCohortEventDays.R <study_cohort> \
 
 The cohort intersection wrappers also support `--indexDate`, matching date-column options (`--targetDate` for Date/Days, `--targetStartDate` and `--targetEndDate` for Count/Flag), and `--nameStyle`. Event Date/Days additionally support `--censorDate`.
 
-### 3.3. Concept intersections and concept events
+### 2.3. Concept intersections and concept events
 
 Use concept intersections to count occurrences, find event dates, or set an event flag for a selected OMOP concept set. The following example counts selected skin cancer concept events within the defined window.
 
@@ -238,7 +210,7 @@ For concept-event scripts, additional options include `--indexDate`, `--targetDa
 
 **Not implemented in this snapshot:** `addConceptIntersectDays.R` does not exist under `inst/scripts/`. Use the available concept Date/Count/Flag scripts or concept Event Days functionality instead; do not reference a nonexistent executor.
 
-### 3.4. OMOP table intersections
+### 2.4. OMOP table intersections
 
 These scripts intersect cohort records with a standard OMOP CDM table such as `visit_occurrence`, `drug_exposure`, or `condition_occurrence`. The example counts visits for the study cohort.
 
@@ -276,7 +248,7 @@ Rscript inst/scripts/addTableIntersectFlag.R <study_cohort> \
 
 Table-intersection wrappers support `--indexDate`, `--inObservation=TRUE|FALSE`, `--nameStyle`, and table-specific date columns (`--targetDate`, `--targetStartDate`, or `--targetEndDate`, according to the script).
 
-### 3.5. Aggregate cohort summaries
+### 2.5. Aggregate cohort summaries
 
 `summariseCohort.R` can be run after any of the feature-generation scripts above. It accepts `--variables` and `--estimates` as JSON arrays, plus optional `--group`, `--strata`, `--includeOverallGroup`, `--includeOverallStrata`, `--counts`, `--weights`, and `--customEstimates`.
 
@@ -291,7 +263,7 @@ The wrapper exports with `minCellCount = 5`. Feature column names depend on the 
 
 ---
 
-## 4. DrugExposureDiagnostics
+## 3. DrugExposureDiagnostics
 
 `drugExposureDiagnostics.R` evaluates drug exposure records for ingredient concept IDs. Its default checks are missingness, exposure duration, and quantity. It writes a directory of diagnostic results rather than a single predetermined CSV file.
 
@@ -319,11 +291,11 @@ Rscript inst/scripts/drugExposureDiagnostics.R \
 
 ---
 
-## 5. DrugUtilisation
+## 4. DrugUtilisation
 
 These scripts support drug-cohort creation, exposure metrics, indications, restart analysis, dose coverage, and combining aggregate results. Ingredient **names** are used for `generateIngredientCohortSet.R --ingredient`; ingredient **concept IDs** are used for `--ingredientConceptId` in the metric and summarisation wrappers.
 
-### 5.1. Generate an ingredient cohort
+### 4.1. Generate an ingredient cohort
 
 ```bash
 Rscript inst/scripts/generateIngredientCohortSet.R du_acetaminophen_01 \
@@ -336,7 +308,7 @@ Rscript inst/scripts/generateIngredientCohortSet.R du_acetaminophen_01 \
 
 Alternatively, define a cohort using `--atc=<ATC_name>` instead of `--ingredient`. The script also accepts `--subsetCohort` and `--subsetCohortId` to restrict the source population. `--outputPath` here saves **cohort settings**, not a patient-level cohort export.
 
-### 5.2. Summarise drug utilisation
+### 4.2. Summarise drug utilisation
 
 ```bash
 Rscript inst/scripts/summariseDrugUtilisation.R du_acetaminophen_01 \
@@ -349,7 +321,7 @@ Rscript inst/scripts/summariseDrugUtilisation.R du_acetaminophen_01 \
 
 Use the `--numberExposures`, `--numberEras`, `--daysExposed`, `--daysPrescribed`, `--timeToExposure`, `--initialExposureDuration`, `--initialQuantity`, `--cumulativeQuantity`, `--initialDailyDose`, and `--cumulativeDose` options with explicit `TRUE`/`FALSE` values to select metrics. Other supported options include `--conceptSet`, `--indexDate`, `--censorDate`, and `--restrictIncident`.
 
-### 5.3. Add drug utilisation variables to a cohort
+### 4.3. Add drug utilisation variables to a cohort
 
 ```bash
 Rscript inst/scripts/addDrugUtilisation.R du_acetaminophen_01 \
@@ -366,7 +338,7 @@ Rscript inst/scripts/summariseCohort.R du_acetaminophen_01 \
 
 `addDrugUtilisation.R` uses the same metric switches as the summary wrapper and also accepts `--nameStyle`. It enriches the database cohort; it does not itself export aggregate results. The variable name in the second command is an example and **must match the resulting column**.
 
-### 5.4. Add and summarise indications
+### 4.4. Add and summarise indications
 
 ```bash
 Rscript inst/scripts/defineConceptCohortSet.R du_headache_01 \
@@ -388,7 +360,7 @@ Rscript inst/scripts/summariseIndication.R du_acetaminophen_01 \
 
 Both indication scripts support `--unknownIndicationTable`, `--indexDate`, `--censorDate`, and `--restrictIncident`. `addIndication.R` supports `--nameStyle`, while `summariseIndication.R` supports `--strata`. A recorded condition near an index drug exposure indicates temporal proximity, not proof of the prescribing indication.
 
-### 5.5. Summarise dose coverage
+### 4.5. Summarise dose coverage
 
 ```bash
 Rscript inst/scripts/summariseDoseCoverage.R du_acetaminophen_01 \
@@ -397,7 +369,7 @@ Rscript inst/scripts/summariseDoseCoverage.R du_acetaminophen_01 \
   --outputPath=/outputs/dose_coverage.csv
 ```
 
-### 5.6. Summarise subsequent drug use / restarts
+### 4.6. Summarise subsequent drug use / restarts
 
 ```bash
 Rscript inst/scripts/generateIngredientCohortSet.R du_metformin_01 \
@@ -412,7 +384,7 @@ Rscript inst/scripts/summariseDrugRestart.R du_acetaminophen_01 \
 
 Optional settings include `--switchCohortId`, `--strata`, `--censorDate`, and `--restrictToFirstDiscontinuation`. Acetaminophen and metformin are illustrative test inputs, not clinically equivalent or interchangeable treatments.
 
-### 5.7. Combine summarised results
+### 4.7. Combine summarised results
 
 ```bash
 Rscript inst/scripts/finaliseDrugUtilisationResults.R \
@@ -423,7 +395,7 @@ Rscript inst/scripts/finaliseDrugUtilisationResults.R \
 
 Optional switches: `--suppressCounts` and `--suppressGroup`. Only combine **compatible summarised-result structures**; this wrapper reads each path as RDS or CSV and uses `omopgenerics::bind()`. A generic CSV from another wrapper is not necessarily compatible. Validate this integration against your actual files.
 
-### 5.8. Clean up study tables
+### 4.8. Clean up study tables
 
 ```bash
 Rscript inst/scripts/cleanUpCohortTables.R \
@@ -432,7 +404,7 @@ Rscript inst/scripts/cleanUpCohortTables.R \
 
 ---
 
-## 6. TreatmentPatterns
+## 5. TreatmentPatterns
 
 `treatmentPatterns.R` computes aggregate pathways from separate **target** (e.g. disease) and **event** (e.g. treatment) cohort tables, optionally with an **exit** cohort. Its `--combinedCohortTable` is an intermediate table dropped by the script. The study cohorts should be cleaned up separately.
 
@@ -478,11 +450,11 @@ The wrapper uses `computePathways()` and exports aggregate results only. It does
 
 ---
 
-## 7. CohortSurvival
+## 6. CohortSurvival
 
 The toolkit provides cohort-level survival feature generation and aggregate survival estimation. These operations require study and outcome cohorts that are defined in the OMOP database.
 
-### 7.1. Prepare target, outcome and optional death cohorts
+### 6.1. Prepare target, outcome and optional death cohorts
 
 ```bash
 Rscript inst/scripts/defineConceptCohortSet.R surv_target_01 \
@@ -497,7 +469,7 @@ Rscript inst/scripts/createDeathCohort.R surv_death_01 \
   --subsetCohort=surv_target_01
 ```
 
-### 7.2. Estimate single-event survival
+### 6.2. Estimate single-event survival
 
 ```bash
 Rscript inst/scripts/estimateSingleEventSurvival.R \
@@ -512,7 +484,7 @@ Rscript inst/scripts/estimateSingleEventSurvival.R \
 
 Other options: `--targetCohortId`, `--outcomeCohortId`, `--outcomeDateVariable`, `--censorOnCohortExit`, `--censorOnDate`, `--weight`, `--strata`, `--restrictedMeanFollowUp`, and `--minimumSurvivalDays`. This wrapper computes the aggregate estimate and exports it; it does not produce a patient-level CSV.
 
-### 7.3. Add survival time and event status to a cohort
+### 6.3. Add survival time and event status to a cohort
 
 ```bash
 Rscript inst/scripts/addCohortSurvival.R surv_target_01 \
@@ -525,13 +497,13 @@ Rscript inst/scripts/addCohortSurvival.R surv_target_01 \
 
 This wrapper adds survival-related variables to a new TRE cohort table, not an aggregate results file. `--name` is required by the implementation. Options include `--outcomeDateVariable`, `--censorOnCohortExit`, and `--censorOnDate`.
 
-### 7.4. Competing-event survival — implementation warning
+### 6.4. Competing-event survival — implementation warning
 
 The repository includes `estimateCompetingEventSurvival.R`, intended to estimate the event of interest while accounting for a competing outcome cohort. Its CLI declares `--targetCohortTable`, `--outcomeCohortTable`, `--competingOutcomeCohortTable`, `--followUpDays`, `--eventGap`, `--estimateGap`, `--strata`, `--outputPath`, and the corresponding outcome/censoring options.
 
 **Do not treat this script as executable without repair:** the current source passes `arguments$competingOutcomeCohortTabl` (missing final `e`) to `estimateCompetingRiskSurvival()`. Its usage line also misspells the script name as `estimateCompetingEventSurvial.R`. Fix and retest the wrapper before adding it to an operational TES workflow.
 
-### 7.5. Clean up survival cohorts
+### 6.5. Clean up survival cohorts
 
 ```bash
 Rscript inst/scripts/cleanUpCohortTables.R \
@@ -543,7 +515,7 @@ Drops the named tables from the connected database. This can be used to clean up
 ---
 
 
-## 8. Script index and supported CLI options
+## 7. Script index and supported CLI options
 
 The following index is derived from the **actual `Usage` and `Options` definitions in the supplied `inst/scripts/*.R` files**. Use it to confirm script names and flags when adapting the examples. `[options]` means that a script accepts the flags listed in its own help text. `-h`/`--help` and `--version` are available in the documented interfaces and are omitted below for brevity.
 
