@@ -8,7 +8,7 @@ The toolkit wraps OMOP CDM analysis packages with command-line R scripts under `
 
 ## Running the scripts
 
-Run commands from the **repository working directory**, since the scripts load helper files using relative paths such as `R/postgres-connect-5s-tes.R`. In 5STES, place the command tokens in a TES executor's `command` array and use the OMOP R Toolkit image, `ghcr.io/health-informatics-uon/omop-r-tools:edge`.
+Run commands from the **repository working directory**, since the scripts load helper files using relative paths such as `R/postgres-connect-5s-tes.R`. In 5S-TES, place the command tokens in a TES executor's `command` array and use the OMOP R Toolkit image, `ghcr.io/health-informatics-uon/omop-r-tools:edge`.
 
 The database connector reads `postgresServer`, `postgresPort`, `postgresUsername`, `postgresPassword`, `postgresDatabase`, and `postgresSchema` from the execution environment. The TRE deployment must provide these values securely; do not embed credentials in a TES JSON message.
 
