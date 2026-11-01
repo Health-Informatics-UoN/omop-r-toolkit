@@ -499,8 +499,6 @@ This wrapper adds survival-related variables to a new TRE cohort table, not an a
 
 The repository includes `estimateCompetingEventSurvival.R`, intended to estimate the event of interest while accounting for a competing outcome cohort. Its CLI declares `--targetCohortTable`, `--outcomeCohortTable`, `--competingOutcomeCohortTable`, `--followUpDays`, `--eventGap`, `--estimateGap`, `--strata`, `--outputPath`, and the corresponding outcome/censoring options.
 
-**Do not treat this script as executable without repair:** the current source passes `arguments$competingOutcomeCohortTabl` (missing final `e`) to `estimateCompetingRiskSurvival()`. Its usage line also misspells the script name as `estimateCompetingEventSurvial.R`. Fix and retest the wrapper before adding it to an operational TES workflow.
-
 ### 6.5. Clean up survival cohorts
 
 ```bash
