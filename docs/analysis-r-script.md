@@ -539,7 +539,7 @@ Rscript inst/scripts/cleanUpCohortTables.R \
   surv_target_01 surv_outcome_01 surv_death_01 surv_target_with_survival_01
 ```
 
-Run cleanup only for tables that were actually created by your workflow.
+Drops the named tables from the connected database. This can be used to clean up the cohort tables created by your workflow.
 
 ---
 
