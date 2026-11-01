@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document describes the R scripts exposed by the OMOP R Toolkit and shows how to combine them for analyses within the Five Safes TES (5STES) environment. It complements [TES Message Examples](./analysis-tes-json.md), which contains complete TES JSON tasks, and [Analysis Types](./analysis-types.md), which explains the research applications.
+This document describes the R scripts exposed by the OMOP R Toolkit and shows how to combine them for analyses within the Five Safes TES (5S-TES) environment. It complements the [TES Message Examples](./analysis-tes-json.md), which contain complete TES messages, and [Analysis Types](./analysis-types.md), which explains the research applications.
 
 The toolkit wraps OMOP CDM analysis packages with command-line R scripts under `inst/scripts/`. The scripts create or enrich cohort tables in the connected TRE database, calculate aggregate results, and optionally write output files. The examples below are based on the repository source snapshot supplied on **27 October 2026**; they have not all been executed against a TRE database.
 
