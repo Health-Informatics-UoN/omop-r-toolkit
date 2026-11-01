@@ -14,6 +14,7 @@ The database connector reads `postgresServer`, `postgresPort`, `postgresUsername
 
 ### CLI conventions
 
+- **Table names are case-sensitive and must use lowercase `snake_case`** when referenced through CDM objects. This applies to generated cohort table names and existing OMOP CDM tables. For example, use `skin_cancer_cohort` instead of `SkinCancerCohort`, and `visit_occurrence` instead of `VisitOccurrence`.
 - Run an R script with `Rscript inst/scripts/<script>.R ...`.
 - A switch such as `--addAge` is passed without a value; an option such as `--gapEra=7` takes a value. Where an option is declared as `<logical>`, use an explicit `TRUE` or `FALSE`.
 - Quote JSON and windows when invoking a shell: `--conceptSet='{"skin_cancer":[139750]}'`, `--window='[-365,-1]'`, and `--ageGroup='[[0,17],[18,64],[65,150]]'`.
