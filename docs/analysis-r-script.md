@@ -77,6 +77,23 @@ Rscript inst/scripts/cleanUpCohortTables.R \
 
 ### 2.1. Cohort characteristics
 
+
+| Options | Meaning |
+|---|---|
+| `--indexDate=cohort_end_date` | Specify the reference date used to calculate patient characteristics. |
+| `--addAge` | Calculate patient age at the index date. |
+| `--ageGroup='[[0,17],[18,64],[65,150]]'` | Define age groups for cohort characterisation. |
+| `--ageName=<column>` | Specify the name of the generated age column. |
+| `--ageMissingMonth=6`, `--ageMissingDay=15` | Specify replacement month and day values when birth-date components are missing. |
+| `--ageImposeMonth`, `--ageImposeDay` | Enable imputation of missing birth-date components using the configured values. |
+| `--addSex` | Include patient sex information. |
+| `--addPriorObservation` | Calculate the duration of observation before the index date. |
+| `--addFutureObservation` | Calculate the available observation time after the index date. |
+| `--addInObservation` | Identify whether the patient is under observation during a specified time window. |
+| `--inObservationWindow='[0,30]'` | Define the observation window relative to the index date. |
+| `--completeInterval` | Require the complete interval when evaluating observation status. |
+| `--useDemographics` | Use the combined demographics functionality to calculate supported patient characteristics. |
+
 Calculate age, age groups, sex, prior/future observation days, and an in-observation flag. This example uses `cohort_end_date` as the index date and the combined `addDemographics()` path.
 
 ```bash
