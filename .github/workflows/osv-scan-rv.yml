@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repository to the runner
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Load RV
         run: curl -sSL https://raw.githubusercontent.com/A2-ai/rv/refs/heads/main/scripts/install.sh | bash
       - name: Make renv lockfile
@@ -24,7 +24,7 @@ jobs:
         run: |-
           sed -i 's/"Repository": "PPM"/"Repository": "CRAN"/' renv.lock
       - name: Upload lockfile
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: lockfile
           path: ./renv.lock
