@@ -39,7 +39,7 @@ jobs:
      needs: [release, publish-container]
      if: needs.release.outputs.release-created == 'true'
      with:
-       image-name: omopRTools
+       image-name: omop-r-tools
        registry: ghcr.io
        tag: ${{ needs.release.outputs.release-tag }}
        tag-latest: true
