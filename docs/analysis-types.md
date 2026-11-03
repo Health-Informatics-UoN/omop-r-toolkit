@@ -20,6 +20,13 @@ This document provides an accessible overview of the supported analyses, their r
 | **CohortSurvival** | Perform time-to-event analyses, including single-event survival and competing-risk analysis. | [CohortSurvival Documentation](https://darwin-eu.github.io/CohortSurvival/) |
 
 
+### 5STES Notebook Examples
+
+In addition to the official Darwin-EU documentation, there are Jupyter notebooks demonstrating the use of Darwin-EU analyses within the Five Safes TES.
+
+- [5STES Darwin-EU Notebook Examples](https://github.com/Health-Informatics-UoN/5s-TES-notebooks/tree/main/Darwin-EU)
+
+
 ## Incidence and Prevalence
 
 **Incidence** and **prevalence** are fundamental epidemiological measures. The toolkit exposes the Darwin-EU `IncidencePrevalence` package through `inst/scripts/incidencePrevalence.R`.
